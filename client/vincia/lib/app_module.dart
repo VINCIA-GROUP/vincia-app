@@ -1,6 +1,7 @@
 import 'package:auth0_flutter/auth0_flutter.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:vincia/modules/login/infra/repositories/login_repository_impl.dart';
+import 'package:vincia/modules/login/presenter/page/store/login_store.dart';
 
 import 'modules/Initial/presenter/page/initial_page.dart';
 import 'modules/home/presenter/page/home_page.dart';
@@ -18,6 +19,7 @@ class AppModule extends Module {
         Bind((i) => AuthzeroDatasourceImpl(i())),
         Bind((i) => LoginRepositoryImpl(i())),
         Bind((i) => LoginImpl(i())),
+        Bind((i) => LoginStore(i()))
       ];
 
   @override

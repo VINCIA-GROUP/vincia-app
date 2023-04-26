@@ -1,35 +1,45 @@
-import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-
-import '../../domain/entities/success.dart';
-import '../../domain/errors/errors.dart';
-import '../../domain/usercases/login.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:vincia/modules/login/presenter/page/store/login_store.dart';
+import 'package:vincia/modules/login/presenter/page/store/state/login_state.dart';
 
 class LoginPage extends StatelessWidget {
-  final Login login = Modular.get<Login>();
+  final LoginStore loginStore = Modular.get<LoginStore>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(30.0),
-            child: Image(
-              image: AssetImage("assets/images/logo-img.png"),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(30.0),
+              child: Image(
+                image: AssetImage("assets/images/logo-img.png"),
+              ),
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _buttonLogin(context, "Log in", () async => {await login()}),
-            ],
-          ),
-        ],
+            Observer(builder: (context) {
+              if (loginStore.state is LodingSate) {
+                return const CircularProgressIndicator();
+              }
+              if (loginStore.state is FailureSate) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text(
+                        "Erro ao tentar efetuar o login. Por favor tente novamente mais tarde."),
+                  ));
+                });
+              }
+              return _buttonLogin(
+                  context, "Log in", () => loginStore.onPressedLogin());
+            }),
+          ],
+        ),
       ),
     );
   }
