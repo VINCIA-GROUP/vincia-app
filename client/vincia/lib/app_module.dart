@@ -8,6 +8,7 @@ import 'modules/home/presenter/page/home_page.dart';
 import 'modules/login/domain/usercases/login.dart';
 import 'modules/login/external/datasources/authzero_datasource.dart';
 import 'modules/login/presenter/page/login_page.dart';
+import 'modules/question/presenter/page/question_page.dart';
 
 class AppModule extends Module {
   static const domain = String.fromEnvironment("AUTH0_DOMAIN");
@@ -27,5 +28,6 @@ class AppModule extends Module {
         ChildRoute('/', child: (context, args) => InitialPage()),
         ChildRoute('/home', child: (context, args) => HomePage()),
         ChildRoute('/login', child: (context, args) => LoginPage()),
+        ChildRoute('/question', child: (context, args) => QuestionPage()),
       ];
 }

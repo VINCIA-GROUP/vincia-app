@@ -112,7 +112,9 @@ class HomePage extends StatelessWidget {
                     _carouselButton(
                       "Questões",
                       Icons.checklist_rtl,
-                      () {},
+                      () {
+                        Modular.to.navigate("/question");
+                      },
                     ),
                     _carouselButton(
                       "Simulado",
