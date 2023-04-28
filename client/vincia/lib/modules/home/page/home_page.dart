@@ -1,11 +1,15 @@
 import 'package:auth0_flutter/auth0_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:vincia/modules/home/page/controller/home_controller.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  final HomeController _homeController = Modular.get<HomeController>();
 
-  static const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
+  HomePage({super.key}) {
+    _homeController.init();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,33 +70,37 @@ class HomePage extends StatelessWidget {
             ),
             PopupMenuButton(
               icon: Row(
-                children: const [
-                  CircleAvatar(
-                    child: Image(
-                        image: AssetImage("assets/images/avatar_default.png")),
-                  ),
+                children: [
+                  Observer(builder: (context) {
+                    var pictureUrl = _homeController.user?.pictureUrl;
+                    if (pictureUrl != null) {
+                      return CircleAvatar(
+                        backgroundImage: NetworkImage(pictureUrl.toString()),
+                      );
+                    } else {
+                      return const CircleAvatar(
+                        backgroundImage:
+                            AssetImage("assets/images/avatar_default.png"),
+                      );
+                    }
+                  }),
                   Icon(Icons.arrow_drop_down_sharp)
                 ],
               ),
               itemBuilder: (BuildContext context) {
                 return const <PopupMenuEntry>[
                   PopupMenuItem(
-                    value: 1,
-                    child: Text('Opção 1'),
+                    value: "profile",
+                    child: Text('Perfil'),
                   ),
                   PopupMenuItem(
-                    value: 2,
-                    child: Text('Opção 2'),
-                  ),
-                  PopupMenuItem(
-                    value: 3,
+                    value: "logout",
                     child: Text('Log out'),
                   ),
                 ];
               },
               onSelected: (value) {
-                // Aqui você pode fazer algo quando uma opção for selecionada
-                print('Opção selecionada: $value');
+                _homeController.menuFunction(value);
               },
             ),
           ],

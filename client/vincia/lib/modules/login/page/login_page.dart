@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:vincia/modules/login/presenter/page/store/login_store.dart';
-import 'package:vincia/modules/login/presenter/page/store/state/login_state.dart';
+import 'package:vincia/modules/login/page/controller/login_controller.dart';
+
+import 'controller/state/login_state.dart';
 
 class LoginPage extends StatelessWidget {
-  final LoginStore loginStore = Modular.get<LoginStore>();
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final LoginController loginStore = Modular.get<LoginController>();
 
   LoginPage({super.key});
 
@@ -24,10 +24,10 @@ class LoginPage extends StatelessWidget {
               ),
             ),
             Observer(builder: (context) {
-              if (loginStore.state is LodingSate) {
+              if (loginStore.state is LodingState) {
                 return const CircularProgressIndicator();
               }
-              if (loginStore.state is FailureSate) {
+              if (loginStore.state is FailureState) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                     content: Text(
@@ -35,8 +35,7 @@ class LoginPage extends StatelessWidget {
                   ));
                 });
               }
-              return _buttonLogin(
-                  context, "Log in", () => loginStore.onPressedLogin());
+              return _buttonLogin(context, "Log in", () => loginStore.login());
             }),
           ],
         ),
