@@ -20,9 +20,9 @@ data = ReadConvertFile.read_zip_convert_in_object(f"{base_path}/{pdf_path_out}")
 textFirstElement = data['elements'][0]['Text'].lower()
 
 if 'questão' in textFirstElement:
-    textFirstElementSplit = textFirstElement.split('-')
-    numQuestao = textFirstElementSplit[0].split(' ')[1]
-    area = textFirstElementSplit[1]
+    text_first_element_split = textFirstElement.split('-')
+    num_questao = text_first_element_split[0].split(' ')[1]
+    area = text_first_element_split[1]
     alternativas = []
     enuciado = ""
     aa = False
@@ -37,16 +37,16 @@ if 'questão' in textFirstElement:
             enuciado += f"<p>{elemets[i]['Text']}"
         except:
             try:
-                imgElement = elemets[i]
-                imgPath = imgElement['filePaths'][0]
-                encoding = ReadConvertFile.read_img_convert_for_base64(f"{base_path}/{pdf_path_out}", imgPath)
-                nextElement = elemets[i+1]
+                img_element = elemets[i]
+                img_path = img_element['filePaths'][0]
+                encoding = ReadConvertFile.read_img_convert_for_base64(f"{base_path}/{pdf_path_out}", img_path)
+                next_element = elemets[i+1]
                 try:
-                    if nextElement['CharBounds'][0][1] > imgElement['Bounds'][1]:
-                        imagePosition = Transformer.find_img_position(imgElement, nextElement)
-                        textNextElement = nextElement['Text']
-                        newText = f'{textNextElement[:imagePosition]}<img src="data:image/png;base64,{encoding}">{textNextElement[imagePosition:]}'   
-                        elemets[i+1]['Text'] = newText
+                    if next_element['CharBounds'][0][1] > img_element['Bounds'][1]:
+                        image_position = Transformer.find_img_position(img_element, next_element)
+                        text_next_element = next_element['Text']
+                        new_text = f'{text_next_element[:image_position]}<img src="data:image/png;base64,{encoding}">{text_next_element[image_position:]}'   
+                        elemets[i+1]['Text'] = new_text
                     else:
                         enuciado += f'</p><img src="data:image/png;base64,{encoding}"><p>'    
                 except:
