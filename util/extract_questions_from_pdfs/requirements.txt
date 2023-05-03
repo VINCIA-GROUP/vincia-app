@@ -1,0 +1,2 @@
+pdfservices-sdk==2.1.2
+zipfile36==0.1.3
