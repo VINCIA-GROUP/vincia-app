@@ -1,69 +1,52 @@
 from adobe_api_functions import AdobeApiFunctions
 from read_convert_file import ReadConvertFile
 from alternative import Alternative
-from transformer import Transformer
+from extractor import Extractor
 import os.path
+import asyncio
+
+async def extract_question(file_name, base_path, html_questions, count, total):
+    file_name = file_name.replace('.pdf', '')
+    pdf_path_in = f"resources/{file_name}.pdf"
+    pdf_path_temp = f"temp/{file_name}.zip"
 
 
-#1 - Ler aquirvo pdf
-
-#2 - Dividir arquivo em páginas
-base_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) + "/extract_questions_from_pdfs"
-pdf_path_in = "resources/EX94-DIA2.pdf"
-pdf_path_out = "output/EX94-DIA2-v1.zip"
-
-
-#AdobeApiFunctions.extract_info_from_pdf(pdf_path_in, pdf_path_out)
-
-data = ReadConvertFile.read_zip_convert_in_object(f"{base_path}/{pdf_path_out}")
-
-textFirstElement = data['elements'][0]['Text'].lower()
-
-if 'questão' in textFirstElement:
-    text_first_element_split = textFirstElement.split('-')
-    num_questao = text_first_element_split[0].split(' ')[1]
-    area = text_first_element_split[1]
-    alternativas = []
-    enuciado = ""
-    aa = False
+    await AdobeApiFunctions.extract_info_from_pdf(pdf_path_in, pdf_path_temp)
     
-    elemets = data['elements'] 
+    pdf_path_temp_complete = f"{base_path}/{pdf_path_temp}"
+    data = ReadConvertFile.read_zip_convert_in_object(pdf_path_temp_complete)
+
+    try:
+        if Extractor.is_a_question(data):
+            extractor = Extractor()
+            question = extractor.extract_question(data, pdf_path_temp_complete )
+            html_questions.append(f"<br><div>{question.to_html()}</div>") 
+    except:
+        pass
+        
+    os.remove(pdf_path_temp_complete)
+    print(f"{count}/{total}")
     
-    alternativas = Transformer.get_alternatives(elemets)
-        
-    i = 1
-    while i < len(elemets):
-        try:
-            enuciado += f"<p>{elemets[i]['Text']}"
-        except:
-            try:
-                img_element = elemets[i]
-                img_path = img_element['filePaths'][0]
-                encoding = ReadConvertFile.read_img_convert_for_base64(f"{base_path}/{pdf_path_out}", img_path)
-                next_element = elemets[i+1]
-                try:
-                    if next_element['CharBounds'][0][1] > img_element['Bounds'][1]:
-                        image_position = Transformer.find_img_position(img_element, next_element)
-                        text_next_element = next_element['Text']
-                        new_text = f'{text_next_element[:image_position]}<img src="data:image/png;base64,{encoding}">{text_next_element[image_position:]}'   
-                        elemets[i+1]['Text'] = new_text
-                    else:
-                        enuciado += f'</p><img src="data:image/png;base64,{encoding}"><p>'    
-                except:
-                    enuciado += f'</p><img src="data:image/png;base64,{encoding}"><p>'
-                    pass
-            except:
-                pass
-            pass
-        i += 1
-        
+async def main_async():
+    base_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) + "/extract_questions_from_pdfs"
+    html_questions = []
+    list_file_names = os.listdir(f"{base_path}/resources")
+
+    tasks = []
+    count = 1
+    for file_name in list_file_names:
+        tasks.append(asyncio.create_task(extract_question(file_name, base_path, html_questions, count, len(list_file_names))))
+        count += 1
+    
+    await asyncio.gather(*tasks)
+
     with open("exemplo.html", "w", encoding="utf-8") as arquivo:
-        arquivo.write(enuciado)
-    
+        for q in html_questions:
+            arquivo.write(q)           
+    print("Fim")
 
-  
-            
-        
-print("fim")
+
+asyncio.run(main_async())
+
 
 

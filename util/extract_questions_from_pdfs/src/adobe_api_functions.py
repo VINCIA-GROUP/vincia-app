@@ -11,7 +11,7 @@ from adobe.pdfservices.operation.pdfops.extract_pdf_operation import ExtractPDFO
 from adobe.pdfservices.operation.pdfops.options.extractpdf.extract_renditions_element_type import ExtractRenditionsElementType
 
 class AdobeApiFunctions:
-    def extract_info_from_pdf(path_in, path_out):
+    async def extract_info_from_pdf(path_in, path_out):
         try:
             # get base path.
             base_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -38,7 +38,7 @@ class AdobeApiFunctions:
             extract_pdf_operation.set_options(extract_pdf_options)
 
             # Execute the operation.
-            result: FileRef = extract_pdf_operation.execute(execution_context)
+            result: FileRef = await extract_pdf_operation.execute(execution_context)
 
             # Save the result to the specified location.
             result.save_as(f"{base_path}/extract_questions_from_pdfs/{path_out}")
