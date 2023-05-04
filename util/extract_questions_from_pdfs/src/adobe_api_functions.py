@@ -38,7 +38,7 @@ class AdobeApiFunctions:
             extract_pdf_operation.set_options(extract_pdf_options)
 
             # Execute the operation.
-            result: FileRef = await extract_pdf_operation.execute(execution_context)
+            result: FileRef = extract_pdf_operation.execute(execution_context)
 
             # Save the result to the specified location.
             result.save_as(f"{base_path}/extract_questions_from_pdfs/{path_out}")
