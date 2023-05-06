@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
+import 'package:vincia/modules/question/model/question_test_model.dart';
 
 class QuestionPage extends StatelessWidget {
-  const QuestionPage({super.key});
+  final question = QuestionTestModel();
+
+  QuestionPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -82,34 +86,37 @@ class QuestionPage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 2,
-                blurRadius: 5,
-                offset: const Offset(8, 8),
-              ),
-            ],
-          ),
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text("(Enem 2012)"),
-              Center(
-                child: Image(
-                  width: 250,
-                  height: 250,
-                  image: AssetImage("assets/images/enem-exemple.png"),
-                ),
-              ),
-              Text(
-                  "O efeito de sentido da charge é provocado pela combinação de informações visuais e recursos linguísticos. No contexto da ilustração, a frase proferida recorre à")
-            ],
-          )),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: const Offset(8, 8),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.all(8.0),
+        child: HtmlWidget(question.statement),
+
+        // Column(
+        //   crossAxisAlignment: CrossAxisAlignment.start,
+        //   children: const [
+        //     Text("),
+        //     Center(
+        //       child: Image(
+        //         width: 250,
+        //         height: 250,
+        //         image: AssetImage("assets/images/enem-exemple.png"),
+        //       ),
+        //     ),
+        //     Text(
+        //         "")
+        //   ],
+        // ),
+      ),
     );
   }
 

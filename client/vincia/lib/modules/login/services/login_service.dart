@@ -14,7 +14,9 @@ class LoginService implements ILoginService {
   Future<Either<Failure, Success>> login() async {
     try {
       const scheme = String.fromEnvironment("AUTH0_CUSTOM_SCHEME");
-      await auth.webAuthentication(scheme: scheme).login();
+      var cre = await auth
+          .webAuthentication(scheme: scheme)
+          .login(audience: "vincia-api-v1");
       return Right(Success());
     } catch (e) {
       return Left(Failure());
