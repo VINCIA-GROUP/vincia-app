@@ -5,6 +5,7 @@ import 'package:vincia/util/color_schemes.dart';
 class AppWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
       title: 'Vincia',
       theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
       darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),

@@ -7,6 +7,11 @@ import 'package:vincia/modules/home/page/controller/home_controller.dart';
 class HomePage extends StatelessWidget {
   final HomeController _homeController = Modular.get<HomeController>();
 
+  final itens = [
+    "Coordenadas cartesianas: Entender como as coordenadas cartesianas funcionam e como elas podem ser usadas para descrever pontos em um plano.",
+    "Distância e inclinação: Aprender como encontrar a distância entre dois pontos e a inclinação de uma reta usando coordenadas cartesianas."
+  ];
+
   HomePage({super.key}) {
     _homeController.init();
   }
@@ -107,7 +112,53 @@ class HomePage extends StatelessWidget {
         ),
         body: Column(
           children: [
-            Expanded(child: Container()),
+            Expanded(
+                child: Container(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color: Theme.of(context).colorScheme.primary),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Column(children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: Text(
+                          "Guia de estudos",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Theme.of(context).colorScheme.primary),
+                        ),
+                      ),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: itens.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: Row(
+                              children: [
+                                Checkbox(
+                                  value: false,
+                                  onChanged: (bool? newValue) {},
+                                ),
+                                Expanded(child: Text(itens[index])),
+                              ],
+                            ),
+                          );
+                        },
+                      )
+                    ]),
+                  ),
+                ),
+              ),
+            )),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: Container(

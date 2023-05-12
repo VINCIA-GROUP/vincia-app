@@ -2,7 +2,6 @@ class QuestionTestModel {
   final String statement = '''
               <p>(Enem 2012)</p>
               <img src="data:image/png;base64,$image" alt="Image">
-              <p style="text-align: right;">Citação: citar aqui</p>
               <p>O efeito de sentido da charge é provocado pela combinação de informações visuais e recursos linguísticos. No contexto da ilustração, a frase proferida recorre à</p>
               ''';
 }

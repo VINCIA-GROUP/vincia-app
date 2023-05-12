@@ -2,19 +2,28 @@ import os
 
 from dotenv import load_dotenv
 from flask import Flask
-from authlib.integrations.flask_oauth2 import ResourceProtector
-from app.validators.auth_validator import Auth0JWTBearerTokenValidator
+from flask import jsonify, request
 
 load_dotenv()
 
-require_auth = ResourceProtector()
-validator = Auth0JWTBearerTokenValidator(
-    "dev-zqwk5k31wg11dtkh.us.auth0.com",
-    "vincia-api-v1"
-)
-
-require_auth.register_token_validator(validator)
 
 app = Flask(__name__)
+app.secret_key = "secrete"
+
+# Error handler
+class AuthError(Exception):
+    def __init__(self, error, status_code):
+        self.error = error
+        self.status_code = status_code
+
+@app.errorhandler(AuthError)
+def handle_auth_error(ex):
+    response = jsonify(ex.error)
+    response.status_code = ex.status_code
+    return response
 
 from app.controllers import test_controller
+from app.controllers import question_controller
+
+
+
