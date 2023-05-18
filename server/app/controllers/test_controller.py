@@ -1,6 +1,7 @@
 from flask import jsonify, request, session
 from app import app
 from app.decorator.requires_auth import requires_auth
+from app.controllers.base_controller import *
 
 @app.route("/api/public")
 def public():
@@ -9,7 +10,8 @@ def public():
         "Hello from a public endpoint! You don't need to be"
         " authenticated to see this."
     )
-    return jsonify(message=response)
+    return success_api_response(response)
+
 
 
 @app.route("/api/private")
@@ -20,7 +22,8 @@ def private():
     response = (
         f"Hello from a private endpoint! You need to be {user_id}"
     )
-    return jsonify(message=response)
+    return success_api_response(response)
+
 
 
 # @app.route("/api/private-scoped")
