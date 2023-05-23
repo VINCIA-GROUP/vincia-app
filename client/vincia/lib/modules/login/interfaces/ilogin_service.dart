@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
 
-import '../models/errors.dart';
-import '../models/success.dart';
+import '../../../shared/model/failure_model.dart';
+import '../../../shared/model/success_model.dart';
 
 abstract class ILoginService {
-  Future<Either<Failure, Success>> login();
+  Future<Either<FailureModel, SuccessModel>> login();
 }

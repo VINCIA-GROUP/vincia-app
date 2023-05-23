@@ -1,10 +1,10 @@
 import 'package:auth0_flutter/auth0_flutter.dart';
 import 'package:dartz/dartz.dart';
 
-import '../models/errors.dart';
-import '../models/success.dart';
+import '../../../shared/model/failure_model.dart';
+import '../../../shared/model/success_model.dart';
 
 abstract class IAuthService {
-  Future<Either<Failure, Success>> logout();
-  Future<Either<Failure, UserProfile>> getUserProfile();
+  Future<Either<FailureModel, SuccessModel>> logout();
+  Future<Either<FailureModel, UserProfile>> getUserProfile();
 }

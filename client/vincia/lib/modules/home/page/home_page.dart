@@ -89,7 +89,7 @@ class HomePage extends StatelessWidget {
                       );
                     }
                   }),
-                  Icon(Icons.arrow_drop_down_sharp)
+                  const Icon(Icons.arrow_drop_down_sharp)
                 ],
               ),
               itemBuilder: (BuildContext context) {
@@ -113,7 +113,6 @@ class HomePage extends StatelessWidget {
         body: Column(
           children: [
             Expanded(
-                child: Container(
               child: SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -158,7 +157,7 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
               ),
-            )),
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: Container(

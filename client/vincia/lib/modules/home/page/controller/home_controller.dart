@@ -18,7 +18,7 @@ abstract class _HomeController with Store {
   _HomeController(this._authService);
 
   @action
-  Future init() async {
+  Future<void> init() async {
     var result = await _authService.getUserProfile();
     if (result.isRight()) {
       user = (result as Right).value;
@@ -26,7 +26,7 @@ abstract class _HomeController with Store {
     return;
   }
 
-  Future menuFunction(String action) async {
+  Future<void> menuFunction(String action) async {
     if (action == "logout") {
       var result = await _authService.logout();
       if (result.isRight()) {

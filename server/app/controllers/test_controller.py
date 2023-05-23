@@ -3,7 +3,7 @@ from app import app
 from app.decorator.requires_auth import requires_auth
 from app.controllers.base_controller import *
 
-@app.route("/api/public")
+@app.route("/api/test/public", endpoint="test/public")
 def public():
     """No access token required."""
     response = (
@@ -14,7 +14,7 @@ def public():
 
 
 
-@app.route("/api/private")
+@app.route("/api/test/private", endpoint="test/private")
 @requires_auth(permissions=["read:messages","write:messages"])
 def private():
     user_id = session.get('current_user').get('sub')

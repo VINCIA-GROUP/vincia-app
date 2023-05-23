@@ -29,7 +29,7 @@ mixin _$ProfileController on _ProfileController, Store {
       AsyncAction('_ProfileController.init', context: context);
 
   @override
-  Future<dynamic> init() {
+  Future<void> init() {
     return _$initAsyncAction.run(() => super.init());
   }
 

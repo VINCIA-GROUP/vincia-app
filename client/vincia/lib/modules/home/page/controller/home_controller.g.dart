@@ -28,7 +28,7 @@ mixin _$HomeController on _HomeController, Store {
       AsyncAction('_HomeController.init', context: context);
 
   @override
-  Future<dynamic> init() {
+  Future<void> init() {
     return _$initAsyncAction.run(() => super.init());
   }
 

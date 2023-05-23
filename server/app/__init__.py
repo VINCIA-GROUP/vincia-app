@@ -14,7 +14,7 @@ app.secret_key = os.environ["APP_SECRET_KEY"]
 
 @app.errorhandler(ApiException)
 def handle_auth_error(error):
-    response = jsonify(sucess=False, data=error.to_json())
+    response = jsonify(sucess=False, errors=error.to_json())
     response.status_code = 400
     return response
 

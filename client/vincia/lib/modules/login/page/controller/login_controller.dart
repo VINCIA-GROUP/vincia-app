@@ -17,7 +17,7 @@ abstract class _LoginController with Store {
   LoginState state = InitialState();
 
   @action
-  Future login() async {
+  Future<void> login() async {
     state = LodingState();
     var result = await loginService.login();
     if (result.isRight()) {

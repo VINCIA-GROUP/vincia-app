@@ -17,7 +17,7 @@ abstract class _ProfileController with Store {
   _ProfileController(this._authService);
 
   @action
-  Future init() async {
+  Future<void> init() async {
     var result = await _authService.getUserProfile();
     if (result.isRight()) {
       user = (result as Right).value;

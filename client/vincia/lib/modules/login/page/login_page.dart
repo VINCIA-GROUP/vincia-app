@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:vincia/modules/login/page/controller/login_controller.dart';
+import 'package:vincia/shared/components/error_message_component.dart';
 
 import 'controller/state/login_state.dart';
 
@@ -28,12 +29,8 @@ class LoginPage extends StatelessWidget {
                 return const CircularProgressIndicator();
               }
               if (loginStore.state is FailureState) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    content: Text(
-                        "Erro ao tentar efetuar o login. Por favor tente novamente mais tarde."),
-                  ));
-                });
+                ErrorMessageComponent.showSnackBar(context,
+                    "Erro ao tentar efetuar o login. Por favor tente novamente mais tarde.");
               }
               return _buttonLogin(context, "Log in", () => loginStore.login());
             }),

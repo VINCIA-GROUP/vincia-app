@@ -29,14 +29,14 @@ def get_token_auth_header():
 def requires_permissions(required_permissions, permissions):
     """Determines if the required premissions is present in the Access Token
     """
+    if required_permissions == None or len(required_permissions) <= 0:
+        return True
     for required_permission in required_permissions:
         if required_permission in permissions:
             return True
     return False
 
 def requires_auth(permissions):
-    """Determines if the access token is valid
-    """
     def wrapper(func):
         def decorated(*args, **kwargs):      
                   
