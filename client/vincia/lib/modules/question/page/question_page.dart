@@ -4,6 +4,7 @@ import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
+import 'package:uuid/uuid.dart';
 import 'package:vincia/modules/question/model/alternative_model.dart';
 import 'package:vincia/modules/question/page/controller/question_controller.dart';
 import 'package:vincia/modules/question/page/controller/states/question_states.dart';
@@ -24,6 +25,10 @@ class _QuestionPageState extends State<QuestionPage>
 
   late final AnimationController _chatButtonAnimationController;
   late final AnimationController _chatAnimationController;
+  List<types.Message> _messages = [];
+  final _user = const types.User(
+    id: '82091008-a484-4a89-ae75-a22bf8d6f3ac',
+  );
 
   @override
   void initState() {
@@ -37,6 +42,23 @@ class _QuestionPageState extends State<QuestionPage>
       duration: const Duration(seconds: 3),
       vsync: this,
     );
+  }
+
+  void _addMessage(types.Message message) {
+    setState(() {
+      _messages.insert(0, message);
+    });
+  }
+
+  void _handleSendPressed(types.PartialText message) {
+    final textMessage = types.TextMessage(
+      author: _user,
+      createdAt: DateTime.now().millisecondsSinceEpoch,
+      id: const Uuid().v4(),
+      text: message.text,
+    );
+
+    _addMessage(textMessage);
   }
 
   @override
@@ -131,10 +153,6 @@ class _QuestionPageState extends State<QuestionPage>
   }
 
   Widget _chat(BuildContext context) {
-    List<types.Message> _messages = [];
-    final _user = const types.User(
-      id: '82091008-a484-4a89-ae75-a22bf8d6f3ac',
-    );
     return SizeTransition(
       sizeFactor: CurvedAnimation(
         parent: _chatButtonAnimationController,
@@ -208,7 +226,9 @@ class _QuestionPageState extends State<QuestionPage>
                     color: Theme.of(context).colorScheme.secondary,
                     child: Chat(
                         messages: _messages,
-                        onSendPressed: (a) {},
+                        onSendPressed: _handleSendPressed,
+                        showUserAvatars: true,
+                        showUserNames: true,
                         user: _user),
                   ),
                 ),

@@ -11,19 +11,21 @@ import '../interfaces/iquestion_service.dart';
 
 class QuestionService implements IQuestionService {
   final Auth0 auth;
+  final http.Client client;
   static const String apiUrl = String.fromEnvironment("API_URL");
 
-  QuestionService(this.auth);
+  QuestionService(this.auth, this.client);
 
   @override
   Future<Either<FailureModel, QuestionModel>> getQuestion() async {
     try {
       final token = await getAcessToken();
-      final response = await http.get(
+      final response = await client.get(
         Uri.parse("$apiUrl/api/question"),
         headers: {
           'Authorization': 'Bearer $token',
           'Accept': 'application/json',
+          'Connection': 'keep-alive',
         },
       );
       if (response.statusCode == 200) {
@@ -51,12 +53,13 @@ class QuestionService implements IQuestionService {
 
       var jsonData = jsonEncode(requestData);
 
-      final response = await http.post(Uri.parse("$apiUrl/api/question/answer"),
-          headers: {
-            'Authorization': 'Bearer $token',
-            'Content-Type': 'application/json',
-          },
-          body: jsonData);
+      final response =
+          await client.post(Uri.parse("$apiUrl/api/question/answer"),
+              headers: {
+                'Authorization': 'Bearer $token',
+                'Content-Type': 'application/json',
+              },
+              body: jsonData);
       if (response.statusCode == 200) {
         return Right(SuccessModel());
       } else {

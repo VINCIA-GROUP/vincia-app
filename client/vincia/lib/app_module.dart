@@ -13,6 +13,7 @@ import 'modules/login/page/login_page.dart';
 import 'modules/question/page/controller/question_controller.dart';
 import 'modules/question/page/question_page.dart';
 import 'modules/question/services/question_service.dart';
+import 'package:http/http.dart' as http;
 
 class AppModule extends Module {
   static const domain = String.fromEnvironment("AUTH0_DOMAIN");
@@ -21,9 +22,10 @@ class AppModule extends Module {
   @override
   List<Bind> get binds => [
         Bind((i) => Auth0(domain, clientId)),
+        Bind((i) => http.Client()),
         Bind((i) => LoginService(i())),
         Bind((i) => AuthService(i())),
-        Bind((i) => QuestionService(i())),
+        Bind((i) => QuestionService(i(), i())),
         Bind((i) => LoginController(i())),
         Bind((i) => HomeController(i())),
         Bind((i) => ProfileController(i())),

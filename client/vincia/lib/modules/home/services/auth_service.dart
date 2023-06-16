@@ -1,7 +1,7 @@
 import 'package:auth0_flutter/auth0_flutter.dart';
 import 'package:dartz/dartz.dart';
 
-import '../../../shared/errors/error_model.dart';
+import '../../../shared/errors/aplication_errors.dart';
 import '../interfaces/iauth_service.dart';
 import '../../../shared/model/failure_model.dart';
 import '../../../shared/model/success_model.dart';
@@ -18,8 +18,7 @@ class AuthService implements IAuthService {
       await auth.webAuthentication(scheme: scheme).logout();
       return Right(SuccessModel());
     } catch (e) {
-      //TODO: alterar error
-      return Left(FailureModel(ErrorModel("2", "Erro ao efetuar o logout")));
+      return Left(FailureModel.fromEnum(AplicationErrors.internalError));
     }
   }
 
@@ -29,9 +28,7 @@ class AuthService implements IAuthService {
       var credentials = await auth.credentialsManager.credentials();
       return Right(credentials.user);
     } catch (e) {
-      //TODO: alterar error
-      return Left(
-          FailureModel(ErrorModel("1", "Erro ao obter as credenciais")));
+      return Left(FailureModel.fromEnum(AplicationErrors.internalError));
     }
   }
 }
