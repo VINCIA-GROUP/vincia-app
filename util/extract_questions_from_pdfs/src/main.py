@@ -44,9 +44,18 @@ async def main_async():
         for q in html_questions:
             arquivo.write(q)           
     print("Fim")
+    
+    
+async def main2_async():
+    print("Inicio") 
+    file_name = "ENEM_2021_P1_CAD_07_DIA_2_AZUL-PG1"
+    pdf_path_in = f"resources/{file_name}.pdf"
+    pdf_path_temp = f"output/{file_name}.zip"
+    await AdobeApiFunctions.extract_info_from_pdf(pdf_path_in, pdf_path_temp)
+    print("Fim")
 
 
-asyncio.run(main_async())
+asyncio.run(main2_async())
 
 
 

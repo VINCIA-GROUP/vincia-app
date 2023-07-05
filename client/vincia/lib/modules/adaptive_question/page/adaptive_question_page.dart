@@ -1,45 +1,55 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:uuid/uuid.dart';
-import 'package:vincia/modules/question/model/alternative_model.dart';
-import 'package:vincia/modules/question/page/controller/question_controller.dart';
-import 'package:vincia/modules/question/page/controller/states/question_states.dart';
+import 'package:vincia/modules/adaptive_question/model/alternative_model.dart';
+import 'package:vincia/modules/adaptive_question/page/controller/adaptive_question_controller.dart';
+import 'package:vincia/modules/adaptive_question/page/controller/states/question_states.dart';
 import 'package:vincia/shared/components/error_message_component.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
-class QuestionPage extends StatefulWidget {
-  const QuestionPage({super.key});
+class AdaptiveQuestionPage extends StatefulWidget {
+  const AdaptiveQuestionPage({super.key});
 
   @override
-  State<QuestionPage> createState() => _QuestionPageState();
+  State<AdaptiveQuestionPage> createState() => _AdaptiveQuestionPageState();
 }
 
-class _QuestionPageState extends State<QuestionPage>
+class _AdaptiveQuestionPageState extends State<AdaptiveQuestionPage>
     with TickerProviderStateMixin {
-  final _questionController = Modular.get<QuestionController>();
+  final _questionController = Modular.get<AdaptiveQuestionController>();
 
   late final AnimationController _chatButtonAnimationController;
   late final AnimationController _chatAnimationController;
+  late final Future _initQuestion;
   List<types.Message> _messages = [];
   final _user = const types.User(
     id: '82091008-a484-4a89-ae75-a22bf8d6f3ac',
   );
+  final _user1 = const types.User(
+    id: '82091009-a484-4a89-ae75-a22bf8d6f3ac',
+  );
 
   @override
   void initState() {
+    final textMessage1 = types.TextMessage(
+      author: _user1,
+      createdAt: DateTime.now().millisecondsSinceEpoch,
+      id: const Uuid().v4(),
+      text: "Hello",
+    );
+    _messages.add(textMessage1);
     super.initState();
-    _questionController.init();
+    _initQuestion = _questionController.init();
     _chatButtonAnimationController = AnimationController(
-      duration: const Duration(seconds: 3),
+      duration: const Duration(seconds: 1),
       vsync: this,
     );
     _chatAnimationController = AnimationController(
-      duration: const Duration(seconds: 3),
+      duration: const Duration(seconds: 1),
       vsync: this,
     );
   }
@@ -70,7 +80,7 @@ class _QuestionPageState extends State<QuestionPage>
           icon: const Icon(Icons.close),
           color: Colors.red,
           onPressed: () {
-            Modular.to.navigate("/home");
+            Modular.to.pop("/home");
           },
         ),
         title: Center(
@@ -225,6 +235,10 @@ class _QuestionPageState extends State<QuestionPage>
                     height: constraints.maxHeight - 40 - 30,
                     color: Theme.of(context).colorScheme.secondary,
                     child: Chat(
+                        theme: DefaultChatTheme(
+                          inputBackgroundColor:
+                              Theme.of(context).colorScheme.secondary,
+                        ),
                         messages: _messages,
                         onSendPressed: _handleSendPressed,
                         showUserAvatars: true,
@@ -321,7 +335,9 @@ class _QuestionPageState extends State<QuestionPage>
 
   @override
   void dispose() {
+    _initQuestion.ignore();
     _chatButtonAnimationController.dispose();
+    _chatAnimationController.dispose();
     super.dispose();
   }
 }

@@ -3,21 +3,21 @@ import 'package:dartz/dartz.dart';
 import 'package:vincia/shared/errors/aplication_errors.dart';
 import 'package:vincia/shared/model/success_model.dart';
 import '../../../shared/model/failure_model.dart';
-import 'package:vincia/modules/question/model/question_model.dart';
+import 'package:vincia/modules/adaptive_question/model/adaptive_question_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import '../interfaces/iquestion_service.dart';
+import '../interfaces/i_adaptive_question_service.dart';
 
-class QuestionService implements IQuestionService {
+class AdaptiveQuestionService implements IAdaptiveQuestionService {
   final Auth0 auth;
   final http.Client client;
   static const String apiUrl = String.fromEnvironment("API_URL");
 
-  QuestionService(this.auth, this.client);
+  AdaptiveQuestionService(this.auth, this.client);
 
   @override
-  Future<Either<FailureModel, QuestionModel>> getQuestion() async {
+  Future<Either<FailureModel, AdaptiveQuestionModel>> getQuestion() async {
     try {
       final token = await getAcessToken();
       final response = await client.get(
@@ -30,7 +30,7 @@ class QuestionService implements IQuestionService {
       );
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body)["data"];
-        return Right(QuestionModel.fromJson(body));
+        return Right(AdaptiveQuestionModel.fromJson(body));
       } else {
         final body = jsonDecode(response.body)["errors"];
         return Left(FailureModel.fromJson(body));

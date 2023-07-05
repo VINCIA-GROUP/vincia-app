@@ -33,7 +33,6 @@ class AdobeApiFunctions:
             extract_pdf_options: ExtractPDFOptions = ExtractPDFOptions.builder() \
                 .with_elements_to_extract([ExtractElementType.TEXT]) \
                 .with_elements_to_extract_renditions([ExtractRenditionsElementType.FIGURES]) \
-                .with_get_char_info(True) \
                 .build()
             extract_pdf_operation.set_options(extract_pdf_options)
 

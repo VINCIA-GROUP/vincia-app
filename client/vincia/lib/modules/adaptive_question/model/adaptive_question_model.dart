@@ -1,6 +1,6 @@
-import 'package:vincia/modules/question/model/alternative_model.dart';
+import 'package:vincia/modules/adaptive_question/model/alternative_model.dart';
 
-class QuestionModel {
+class AdaptiveQuestionModel {
   String id;
   String statement;
   String answer;
@@ -8,10 +8,10 @@ class QuestionModel {
   bool isEssay;
   List<AlternativeModel> alternatives = [];
 
-  QuestionModel(this.id, this.statement, this.answer, this.difficulty,
+  AdaptiveQuestionModel(this.id, this.statement, this.answer, this.difficulty,
       this.isEssay, this.alternatives);
 
-  factory QuestionModel.fromJson(Map<String, dynamic> json) {
+  factory AdaptiveQuestionModel.fromJson(Map<String, dynamic> json) {
     var alternativesList = <AlternativeModel>[];
 
     if (json['alternatives'] != null) {
@@ -21,7 +21,7 @@ class QuestionModel {
           .toList();
     }
 
-    return QuestionModel(
+    return AdaptiveQuestionModel(
       json['id'] as String,
       json['statement'] as String,
       json['answer'] as String,

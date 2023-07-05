@@ -171,7 +171,7 @@ class HomePage extends StatelessWidget {
                       "Questões",
                       Icons.checklist_rtl,
                       () {
-                        Modular.to.navigate("/question");
+                        Modular.to.pushNamed("/question");
                       },
                     ),
                     _carouselButton(

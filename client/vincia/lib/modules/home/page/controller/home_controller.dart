@@ -35,7 +35,7 @@ abstract class _HomeController with Store {
       return;
     }
     if (action == "profile") {
-      Modular.to.navigate("/profile");
+      Modular.to.pushNamed("/profile");
       return;
     }
   }

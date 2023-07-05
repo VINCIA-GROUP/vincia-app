@@ -19,7 +19,7 @@ class ProfilePage extends StatelessWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.close),
-          onPressed: () => Modular.to.navigate("/home"),
+          onPressed: () => Modular.to.pop(),
         ),
       ),
       body: Observer(builder: (context) {

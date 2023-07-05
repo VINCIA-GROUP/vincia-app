@@ -2,17 +2,18 @@ import 'dart:async';
 
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
-import 'package:vincia/modules/question/interfaces/iquestion_service.dart';
-import 'package:vincia/modules/question/model/question_model.dart';
-import 'package:vincia/modules/question/page/controller/states/question_states.dart';
+import 'package:vincia/modules/adaptive_question/interfaces/i_adaptive_question_service.dart';
+import 'package:vincia/modules/adaptive_question/model/adaptive_question_model.dart';
+import 'package:vincia/modules/adaptive_question/page/controller/states/question_states.dart';
 import 'package:vincia/shared/model/failure_model.dart';
 
-part 'question_controller.g.dart';
+part 'adaptive_question_controller.g.dart';
 
-class QuestionController = _QuestionController with _$QuestionController;
+class AdaptiveQuestionController = _AdaptiveQuestionController
+    with _$AdaptiveQuestionController;
 
-abstract class _QuestionController with Store {
-  final IQuestionService _questionService;
+abstract class _AdaptiveQuestionController with Store {
+  final IAdaptiveQuestionService _questionService;
 
   Timer? timeWatcher;
 
@@ -20,12 +21,12 @@ abstract class _QuestionController with Store {
   Duration duration = const Duration(seconds: 0);
 
   @observable
-  QuestionModel? question;
+  AdaptiveQuestionModel? question;
 
   @observable
   QuestionState state = InitialState();
 
-  _QuestionController(this._questionService);
+  _AdaptiveQuestionController(this._questionService);
 
   @computed
   String get time {

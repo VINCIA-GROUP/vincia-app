@@ -6,3 +6,5 @@
 3 - excecução do ambiente 
     . venv/Scripts/activate
 4 - .\venv\Scripts\pip.exe intall -r requirements.txt
+- desativar env
+    deactivate
