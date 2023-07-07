@@ -42,13 +42,14 @@ class AdaptiveQuestionService implements IAdaptiveQuestionService {
 
   @override
   Future<Either<FailureModel, SuccessModel>> sendAnswerQuestion(
-      String answer, Duration duration) async {
+      String answer, Duration duration, String historyQuestionId) async {
     try {
       final token = await getAcessToken();
 
       final Map<String, dynamic> requestData = {
         'answer': answer,
         'duration': duration.toString(),
+        'historyQuestionId': historyQuestionId
       };
 
       var jsonData = jsonEncode(requestData);
@@ -74,5 +75,11 @@ class AdaptiveQuestionService implements IAdaptiveQuestionService {
   Future<String> getAcessToken() async {
     var credentials = await auth.credentialsManager.credentials();
     return credentials.accessToken;
+  }
+
+  @override
+  Future<String> getUserId() async {
+    var credentials = await auth.credentialsManager.credentials();
+    return credentials.user.sub;
   }
 }

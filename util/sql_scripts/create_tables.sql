@@ -51,3 +51,12 @@ CREATE TABLE grades(
 );
 
 
+CREATE TABLE chats_messages(
+  id VARCHAR PRIMARY KEY NOT NULL,
+  history_of_question_id VARCHAR NOT NULL,
+  user_id VARCHAR NOT NULL,
+  role VARCHAR NOT NULL,
+  content TEXT NOT NULL,
+  create_date TIMESTAMP NOT NULL,
+  FOREIGN KEY (history_of_question_id) REFERENCES history_of_questions(id)
+);

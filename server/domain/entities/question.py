@@ -10,8 +10,8 @@ class Question(entity):
         self.is_essay = is_essay
         self.alternatives = []
     
-    def add_alternative(self, alternative):
-        self.alternatives.append(alternative)
+    def add_list_alternative(self, alternatives):
+        self.alternatives = alternatives
     
     def to_json(self):
         allist = list(map(lambda x: {"id": x.id, "text": x.text}, self.alternatives))

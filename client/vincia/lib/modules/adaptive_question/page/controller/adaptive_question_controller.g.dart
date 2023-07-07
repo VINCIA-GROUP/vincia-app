@@ -48,6 +48,54 @@ mixin _$AdaptiveQuestionController on _AdaptiveQuestionController, Store {
     });
   }
 
+  late final _$chatIsOpenAtom =
+      Atom(name: '_AdaptiveQuestionController.chatIsOpen', context: context);
+
+  @override
+  bool? get chatIsOpen {
+    _$chatIsOpenAtom.reportRead();
+    return super.chatIsOpen;
+  }
+
+  @override
+  set chatIsOpen(bool? value) {
+    _$chatIsOpenAtom.reportWrite(value, super.chatIsOpen, () {
+      super.chatIsOpen = value;
+    });
+  }
+
+  late final _$messagesAtom =
+      Atom(name: '_AdaptiveQuestionController.messages', context: context);
+
+  @override
+  List<types.Message> get messages {
+    _$messagesAtom.reportRead();
+    return super.messages;
+  }
+
+  @override
+  set messages(List<types.Message> value) {
+    _$messagesAtom.reportWrite(value, super.messages, () {
+      super.messages = value;
+    });
+  }
+
+  late final _$userAtom =
+      Atom(name: '_AdaptiveQuestionController.user', context: context);
+
+  @override
+  types.User? get user {
+    _$userAtom.reportRead();
+    return super.user;
+  }
+
+  @override
+  set user(types.User? value) {
+    _$userAtom.reportWrite(value, super.user, () {
+      super.user = value;
+    });
+  }
+
   late final _$stateAtom =
       Atom(name: '_AdaptiveQuestionController.state', context: context);
 
@@ -72,6 +120,16 @@ mixin _$AdaptiveQuestionController on _AdaptiveQuestionController, Store {
     return _$initAsyncAction.run(() => super.init());
   }
 
+  late final _$handleSendPressedAsyncAction = AsyncAction(
+      '_AdaptiveQuestionController.handleSendPressed',
+      context: context);
+
+  @override
+  Future<void> handleSendPressed(types.PartialText message) {
+    return _$handleSendPressedAsyncAction
+        .run(() => super.handleSendPressed(message));
+  }
+
   late final _$_AdaptiveQuestionControllerActionController =
       ActionController(name: '_AdaptiveQuestionController', context: context);
 
@@ -87,10 +145,24 @@ mixin _$AdaptiveQuestionController on _AdaptiveQuestionController, Store {
   }
 
   @override
+  void chatOpen() {
+    final _$actionInfo = _$_AdaptiveQuestionControllerActionController
+        .startAction(name: '_AdaptiveQuestionController.chatOpen');
+    try {
+      return super.chatOpen();
+    } finally {
+      _$_AdaptiveQuestionControllerActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 duration: ${duration},
 question: ${question},
+chatIsOpen: ${chatIsOpen},
+messages: ${messages},
+user: ${user},
 state: ${state},
 time: ${time}
     ''';
