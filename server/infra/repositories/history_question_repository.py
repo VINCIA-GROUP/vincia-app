@@ -19,4 +19,8 @@ class HistoryQuestionsRepository(Repository):
         cursor.close()
         return question
     
+    def create(self, id, date, hit_level, var_grade, time, question_id, user_id):
+        cursor = self.conn.cursor()
+        cursor.execute("INSERT INTO history_of_questions (id, date, hit_level, var_grade, time, question_id, user_id) VALUES (%s, %s, %s, %s, %s, %s, %s);", (id, date, hit_level, var_grade, time, question_id, user_id))
+        cursor.close()
     

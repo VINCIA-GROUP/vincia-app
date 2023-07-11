@@ -20,7 +20,7 @@ abstract class _AdaptiveQuestionController with Store {
     id: '82091009-a484-4a89-ae75-a22bf8d6f3ac',
   );
 
-  final String history_question_id = const Uuid().v4();
+  final String historyQuestionId = const Uuid().v4();
 
   Timer? timeWatcher;
 
@@ -86,7 +86,7 @@ abstract class _AdaptiveQuestionController with Store {
     if (state is InitialState) {
       timeWatcher?.cancel();
       _questionService.sendAnswerQuestion(
-          alternativeId, duration, history_question_id);
+          alternativeId, duration, historyQuestionId, question!.id);
       if (alternativeId == question!.answer) {
         state = AnsweredQuestionState(true, alternativeId);
       } else {
@@ -109,5 +109,21 @@ abstract class _AdaptiveQuestionController with Store {
       text: message.text,
     );
     messages = List.from(messages..insert(0, textMessage));
+    var result =
+        await _questionService.sendMessage(message.text, historyQuestionId);
+    if (result.isRight()) {
+      var response = (result as Right).value;
+      final textMessage = types.TextMessage(
+        author: _chatBotUser,
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        id: const Uuid().v4(),
+        text: response,
+      );
+      messages = List.from(messages..insert(0, textMessage));
+    }
+    if (result.isLeft()) {
+      FailureModel value = (result as Left).value;
+      state = FailureState(value);
+    }
   }
 }

@@ -14,7 +14,6 @@ class ChatService:
         
     def send_message(self, user_id, history_question_id, message):
         
-        # Verificar se já existe um chat: serach(user_id, history_id)
         chat_messages = None
         try:
             chat_messages = self.chat_repository.get_by_history_question_id(history_question_id, user_id)
@@ -24,7 +23,7 @@ class ChatService:
             else:
                 raise error
         
-        user_message = ChatMessages(str(uuid.uuid4()), history_question_id, "user", message, datetime.datetime.now() + datetime.timedelta(milliseconds=2))
+        user_message = ChatMessages(str(uuid.uuid4()), history_question_id, "user", message, datetime.datetime.now(), chat_messages[-1].sequence + 1)
         chat_messages.append(user_message)
         messages = list(map(lambda x : x.to_json(), chat_messages))
         
@@ -34,7 +33,7 @@ class ChatService:
             messages = messages,
             temperature = 0.3
             )
-            assistant_message = ChatMessages(str(uuid.uuid4()), history_question_id, "assistant", response.choices[0].message.content, datetime.datetime.now() + datetime.timedelta(milliseconds=3))
+            assistant_message = ChatMessages(str(uuid.uuid4()), history_question_id, "assistant", response.choices[0].message.content, datetime.datetime.now(), chat_messages[-1].sequence + 1)
             self.chat_repository.insert_range_messages([user_message, assistant_message], user_id)
             self.chat_repository.unit_of_work()
             return response.choices[0].message.content
@@ -62,9 +61,9 @@ class ChatService:
             if(value.id == question.answer):
                 answer = f"{chr(ord(letter) + index)}){value.text}"
         chat_message_system = ChatMessages(str(uuid.uuid4()), history_question_id,  "system",  
-                                    f"Você é o Vincia Bot, um professor que irá tirar todas as dúvidas que o aluno tiver em relação a seguinte questão '{statement}' com as alternativas '{alternatives}', sendo a resposta certa a alternativa '{answer}'", datetime.datetime.now())
+                                    f"Você é o Vincia Bot, um professor que irá tirar todas as dúvidas que o aluno tiver em relação a seguinte questão '{statement}' com as alternativas '{alternatives}', sendo a resposta certa a alternativa '{answer}'", datetime.datetime.now(), 1)
         
-        chat_message_assistant = ChatMessages(str(uuid.uuid4()),  history_question_id,  "assistant", "Olá, sou o Vincia Bot é irei esclarecer todas as suas dúvidas. Como posso te ajudar?",  datetime.datetime.now()+ datetime.timedelta(milliseconds=1))
+        chat_message_assistant = ChatMessages(str(uuid.uuid4()),  history_question_id,  "assistant", "Olá, sou o Vincia Bot é irei esclarecer todas as suas dúvidas. Como posso te ajudar?",  datetime.datetime.now(), 2)
         return [chat_message_system, chat_message_assistant]
     
     def remover_tags_img(self, html):

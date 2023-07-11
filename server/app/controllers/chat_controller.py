@@ -11,6 +11,7 @@ from app import connection
 
 
 @app.route("/api/chat", methods=["POST"], endpoint="chat")
+@requires_auth(None)
 def send_message(): 
     
         question_repository = QuestionsRepository(connection)
@@ -19,6 +20,8 @@ def send_message():
         service = ChatService(history_question_repository, question_repository, chat_repository)
 
         data = request.get_json()
-        messages = data.get('messages')
-        response = service.send_message("teste", "teste", messages)
+        user_id = session.get('current_user').get('sub')
+        history_question_id = data.get('historyQuestionId')
+        message = data.get('message') 
+        response = service.send_message(user_id, history_question_id, message)
         return success_api_response(data=response)
