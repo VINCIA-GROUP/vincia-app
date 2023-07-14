@@ -13,16 +13,11 @@ class ChatService:
         self.chat_repository = chat_repository
         
     def send_message(self, user_id, history_question_id, message):
-        
-        chat_messages = None
-        try:
-            chat_messages = self.chat_repository.get_by_history_question_id(history_question_id, user_id)
-        except ApiException as error:
-            if(any(isinstance(item, ChatNotFound) for item in error.errors)):
-                chat_messages = self.create_new_chat(history_question_id, user_id)
-            else:
-                raise error
-        
+
+        chat_messages = self.chat_repository.get_by_history_question_id(history_question_id, user_id)
+        if(chat_messages == None):
+            chat_messages = self.create_new_chat(history_question_id, user_id)
+
         user_message = ChatMessages(str(uuid.uuid4()), history_question_id, "user", message, datetime.datetime.now(), chat_messages[-1].sequence + 1)
         chat_messages.append(user_message)
         messages = list(map(lambda x : x.to_json(), chat_messages))
@@ -35,7 +30,7 @@ class ChatService:
             )
             assistant_message = ChatMessages(str(uuid.uuid4()), history_question_id, "assistant", response.choices[0].message.content, datetime.datetime.now(), chat_messages[-1].sequence + 1)
             self.chat_repository.insert_range_messages([user_message, assistant_message], user_id)
-            self.chat_repository.unit_of_work()
+            self.chat_repository.commit()
             return response.choices[0].message.content
         except Exception as e:
             raise ApiException(ChatError())
@@ -43,8 +38,10 @@ class ChatService:
        
         
     def create_new_chat(self,  history_question_id, user_id):
-        history_question = self.history_question_repository.get_by_id(history_question_id, user_id)
-        question = self.question_repository.get_by_id(history_question.question_id)
+        question_id = self.history_question_repository.get_question_id(history_question_id, user_id)
+        if(question_id == None):
+            raise ApiException(HistoryOfQuestionNotFound())
+        question = self.question_repository.get_by_id(question_id)
         messages = self.generate_initial_messages(question, history_question_id)
         self.chat_repository.insert_range_messages(messages, user_id)
         return messages

@@ -11,3 +11,16 @@ class HistoryOfQuestionNotFound(ApiError):
 class ChatNotFound(ApiError):
     def __init__(self):
         super().__init__("2003", "Chat not found.")
+        
+
+class HistoryOfQuestionIdInvalid(ApiError):
+    def __init__(self):
+        super().__init__("2004", "The history of question id is invalid.")
+        
+class AbilityNotFound(ApiError):
+    def __init__(self):
+        super().__init__("2005", "no ability found.")
+        
+class QuestionNotFound(ApiError):
+    def __init__(self):
+        super().__init__("2006", "no question found.")

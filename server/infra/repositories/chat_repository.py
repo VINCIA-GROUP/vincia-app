@@ -25,7 +25,7 @@ class ChatRepository(Repository):
         cursor.execute("SELECT c.id, c.history_of_question_id, c.role, c.content, c.create_date, c.sequence FROM chats_messages c WHERE c.history_of_question_id = %s and c.user_id = %s;", (history_question_id, user_id,))
         if(cursor.rowcount <= 0):
             cursor.close()
-            raise ApiException(ChatNotFound())
+            return None
         messages_tuple = cursor.fetchall()
         messages = [] 
         for message_tuple in messages_tuple:            

@@ -41,8 +41,8 @@ class AdaptiveQuestionService implements IAdaptiveQuestionService {
   }
 
   @override
-  Future<Either<FailureModel, SuccessModel>> sendAnswerQuestion(String answer,
-      Duration duration, String historyQuestionId, String questionId) async {
+  Future<Either<FailureModel, SuccessModel>> sendAnswerQuestion(
+      String answer, Duration duration, String historyQuestionId) async {
     try {
       final token = await getAcessToken();
 
@@ -50,7 +50,6 @@ class AdaptiveQuestionService implements IAdaptiveQuestionService {
         'answer': answer,
         'duration': duration.toString(),
         'historyQuestionId': historyQuestionId,
-        'questionId': questionId
       };
 
       var jsonData = jsonEncode(requestData);

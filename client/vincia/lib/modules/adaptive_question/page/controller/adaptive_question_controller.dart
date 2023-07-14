@@ -20,8 +20,6 @@ abstract class _AdaptiveQuestionController with Store {
     id: '82091009-a484-4a89-ae75-a22bf8d6f3ac',
   );
 
-  final String historyQuestionId = const Uuid().v4();
-
   Timer? timeWatcher;
 
   @observable
@@ -86,7 +84,7 @@ abstract class _AdaptiveQuestionController with Store {
     if (state is InitialState) {
       timeWatcher?.cancel();
       _questionService.sendAnswerQuestion(
-          alternativeId, duration, historyQuestionId, question!.id);
+          alternativeId, duration, question!.historyOfQuestionId);
       if (alternativeId == question!.answer) {
         state = AnsweredQuestionState(true, alternativeId);
       } else {
@@ -109,8 +107,8 @@ abstract class _AdaptiveQuestionController with Store {
       text: message.text,
     );
     messages = List.from(messages..insert(0, textMessage));
-    var result =
-        await _questionService.sendMessage(message.text, historyQuestionId);
+    var result = await _questionService.sendMessage(
+        message.text, question!.historyOfQuestionId);
     if (result.isRight()) {
       var response = (result as Right).value;
       final textMessage = types.TextMessage(

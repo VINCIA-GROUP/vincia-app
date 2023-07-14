@@ -7,8 +7,8 @@ import '../model/adaptive_question_model.dart';
 
 abstract class IAdaptiveQuestionService {
   Future<Either<FailureModel, AdaptiveQuestionModel>> getQuestion();
-  Future<Either<FailureModel, SuccessModel>> sendAnswerQuestion(String answer,
-      Duration duration, String historyQuestionId, String questionId);
+  Future<Either<FailureModel, SuccessModel>> sendAnswerQuestion(
+      String answer, Duration duration, String historyQuestionId);
   Future<String> getUserId();
   Future<Either<FailureModel, String>> sendMessage(
       String message, String historyQuestionId);

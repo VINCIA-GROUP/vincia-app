@@ -18,7 +18,10 @@ CREATE TABLE questions(
   id uuid PRIMARY KEY NOT NULL,
   statement TEXT NOT NULL,
   answer TEXT NOT NULL,
-  difficulty INTEGER NOT NULL,
+  rating INTEGER NOT NULL,
+  rating_deviation INTEGER NOT NULL,
+  volatility FLOAT4 NOT NULL,
+  last_rating_update DATE NOT NULL,
   is_essay BOOLEAN NOT NULL,
   ability_id uuid NOT NULL,
   FOREIGN KEY (ability_id) REFERENCES abilities(id)
@@ -33,21 +36,26 @@ CREATE TABLE alternatives(
 
 CREATE TABLE history_of_questions(
   id uuid PRIMARY KEY NOT NULL,
-  date DATE NOT NULL,
-  hit_level INTEGER NOT NULL,
-  var_grade INTEGER NOT NULL,
-  time INTERVAL NOT NULL,
+  create_at DATE NOT NULL,
+  answer_at DATE,
+  hit_level INTEGER,
+  rating INTEGER,
+  rating_deviation INTEGER,
+  volatility FLOAT4,
+  time INTERVAL,
   question_id uuid NOT NULL,
   user_id VARCHAR NOT NULL,
   FOREIGN KEY (question_id) REFERENCES questions(id)
 );
 
-CREATE TABLE grades(
+CREATE TABLE abilities_rating(
   id uuid PRIMARY KEY NOT NULL,
-  grade INTEGER NOT NULL,
-  question_id uuid NOT NULL,
+  rating INTEGER NOT NULL,
+  rating_deviation INTEGER NOT NULL,
+  volatility FLOAT4 NOT NULL,
+  abilitie_id uuid NOT NULL,
   user_id VARCHAR NOT NULL,
-  FOREIGN KEY (question_id) REFERENCES questions(id)
+  FOREIGN KEY (abilitie_id) REFERENCES abilities(id)
 );
 
 
