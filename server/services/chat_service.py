@@ -18,7 +18,7 @@ class ChatService:
         if(chat_messages == None):
             chat_messages = self.create_new_chat(history_question_id, user_id)
 
-        user_message = ChatMessages(str(uuid.uuid4()), history_question_id, "user", message, datetime.datetime.now(), chat_messages[-1].sequence + 1)
+        user_message = ChatMessages(str(uuid.uuid4()), history_question_id, "user", message, datetime.datetime.utcnow(), chat_messages[-1].sequence + 1)
         chat_messages.append(user_message)
         messages = list(map(lambda x : x.to_json(), chat_messages))
         
@@ -28,7 +28,7 @@ class ChatService:
             messages = messages,
             temperature = 0.3
             )
-            assistant_message = ChatMessages(str(uuid.uuid4()), history_question_id, "assistant", response.choices[0].message.content, datetime.datetime.now(), chat_messages[-1].sequence + 1)
+            assistant_message = ChatMessages(str(uuid.uuid4()), history_question_id, "assistant", response.choices[0].message.content, datetime.datetime.utcnow(), chat_messages[-1].sequence + 1)
             self.chat_repository.insert_range_messages([user_message, assistant_message], user_id)
             self.chat_repository.commit()
             return response.choices[0].message.content
@@ -58,9 +58,9 @@ class ChatService:
             if(value.id == question.answer):
                 answer = f"{chr(ord(letter) + index)}){value.text}"
         chat_message_system = ChatMessages(str(uuid.uuid4()), history_question_id,  "system",  
-                                    f"Você é o Vincia Bot, um professor que irá tirar todas as dúvidas que o aluno tiver em relação a seguinte questão '{statement}' com as alternativas '{alternatives}', sendo a resposta certa a alternativa '{answer}'", datetime.datetime.now(), 1)
+                                    f"Você é o Vincia Bot, um professor disponível para esclarecer todas as dúvidas que o aluno possa ter em relação à seguinte questão: '{statement}', com as alternativas '{alternatives}'. A alternativa correta é a '{answer}'. Primeiramente, elabore sua própria solução para o problema. Em seguida, verifique se você chegou à alternativa correta. Caso não tenha chegado, refaça o processo até encontrar a resposta correta. Após isso, responda todas as perguntas do aluno referentes à questão.", datetime.datetime.utcnow(), 1)
         
-        chat_message_assistant = ChatMessages(str(uuid.uuid4()),  history_question_id,  "assistant", "Olá, sou o Vincia Bot é irei esclarecer todas as suas dúvidas. Como posso te ajudar?",  datetime.datetime.now(), 2)
+        chat_message_assistant = ChatMessages(str(uuid.uuid4()),  history_question_id,  "assistant", "Olá, sou o Vincia Bot é irei esclarecer todas as suas dúvidas. Como posso te ajudar?",  datetime.datetime.utcnow(), 2)
         return [chat_message_system, chat_message_assistant]
     
     def remover_tags_img(self, html):

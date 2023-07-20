@@ -2,7 +2,7 @@ from domain.entities.entity import entity
 from datetime import datetime
 
 class Question(entity):
-    def __init__(self, id, statement, answer, is_essay, rating=0, rating_deviation=0, volatility=0, last_rating_update=datetime.min):
+    def __init__(self, id, statement, answer, is_essay, ability_id, rating=0, rating_deviation=0, volatility=0, last_rating_update=datetime.min):
         self.id = id
         self.statement = statement
         self.answer = answer
@@ -11,6 +11,7 @@ class Question(entity):
         self.volatility = volatility
         self.last_rating_update = last_rating_update
         self.is_essay = is_essay
+        self.ability_id = ability_id
         self.alternatives = []
     
     def add_list_alternative(self, alternatives):

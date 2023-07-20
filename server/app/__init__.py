@@ -16,17 +16,15 @@ app = Flask(__name__)
 app.secret_key = os.environ["APP_SECRET_KEY"]
 
 sc = os.environ["CONNECTION_STRING_DB"]    
+# Este talvez não seja o melhor geito de criar a conecção.
 connection = psycopg2.connect(sc, sslmode='require',)
 
-@app.errorhandler(ApiException)
-def handle_auth_error(error):
-    response = jsonify(sucess=False, errors=error.to_json())
-    response.status_code = 400
-    return response
 
+from app.decorator import error_handler
 from app.controllers import test_controller
 from app.controllers import question_controller
 from app.controllers import chat_controller
+from app.decorator import after_request_callback
 
 
 
