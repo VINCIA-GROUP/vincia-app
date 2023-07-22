@@ -24,3 +24,7 @@ class AbilityNotFound(ApiError):
 class QuestionNotFound(ApiError):
     def __init__(self):
         super().__init__("2006", "no question found.")
+        
+class AbilityRatingCreateFailed(ApiError):
+    def __init__(self):
+        super().__init__("2007", "ability rating creation failed.")

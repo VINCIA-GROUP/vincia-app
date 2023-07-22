@@ -25,9 +25,9 @@ class QuestionsRepository(Repository):
         cursor.close()
         return question
     
-    def get_question_by_rating(self, rating, limit):
+    def get_question_by_rating(self, rating, limit, ability_id):
         cursor = self.conn.cursor()
-        cursor.execute("SELECT q.id, q.statement, q.answer, q.rating, q.rating_deviation, q.volatility, q.last_rating_update, q.is_essay, q.ability_id FROM questions q WHERE rating BETWEEN 0 AND (SELECT MAX(rating) FROM questions) ORDER BY ABS(q.rating - %s) LIMIT %s;", (rating, limit))
+        cursor.execute("SELECT q.id, q.statement, q.answer, q.rating, q.rating_deviation, q.volatility, q.last_rating_update, q.is_essay, q.ability_id FROM questions q WHERE ability_id = %s AND rating BETWEEN 0 AND (SELECT MAX(rating) FROM questions) ORDER BY ABS(q.rating - %s) LIMIT %s;", (ability_id,rating, limit))
         if(cursor.rowcount <= 0):
             cursor.close()
             return None

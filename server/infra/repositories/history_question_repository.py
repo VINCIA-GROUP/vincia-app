@@ -40,13 +40,20 @@ class HistoryQuestionsRepository(Repository):
         histories_tuple = cursor.fetchall()
         histories = []
         for history_tuple in histories_tuple:            
-            id, create_at, answer_at, hit_level, time, question_id, q_user_id, calculate_rating = cursor.fetchone()
+            id, create_at, answer_at, hit_level, time, question_id, q_user_id, calculate_rating = history_tuple
             history_of_question = HistoryOfQuestion(id, create_at, answer_at, hit_level, time, question_id, q_user_id, calculate_rating )
             histories.append(history_of_question)
         cursor.close()
         return histories
     
-    
+    def get_all_histories(self, date, question_id):
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT q.id, q.hit_level, u.rating, u.rating_deviation, u.volatility FROM history_of_questions q JOIN history_of_user_rating_updates u ON q.history_of_user_rating_update_id = u.id WHERE q.answer_at >= %s AND q.question_id = %s", (date, question_id))
+        if(cursor.rowcount <= 0):
+            cursor.close()
+            return None
+        return cursor.fetchall()
+
     def create(self, id, create_at, question_id, user_id):
         cursor = self.conn.cursor()
         cursor.execute("INSERT INTO history_of_questions (id, create_at, question_id, user_id, calculate_rating) VALUES (%s, %s, %s, %s, %s);", (id, create_at, question_id, user_id, False))

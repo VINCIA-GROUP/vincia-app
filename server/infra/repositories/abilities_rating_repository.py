@@ -8,22 +8,22 @@ class AbilitiesRatingRepository(Repository):
         
     def get_ability_with_min_rating(self, restriction, user_id):
         cursor = self.conn.cursor()
-        cursor.execute("SELECT q.rating FROM abilities_rating q WHERE q.user_id = %s AND q.id != %s ORDER BY rating LIMIT 1;", (user_id, restriction))
+        cursor.execute("SELECT q.rating, q.ability_id FROM abilities_rating q WHERE q.user_id = %s AND q.id != %s ORDER BY rating LIMIT 1;", (user_id, restriction))
         if(cursor.rowcount <= 0):
             cursor.close()
-            return None
-        rating= cursor.fetchone()
+            return (None, None)
+        rating, ability_id = cursor.fetchone()
         cursor.close()
-        return rating[0]
+        return (rating, ability_id)
     
-    def get_ability_by_id(self, abilitie_id, user_id):
+    def get_ability_by_id(self, ability_id, user_id):
         cursor = self.conn.cursor()
-        cursor.execute("SELECT q.id, q.rating, q.rating_deviation, q.volatility, q.abilitie_id, q.user_id FROM abilities_rating q WHERE q.user_id = %s AND q.abilitie_id", (user_id, abilitie_id))
+        cursor.execute("SELECT q.id, q.rating, q.rating_deviation, q.volatility, q.ability_id, q.user_id FROM abilities_rating q WHERE q.user_id = %s AND q.ability_id = %s", (user_id, ability_id))
         if(cursor.rowcount <= 0):
             cursor.close()
             return None
-        id, rating, rating_deviation, volatility, abilitie_id, user_id = cursor.fetchone()
-        ability = AbilityRating(id, rating, rating_deviation, volatility, abilitie_id, user_id)
+        id, rating, rating_deviation, volatility, ability_id, user_id = cursor.fetchone()
+        ability = AbilityRating(id, rating, rating_deviation, volatility, ability_id, user_id)
         cursor.close()
         return ability
     
@@ -31,7 +31,7 @@ class AbilitiesRatingRepository(Repository):
         cursor = self.conn.cursor()
         cursor.execute("INSERT INTO abilities_rating (id, rating, rating_deviation, volatility, ability_id, user_id) VALUES (%s, %s, %s, %s, %s, %s);", (id, rating, rating_deviation, volatility, ability_id, user_id))
         cursor.close()
-        return rating
+        return (rating, ability_id)
     
     def update_rating(self, id, rating, rating_deviation, volatility , user_id):
         cursor = self.conn.cursor()

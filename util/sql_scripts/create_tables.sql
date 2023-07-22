@@ -34,6 +34,29 @@ CREATE TABLE alternatives(
   FOREIGN KEY (question_id) REFERENCES questions(id)
 );
 
+CREATE TABLE abilities_rating(
+  id uuid PRIMARY KEY NOT NULL,
+  rating INTEGER NOT NULL,
+  rating_deviation INTEGER NOT NULL,
+  volatility FLOAT4 NOT NULL,
+  ability_id uuid UNIQUE NOT NULL,
+  user_id VARCHAR NOT NULL,
+  FOREIGN KEY (ability_id) REFERENCES abilities(id)
+);
+
+
+CREATE TABLE history_of_user_rating_updates(
+  id uuid PRIMARY KEY NOT NULL,
+  create_at DATE NOT NULL,
+  rating INTEGER NOT NULL,
+  rating_deviation INTEGER NOT NULL,
+  volatility FLOAT4 NOT NULL,
+  user_id VARCHAR NOT null,
+  ability_id uuid NOT null,
+  FOREIGN KEY (ability_id) REFERENCES abilities(id)
+);
+
+
 CREATE TABLE history_of_questions(
   id uuid PRIMARY KEY NOT NULL,
   create_at DATE NOT NULL,
@@ -48,15 +71,17 @@ CREATE TABLE history_of_questions(
   FOREIGN KEY (history_of_user_rating_update_id) REFERENCES history_of_user_rating_updates(id)
 );
 
-
-CREATE TABLE history_of_user_rating_updates(
+CREATE TABLE chats_messages(
   id uuid PRIMARY KEY NOT NULL,
-  create_at DATE NOT NULL,
-  rating INTEGER NOT NULL,
-  rating_deviation INTEGER NOT NULL,
-  volatility FLOAT4 NOT NULL,
-  user_id VARCHAR NOT NULL
+  history_of_question_id uuid NOT NULL,
+  user_id VARCHAR NOT NULL,
+  sequence INTEGER NOT NULL,
+  role VARCHAR NOT NULL,
+  content TEXT NOT NULL,
+  create_date TIMESTAMP NOT NULL,
+  FOREIGN KEY (history_of_question_id) REFERENCES history_of_questions(id)
 );
+
 
 CREATE TABLE history_of_question_rating_updates(
   id uuid PRIMARY KEY NOT NULL,
@@ -71,24 +96,5 @@ CREATE TABLE history_of_question_rating_updates(
 
 
 
-CREATE TABLE chats_messages(
-  id uuid PRIMARY KEY NOT NULL,
-  history_of_question_id uuid NOT NULL,
-  user_id VARCHAR NOT NULL,
-  sequence INTEGER NOT NULL,
-  role VARCHAR NOT NULL,
-  content TEXT NOT NULL,
-  create_date TIMESTAMP NOT NULL,
-  FOREIGN KEY (history_of_question_id) REFERENCES history_of_questions(id)
-);
 
 
-CREATE TABLE abilities_rating(
-  id uuid PRIMARY KEY NOT NULL,
-  rating INTEGER NOT NULL,
-  rating_deviation INTEGER NOT NULL,
-  volatility FLOAT4 NOT NULL,
-  abilitie_id uuid NOT NULL,
-  user_id VARCHAR NOT NULL,
-  FOREIGN KEY (abilitie_id) REFERENCES abilities(id)
-);

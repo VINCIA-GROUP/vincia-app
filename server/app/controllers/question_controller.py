@@ -3,6 +3,8 @@ from app import app
 from infra.repositories.abilities_rating_repository import AbilitiesRatingRepository
 from infra.repositories.abilities_repository import AbilitiesRepository
 from infra.repositories.history_question_repository import HistoryQuestionsRepository
+from infra.repositories.history_of_user_rating_update_repository import HistoryOfUserRatingUpdateRepository
+from infra.repositories.history_of_question_rating_update_repository import HistoryOfQuestionRatingUpdateRepository
 from services.question_service import QuestionService
 from domain.errors.api_exception import ApiException
 from app.controllers.base_controller import *
@@ -18,11 +20,16 @@ def get_question():
         history_question_repository = HistoryQuestionsRepository(connection)
         abilities_rating_repository = AbilitiesRatingRepository(connection)
         abilities_repository = AbilitiesRepository(connection)
-        service = QuestionService(questions_repository, history_question_repository, abilities_rating_repository, abilities_repository)
+        history_of_user_rating_update_repository = HistoryOfUserRatingUpdateRepository(connection)
+        history_of_question_rating_update_repository = HistoryOfQuestionRatingUpdateRepository(connection)
+        service = QuestionService(questions_repository, history_question_repository, abilities_rating_repository, abilities_repository, history_of_user_rating_update_repository, history_of_question_rating_update_repository)
         
         user_id = session.get('current_user').get('sub')
         response = service.get_question(user_id)
         return success_api_response(data=response)
+
+
+
 
     
 @app.route("/api/question/answer", methods=["POST"], endpoint="question/answer")
@@ -32,7 +39,9 @@ def post_answer():
         history_question_repository = HistoryQuestionsRepository(connection)
         abilities_rating_repository = AbilitiesRatingRepository(connection)
         abilities_repository = AbilitiesRepository(connection)
-        service = QuestionService(questions_repository, history_question_repository, abilities_rating_repository, abilities_repository)
+        history_of_user_rating_update_repository = HistoryOfUserRatingUpdateRepository(connection)
+        history_of_question_rating_update_repository = HistoryOfQuestionRatingUpdateRepository
+        service = QuestionService(questions_repository, history_question_repository, abilities_rating_repository, abilities_repository, history_of_user_rating_update_repository, history_of_question_rating_update_repository)
         
         user_id = session.get('current_user').get('sub')
         data = request.get_json()

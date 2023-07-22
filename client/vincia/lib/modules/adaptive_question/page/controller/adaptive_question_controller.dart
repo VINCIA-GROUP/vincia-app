@@ -63,6 +63,7 @@ abstract class _AdaptiveQuestionController with Store {
     if (result.isLeft()) {
       FailureModel value = (result as Left).value;
       state = FailureState(value);
+      return;
     }
     timeWatcher = Timer.periodic(const Duration(seconds: 1), (timer) {
       duration += const Duration(seconds: 1);
