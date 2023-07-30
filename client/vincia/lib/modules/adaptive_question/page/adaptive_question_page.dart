@@ -25,23 +25,9 @@ class _AdaptiveQuestionPageState extends State<AdaptiveQuestionPage>
   late final AnimationController _chatButtonAnimationController;
   late final AnimationController _chatAnimationController;
   late final Future _initQuestion;
-  List<types.Message> _messages = [];
-  final _user = const types.User(
-    id: '82091008-a484-4a89-ae75-a22bf8d6f3ac',
-  );
-  final _user1 = const types.User(
-    id: '82091009-a484-4a89-ae75-a22bf8d6f3ac',
-  );
 
   @override
   void initState() {
-    final textMessage1 = types.TextMessage(
-      author: _user1,
-      createdAt: DateTime.now().millisecondsSinceEpoch,
-      id: const Uuid().v4(),
-      text: "Hello",
-    );
-    _messages.add(textMessage1);
     super.initState();
     _initQuestion = _questionController.init();
     _chatButtonAnimationController = AnimationController(
@@ -52,23 +38,6 @@ class _AdaptiveQuestionPageState extends State<AdaptiveQuestionPage>
       duration: const Duration(seconds: 1),
       vsync: this,
     );
-  }
-
-  void _addMessage(types.Message message) {
-    setState(() {
-      _messages.insert(0, message);
-    });
-  }
-
-  void _handleSendPressed(types.PartialText message) {
-    final textMessage = types.TextMessage(
-      author: _user,
-      createdAt: DateTime.now().millisecondsSinceEpoch,
-      id: const Uuid().v4(),
-      text: message.text,
-    );
-
-    _addMessage(textMessage);
   }
 
   @override
@@ -151,11 +120,13 @@ class _AdaptiveQuestionPageState extends State<AdaptiveQuestionPage>
             if (_questionController.state is AnsweredQuestionState) {
               _chatButtonAnimationController.forward();
             }
-
-            return Align(
-              alignment: Alignment.bottomCenter,
-              child: _chat(context),
-            );
+            if (_questionController.user != null) {
+              return Align(
+                alignment: Alignment.bottomCenter,
+                child: _chat(context),
+              );
+            }
+            return Container();
           }),
         ],
       ),
@@ -174,6 +145,7 @@ class _AdaptiveQuestionPageState extends State<AdaptiveQuestionPage>
         width: double.infinity,
         child: GestureDetector(
           onVerticalDragEnd: (details) {
+            _questionController.chatOpen();
             if (_chatAnimationController.isCompleted) {
               _chatAnimationController.reverse();
             } else {
@@ -199,14 +171,16 @@ class _AdaptiveQuestionPageState extends State<AdaptiveQuestionPage>
                             spreadRadius: 5,
                             blurRadius: 15),
                       ]),
-                  child: Icon(
-                    _chatAnimationController.isCompleted
-                        ? CupertinoIcons.chevron_down
-                        : CupertinoIcons.chevron_up,
-                    color: Theme.of(context).colorScheme.onSecondary,
-                    size: 30,
-                    fill: 0.9,
-                  ),
+                  child: Observer(builder: (context) {
+                    return Icon(
+                      _questionController.chatIsOpen!
+                          ? CupertinoIcons.chevron_down
+                          : CupertinoIcons.chevron_up,
+                      color: Theme.of(context).colorScheme.onSecondary,
+                      size: 30,
+                      fill: 0.9,
+                    );
+                  }),
                 ),
                 Container(
                   decoration: BoxDecoration(
@@ -232,19 +206,28 @@ class _AdaptiveQuestionPageState extends State<AdaptiveQuestionPage>
                   axis: Axis.vertical,
                   axisAlignment: -1,
                   child: Container(
-                    height: constraints.maxHeight - 40 - 30,
-                    color: Theme.of(context).colorScheme.secondary,
-                    child: Chat(
-                        theme: DefaultChatTheme(
-                          inputBackgroundColor:
-                              Theme.of(context).colorScheme.secondary,
-                        ),
-                        messages: _messages,
-                        onSendPressed: _handleSendPressed,
-                        showUserAvatars: true,
-                        showUserNames: true,
-                        user: _user),
-                  ),
+                      height: constraints.maxHeight - 40 - 30,
+                      color: Theme.of(context).colorScheme.secondary,
+                      child: Observer(
+                        builder: (context) {
+                          return Chat(
+                              theme: DefaultChatTheme(
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.secondary,
+                                inputBackgroundColor: Theme.of(context)
+                                    .colorScheme
+                                    .secondaryContainer,
+                                inputTextColor: Theme.of(context)
+                                    .colorScheme
+                                    .onSecondaryContainer,
+                              ),
+                              messages: _questionController.messages,
+                              onSendPressed:
+                                  _questionController.handleSendPressed,
+                              showUserNames: true,
+                              user: _questionController.user!);
+                        },
+                      )),
                 ),
               ],
             );

@@ -42,13 +42,14 @@ class AdaptiveQuestionService implements IAdaptiveQuestionService {
 
   @override
   Future<Either<FailureModel, SuccessModel>> sendAnswerQuestion(
-      String answer, Duration duration) async {
+      String answer, Duration duration, String historyQuestionId) async {
     try {
       final token = await getAcessToken();
 
       final Map<String, dynamic> requestData = {
         'answer': answer,
         'duration': duration.toString(),
+        'historyQuestionId': historyQuestionId,
       };
 
       var jsonData = jsonEncode(requestData);
@@ -62,6 +63,43 @@ class AdaptiveQuestionService implements IAdaptiveQuestionService {
               body: jsonData);
       if (response.statusCode == 200) {
         return Right(SuccessModel());
+      } else {
+        final body = jsonDecode(response.body)["errors"];
+        return Left(FailureModel.fromJson(body));
+      }
+    } catch (e) {
+      return Left(FailureModel.fromEnum(AplicationErrors.internalError));
+    }
+  }
+
+  @override
+  Future<String> getUserId() async {
+    var credentials = await auth.credentialsManager.credentials();
+    return credentials.user.sub;
+  }
+
+  @override
+  Future<Either<FailureModel, String>> sendMessage(
+      String message, String historyQuestionId) async {
+    try {
+      final token = await getAcessToken();
+
+      final Map<String, dynamic> requestData = {
+        'historyQuestionId': historyQuestionId,
+        'message': message
+      };
+
+      var jsonData = jsonEncode(requestData);
+
+      final response = await client.post(Uri.parse("$apiUrl/api/chat"),
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json',
+          },
+          body: jsonData);
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body)["data"];
+        return Right(body);
       } else {
         final body = jsonDecode(response.body)["errors"];
         return Left(FailureModel.fromJson(body));

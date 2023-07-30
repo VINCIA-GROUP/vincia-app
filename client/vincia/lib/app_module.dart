@@ -11,7 +11,6 @@ import 'modules/home/page/profile_page.dart';
 import 'modules/home/services/auth_service.dart';
 import 'modules/login/page/controller/login_controller.dart';
 import 'modules/login/page/login_page.dart';
-import 'package:http/http.dart' as http;
 
 class AppModule extends Module {
   static const domain = String.fromEnvironment("AUTH0_DOMAIN");

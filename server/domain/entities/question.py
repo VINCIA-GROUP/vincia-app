@@ -1,17 +1,21 @@
 from domain.entities.entity import entity
-
+from datetime import datetime
 
 class Question(entity):
-    def __init__(self, id, statement, answer, difficulty, is_essay):
+    def __init__(self, id, statement, answer, is_essay, ability_id, rating=0, rating_deviation=0, volatility=0, last_rating_update=datetime.min):
         self.id = id
         self.statement = statement
         self.answer = answer
-        self.difficulty = difficulty
+        self.rating= rating
+        self.rating_deviation = rating_deviation
+        self.volatility = volatility
+        self.last_rating_update = last_rating_update
         self.is_essay = is_essay
+        self.ability_id = ability_id
         self.alternatives = []
     
-    def add_alternative(self, alternative):
-        self.alternatives.append(alternative)
+    def add_list_alternative(self, alternatives):
+        self.alternatives = alternatives
     
     def to_json(self):
         allist = list(map(lambda x: {"id": x.id, "text": x.text}, self.alternatives))
@@ -19,7 +23,7 @@ class Question(entity):
             "id": self.id,
             "statement":self.statement,
             "answer":self.answer,
-            "difficulty":self.difficulty,
+            "rating":self.rating,
             "is_essay":self.is_essay,
             "alternatives": allist
         }
