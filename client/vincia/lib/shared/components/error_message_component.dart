@@ -7,6 +7,7 @@ class ErrorMessageComponent {
       BuildContext context, List<ErrorModel> errorList, Function onPressed) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       showDialog(
+          barrierDismissible: false,
           context: context,
           builder: (_) {
             return errorList.length < 2

@@ -1,53 +1,100 @@
 CREATE TABLE areas(
-  id VARCHAR PRIMARY KEY NOT NULL,
+  id uuid PRIMARY KEY NOT NULL,
   name TEXT NOT NULL,
   description TEXT NOT NULL
 );
 
 
 CREATE TABLE abilities(
-  id VARCHAR PRIMARY KEY NOT NULL,
+  id uuid PRIMARY KEY NOT NULL,
   name TEXT NOT null,
   description TEXT NOT NULL,
-  area_id VARCHAR NOT NULL,
+  area_id uuid NOT NULL,
   FOREIGN KEY (area_id) REFERENCES areas(id)
 );
 
 
 CREATE TABLE questions(
-  id VARCHAR PRIMARY KEY NOT NULL,
+  id uuid PRIMARY KEY NOT NULL,
   statement TEXT NOT NULL,
   answer TEXT NOT NULL,
-  difficulty INTEGER NOT NULL,
+  rating INTEGER NOT NULL,
+  rating_deviation INTEGER NOT NULL,
+  volatility FLOAT4 NOT NULL,
+  last_rating_update DATE NOT NULL,
   is_essay BOOLEAN NOT NULL,
-  ability_id VARCHAR NOT NULL,
+  ability_id uuid NOT NULL,
   FOREIGN KEY (ability_id) REFERENCES abilities(id)
 );
 
 CREATE TABLE alternatives(
-  id VARCHAR PRIMARY KEY NOT NULL,
+  id uuid PRIMARY KEY NOT NULL,
   text TEXT NOT NULL,
-  question_id VARCHAR NOT NULL,
+  question_id uuid NOT NULL,
   FOREIGN KEY (question_id) REFERENCES questions(id)
 );
+
+CREATE TABLE abilities_rating(
+  id uuid PRIMARY KEY NOT NULL,
+  rating INTEGER NOT NULL,
+  rating_deviation INTEGER NOT NULL,
+  volatility FLOAT4 NOT NULL,
+  ability_id uuid UNIQUE NOT NULL,
+  user_id VARCHAR NOT NULL,
+  FOREIGN KEY (ability_id) REFERENCES abilities(id)
+);
+
+
+CREATE TABLE history_of_user_rating_updates(
+  id uuid PRIMARY KEY NOT NULL,
+  create_at DATE NOT NULL,
+  rating INTEGER NOT NULL,
+  rating_deviation INTEGER NOT NULL,
+  volatility FLOAT4 NOT NULL,
+  user_id VARCHAR NOT null,
+  ability_id uuid NOT null,
+  FOREIGN KEY (ability_id) REFERENCES abilities(id)
+);
+
 
 CREATE TABLE history_of_questions(
-  id VARCHAR PRIMARY KEY NOT NULL,
-  date DATE NOT NULL,
-  hit_level INTEGER NOT NULL,
-  var_grade INTEGER NOT NULL,
-  time INTERVAL NOT NULL,
-  question_id VARCHAR NOT NULL,
+  id uuid PRIMARY KEY NOT NULL,
+  create_at DATE NOT NULL,
+  answer_at DATE,
+  hit_level INTEGER,
+  time INTERVAL,
+  calculate_rating BOOLEAN NOT NULL,
+  question_id uuid NOT NULL,
+  history_of_user_rating_update_id uuid,
   user_id VARCHAR NOT NULL,
+  FOREIGN KEY (question_id) REFERENCES questions(id),
+  FOREIGN KEY (history_of_user_rating_update_id) REFERENCES history_of_user_rating_updates(id)
+);
+
+CREATE TABLE chats_messages(
+  id uuid PRIMARY KEY NOT NULL,
+  history_of_question_id uuid NOT NULL,
+  user_id VARCHAR NOT NULL,
+  sequence INTEGER NOT NULL,
+  role VARCHAR NOT NULL,
+  content TEXT NOT NULL,
+  create_date TIMESTAMP NOT NULL,
+  FOREIGN KEY (history_of_question_id) REFERENCES history_of_questions(id)
+);
+
+
+CREATE TABLE history_of_question_rating_updates(
+  id uuid PRIMARY KEY NOT NULL,
+  create_at DATE NOT NULL,
+  rating INTEGER NOT NULL,
+  rating_deviation INTEGER NOT NULL,
+  volatility FLOAT4 NOT NULL,
+  question_id uuid NOT NULL,
   FOREIGN KEY (question_id) REFERENCES questions(id)
 );
 
-CREATE TABLE grades(
-  id VARCHAR PRIMARY KEY NOT NULL,
-  grade INTEGER NOT NULL,
-  question_id VARCHAR NOT NULL,
-  user_id VARCHAR NOT NULL,
-  FOREIGN KEY (question_id) REFERENCES questions(id)
-);
+
+
+
 
 
