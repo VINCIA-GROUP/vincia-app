@@ -1,7 +1,4 @@
-from domain.entities.entity import entity
-
-
-class HistoryOfQuestion(entity):
+class HistoryOfQuestion:
     def __init__(self, id, create_at, answer_at, hit_level,  time, question_id, user_id, calculate_rating):
         self.id = id
         self.create_at = create_at
