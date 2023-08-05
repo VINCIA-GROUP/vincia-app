@@ -7,6 +7,7 @@ from flask import Flask
 from flask import jsonify, request
 from domain.errors.api_exception import ApiException
 from app.controllers.base_controller import *
+from utils.db_pool_connection import DatabaseConnection
 
 load_dotenv()
 
@@ -15,10 +16,7 @@ openai.api_key= os.getenv("OPENAI_KEY")
 app = Flask(__name__)
 app.secret_key = os.environ["APP_SECRET_KEY"]
 
-sc = os.environ["CONNECTION_STRING_DB"]    
-# Este talvez não seja o melhor geito de criar a conecção.
-connection = psycopg2.connect(sc, sslmode='require',)
-
+connection_pool = DatabaseConnection(1, 5)
 
 from app.decorator import error_handler
 from app.controllers import test_controller
