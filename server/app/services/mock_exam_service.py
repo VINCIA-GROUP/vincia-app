@@ -6,12 +6,18 @@ class MockExamService:
       self.question_repository = question_repository
 
    def get_mock_exam_questions(self): #90 questoes
-      # retornar erro para api caso vier vazio alguma materia 
       questions = []
-      questions.append(self.get_areas_questions(AreasID.NATURAL_SCIENCE))
-      questions.append(self.get_areas_questions(AreasID.HUMANITIES))
-      questions.append(self.get_areas_questions(AreasID.LANGUAGES))
-      questions.append(self.get_areas_questions(AreasID.MATHEMATICS))
+      natural_science = self.get_areas_questions(AreasID.NATURAL_SCIENCE)
+      humanities = self.get_areas_questions(AreasID.HUMANITIES)
+      languages = self.get_areas_questions(AreasID.LANGUAGES)
+      mathematics = self.get_areas_questions(AreasID.MATHEMATICS)
+      if (len(natural_science) == 0 | len(natural_science) == 0 | len(natural_science) == 0 | len(natural_science) == 0):
+         return []
+      else:
+         questions.append(natural_science)
+         questions.append(humanities)
+         questions.append(languages)
+         questions.append(mathematics)
       return questions
 
    def get_areas_questions(self, area): #45 questoes  11 facil / 23 normal / 11 dificil
