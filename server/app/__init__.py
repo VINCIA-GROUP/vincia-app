@@ -5,7 +5,7 @@ import psycopg2
 from dotenv import load_dotenv
 from flask import Flask
 from flask import jsonify, request
-from domain.errors.api_exception import ApiException
+from app.domain.errors.api_exception import ApiException
 from app.controllers.base_controller import *
 from utils.db_pool_connection import DatabaseConnection
 

@@ -6,8 +6,8 @@ from urllib.request import urlopen
 import jwt
 from jwt.algorithms import RSAAlgorithm
 import os
-from domain.errors.authentication_errors import *
-from domain.errors.api_exception import ApiException
+from app.domain.errors.authentication_errors import *
+from app.domain.errors.api_exception import ApiException
 
 
 def get_token_auth_header():

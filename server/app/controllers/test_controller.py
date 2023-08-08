@@ -2,8 +2,8 @@ from flask import jsonify, request, session
 from app import app
 from app.decorator.requires_auth import requires_auth
 from app.controllers.base_controller import *
-from domain.errors import api_exception
-from domain.errors.authentication_errors import AuthorizationHeaderMissing
+from app.domain.errors import api_exception
+from app.domain.errors.authentication_errors import AuthorizationHeaderMissing
 
 @app.route("/api/test/public", endpoint="test/public")
 def public():

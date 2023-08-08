@@ -1,3 +1,4 @@
+import random
 from app.domain.enums.areas_id import AreasID
 
 class MockExamService:
@@ -11,7 +12,7 @@ class MockExamService:
       humanities = self.get_areas_questions(AreasID.HUMANITIES)
       languages = self.get_areas_questions(AreasID.LANGUAGES)
       mathematics = self.get_areas_questions(AreasID.MATHEMATICS)
-      if (len(natural_science) == 0 | len(natural_science) == 0 | len(natural_science) == 0 | len(natural_science) == 0):
+      if (len(natural_science) == 0 or len(natural_science) == 0 or len(natural_science) == 0 or len(natural_science) == 0):
          return []
       else:
          questions.append(natural_science)
@@ -25,7 +26,7 @@ class MockExamService:
       easy_questions = self.filter_questions(area, "easy")
       normal_questions = self.filter_questions(area, "normal")
       hard_questions = self.filter_questions(area, "hard")
-      if (len(easy_questions) == 0 | len(normal_questions) == 0 | len(hard_questions) == 0):
+      if (len(easy_questions) == 0 or len(normal_questions) == 0 or len(hard_questions) == 0):
          return []
       else:
          questions.append(self.choose_questions(easy_questions, 11))
@@ -43,16 +44,18 @@ class MockExamService:
    
    def choose_questions(self, questions, amount): #distribuir as questões pelas habilidades
       chosen_questions = []
-      abilities = [question.ability_id() for question in questions]
-      abilities.sort()
-      count_ability = {}
-      for ability in abilities:
-         if ability in count_ability:
-            count_ability[ability] += 1
-         else:
-            count_ability[ability] = 1
-      
-      #dividir a mesma quantidade pra cada e distribuir  
+      if (len(questions) > 0):
+         abilities = {}
+         for question in questions:
+            if question.ability_id in abilities:
+               abilities[question.ability_id].append(question)
+            else:
+               abilities[question.ability_id] = [question]
+         for key, value in abilities.items():
+            if (len(chosen_questions) < amount):
+               random_question_index = random.randint(0, len(value))
+               chosen_questions.append(value[random_question_index])
+               value.remove(random_question_index)
       return chosen_questions
 
 

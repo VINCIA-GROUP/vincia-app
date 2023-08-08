@@ -1,4 +1,4 @@
-from domain.errors.api_exception import ApiError
+from app.domain.errors.api_exception import ApiError
 
 class AuthorizationHeaderMissing(ApiError):
     def __init__(self):
