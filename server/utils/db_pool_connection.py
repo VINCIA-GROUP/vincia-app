@@ -12,9 +12,9 @@ class DatabaseConnection:
       )
 
    def get_connection(self):
-      conn = self._pool.getconn()
-      conn.autocomit = False
-      return conn
+      connection = self._pool.getconn()
+      connection.autocomit = False
+      return connection
    
    def release_connection(self, connection):
       self._pool.putconn(connection)

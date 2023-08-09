@@ -1,11 +1,10 @@
 
-from domain.entities.history_of_question import HistoryOfQuestion
-from domain.entities.question import Question
-from domain.errors.api_exception import ApiException
-from domain.errors.domain_errors import HistoryOfQuestionNotFound
-from infra.repositories.repository import Repository
+from app.domain.entities.history_of_question import HistoryOfQuestion
+from app.domain.entities.question import Question
+from app.domain.errors.api_exception import ApiException
+from app.domain.errors.domain_errors import HistoryOfQuestionNotFound
 
-class HistoryQuestionsRepository(Repository):
+class HistoryQuestionsRepository():
     def __init__(self, connect): 
         super().__init__(connect)   
         

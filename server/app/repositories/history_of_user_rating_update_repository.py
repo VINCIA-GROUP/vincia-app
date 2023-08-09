@@ -1,7 +1,4 @@
-from infra.repositories.repository import Repository
-
-
-class HistoryOfUserRatingUpdateRepository(Repository):
+class HistoryOfUserRatingUpdateRepository():
     def __init__(self, connect): 
         super().__init__(connect)   
     
