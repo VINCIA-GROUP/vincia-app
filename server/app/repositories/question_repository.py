@@ -67,7 +67,7 @@ class QuestionsRepository:
       try:
          cursor = self.connection.cursor()
          cursor.execute("UPDATE questions SET rating = %s, rating_deviation = %s, volatility = %s WHERE id = %s;", (rating, rating_deviation, volatility, id))
-         cursor.close
+         cursor.close()
          return True
       except DatabaseError as error:
          print('QuestionsRepository - update_rating - ' + error)
