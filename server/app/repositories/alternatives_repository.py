@@ -1,37 +1,12 @@
-from psycopg2 import DatabaseError
+from app.repositories.repository import Repository
 from app.domain.entities.alternatives import Alternative
 
-class AlternativeRepository:
-
+class AlternativeRepository(Repository):
    def __init__(self, connection):
-      self.connection = connection
+      super().__init__(connection, Alternative)
 
    def get_by_question(self, question):
-      alternatives = []
-      try:
-         cursor = self.connection.cursor()
-         cursor.execute(
-             "SELECT * FROM alternatives a WHERE a.question_id = %s;", (question.id,))
-         rows = self.cursor.fetchall()
-         for row in rows:
-            alternatives.append(Alternative(*row))
-         cursor.close()
-      except DatabaseError as error:
-         print('AlternativeRepository - get_by_question - ' + error)
+      query = "SELECT * FROM alternatives a WHERE a.question_id = %s;"
+      params = (question.id,)
+      alternatives = super().get_many(query=query, params=params)
       return alternatives
-
-   def commit(self):
-      try:
-         self.connection.commit()
-         return True
-      except DatabaseError as error:
-         print('QuestionsRepository - commit - ' + error)
-         return False
-      
-   def rollback(self):
-      try:
-         self.connection.rollback()
-         return True
-      except DatabaseError as error:
-         print('QuestionsRepository - rollback - ' + error)
-         return False
