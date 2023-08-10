@@ -1,27 +1,28 @@
 from psycopg2 import DatabaseError
 
 class Repository():
-    def __init__(self, connection):
+    def __init__(self, connection, entity):
         self.connection = connection
+        self.entity = entity
 
-    def get_one(self, query, params, result_type):
-        result = result_type()
+    def get_one(self, query, params):
+        data = self.entity()
         error = ""
         try:
             cursor = self.connection.cursor()
             cursor.execute(query, params)
             if (len(cursor) > 0):
                 row = cursor.fetchone()
-                result = result_type(*row)
+                data = self.entity(*row)
             else:
                 error = 'Não existem dados para essa consulta'
             cursor.close()
         except DatabaseError as error:
-            error = error
-        return (result, error)
+            print(self.__class__.__name__ + ' - ' + error.pgerror)
+        return data
 
-    def get_many(self, query, params, result_type):
-        result = []
+    def get_many(self, query, params):
+        data = []
         error = ""
         try:
             cursor = self.connection.cursor()
@@ -29,34 +30,37 @@ class Repository():
             if (len(cursor) > 0):
                 rows = cursor.fetchall()
                 for row in rows:
-                    obj = result_type(*row)
-                    result.append(obj)
+                    obj = self.entity(*row)
+                    data.append(obj)
             else:
                 error = 'Não existem dados para essa consulta'
             cursor.close()
         except DatabaseError as error:
-            error = error
-        return (result, error)
+            print(self.__class__.__name__ + ' - ' + error.pgerror)
+        return data
 
     def update(self, query, params):
         try:
             cursor = self.connection.cursor()
             cursor.execute(query, params)
             cursor.close()
-            return (True, "")
+            return True
         except DatabaseError as error:
-            return (False, error)
+            print(self.__class__.__name__ + ' - ' + error.pgerror)
+            return False
 
     def commit(self):
         try:
             self.connection.commit()
-            return (True, "")
-         except DatabaseError as error:
-            return (False, error)
+            return True
+        except DatabaseError as error:
+            print(self.__class__.__name__ + ' - ' + error.pgerror)
+            return False
       
-   def rollback(self):
+    def rollback(self):
         try:
             self.connection.rollback()
-            return (True, "")
+            return True
         except DatabaseError as error:
-            return (False, error)
+            print(self.__class__.__name__ + ' - ' + error.pgerror)
+            return False

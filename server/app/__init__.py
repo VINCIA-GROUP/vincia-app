@@ -21,6 +21,7 @@ connection_pool = DatabaseConnection(1, 5)
 from app.decorator import error_handler
 from app.controllers import test_controller
 from app.controllers import question_controller
+from app.controllers import mock_exam_controller
 from app.controllers import chat_controller
 from app.decorator import after_request_callback
 

@@ -13,7 +13,6 @@ class DatabaseConnection:
 
    def get_connection(self):
       connection = self._pool.getconn()
-      connection.autocomit = False
       return connection
    
    def release_connection(self, connection):

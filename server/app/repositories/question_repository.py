@@ -1,90 +1,61 @@
-from psycopg2 import DatabaseError
 from app.domain.entities.question import Question
+from app.repositories.repository import Repository
 from app.repositories.alternatives_repository import AlternativeRepository
 
-class QuestionsRepository:
+class QuestionsRepository(Repository):
    def __init__(self, connection):
-      self.connection = connection
+      super().__init__(connection, Question)
 
    def get_all(self):
-      questions = []
       alternatives_repository = AlternativeRepository(self.connection)
-      try:
-         cursor = self.connection.cursor()
-         cursor.execute("SELECT * FROM questions;")
-         rows = cursor.fetchall()
-         for row in rows:
-            question = Question(*row)
-            alternatives = alternatives_repository.get_alternatives_by_question(question)
-            question.alternatives = alternatives
-            questions.append(question)
-         cursor.close()
-      except DatabaseError as error:
-         print('QuestionsRepository - get_all - ' + error)
+      query = "SELECT * FROM questions;"
+      questions = super().get_many(query=query)
+      for question in questions:
+         question.alternatives = alternatives_repository.get_by_question(question)
       return questions
 
    def get_by_id(self, id):
-      question = Question()
       alternatives_repositories = AlternativeRepository(self.connection)
-      try:
-         cursor = self.connection.cursor()
-         cursor.execute("SELECT * FROM questions q WHERE q.id = %s;", (id,))
-         row = cursor.fetchone()
-         question = Question(*row)
-         alternatives = alternatives_repositories.get_alternatives_by_question(question)
-         question.alternatives = alternatives
-      except DatabaseError as error:
-         print('QuestionsRepository - get_by_id - ' + error)
+      query = "SELECT * FROM questions q WHERE q.id = %s;"
+      question = super().get_one(query=query, params=(id,))
+      question.alternatives = alternatives_repositories.get_by_question(question)
       return question
 
    def get_filtered(self, filters): #filter_example = {"rating": "> 1.0", "is_essay": "= false"}
-      questions = []
-      conditions = []
       alternatives_repository = AlternativeRepository(self.connection)
-      try:
-         cursor = self.connection.cursor()
-         if filters:
-            query = "SELECT * FROM questions q WHERE "
-            for column, filter in filters.items():
-               condition = f"{column} {filter}"
-               conditions.append(condition)
-            query += " AND ".join(condition)
-            query += ";"
-            cursor.execute(query)
-            rows = cursor.fetchall()
-            for row in rows:
-               question = Question(*row)
-               alternatives = alternatives_repository.get_alternatives_by_question(question)
-               question.alternatives(alternatives)
-               questions.append(question)
-         else:
-            questions = self.get_all()
-      except DatabaseError as error:
-         print('QuestionsRepository - get_filtered - ' + error)
+      if filters:
+         conditions = []
+         query = "SELECT * FROM questions q WHERE "
+         for column, filter in filters.items():
+            condition = f"{column} {filter}"
+            conditions.append(condition)
+         query += " AND ".join(conditions)
+         query += ";"
+      questions = super().get_many(query=query)
+      for question in questions:
+         question.alternatives = alternatives_repository.get_alternatives_by_question(question)
       return questions
    
+   def get_by_rating(self, rating, limit, ability_id):
+      alternatives_repository = AlternativeRepository(self.connection)
+      query = "SELECT * FROM questions q WHERE ability_id = %s AND rating BETWEEN 0 AND (SELECT MAX(rating) FROM questions) ORDER BY ABS(q.rating - %s) LIMIT %s;"
+      params = (ability_id,rating, limit)
+      questions = super().get_many(query=query, params=params)
+      for question in questions:
+         question.alternatives = alternatives_repository.get_by_question(question)
+      return questions
+   
+   def get_by_area_and_difficult(self, area_id, rating_low, rating_high):
+      alternatives_repository = AlternativeRepository(self.connection)
+      query = "SELECT q.*, a.area_id FROM questions q JOIN abilities a ON q.ability_id = a.area_id WHERE q.is_essay = false AND a.area_id = %s AND rating BETWEEN %s AND %s;"
+      params = (area_id, rating_low, rating_high)
+      questions = super().get_many(query=query, params=params)
+      for question in questions:
+         question.alternatives = alternatives_repository.get_by_question(question)
+      return questions
+
    def update_rating(self, id, rating, rating_deviation, volatility):
-      try:
-         cursor = self.connection.cursor()
-         cursor.execute("UPDATE questions SET rating = %s, rating_deviation = %s, volatility = %s WHERE id = %s;", (rating, rating_deviation, volatility, id))
-         cursor.close()
-         return True
-      except DatabaseError as error:
-         print('QuestionsRepository - update_rating - ' + error)
-         return False
-      
-   def commit(self):
-      try:
-         self.connection.commit()
-         return True
-      except DatabaseError as error:
-         print('QuestionsRepository - commit - ' + error)
-         return False
-      
-   def rollback(self):
-      try:
-         self.connection.rollback()
-         return True
-      except DatabaseError as error:
-         print('QuestionsRepository - rollback - ' + error)
-         return False
+      query = "UPDATE questions SET rating = %s, rating_deviation = %s, volatility = %s WHERE id = %s;"
+      params = (rating, rating_deviation, volatility, id)
+      result = super().update(query=query, params=params)
+      return result

@@ -8,10 +8,10 @@ class MockExamService:
 
    def get_mock_exam_questions(self): #90 questoes
       questions = []
-      natural_science = self.get_areas_questions(AreasID.NATURAL_SCIENCE)
-      humanities = self.get_areas_questions(AreasID.HUMANITIES)
-      languages = self.get_areas_questions(AreasID.LANGUAGES)
-      mathematics = self.get_areas_questions(AreasID.MATHEMATICS)
+      natural_science = self.get_areas_questions(AreasID.NATURAL_SCIENCE.value)
+      humanities = self.get_areas_questions(AreasID.HUMANITIES.value)
+      languages = self.get_areas_questions(AreasID.LANGUAGES.value)
+      mathematics = self.get_areas_questions(AreasID.MATHEMATICS.value)
       if (len(natural_science) == 0 or len(natural_science) == 0 or len(natural_science) == 0 or len(natural_science) == 0):
          return []
       else:
