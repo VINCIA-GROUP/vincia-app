@@ -6,13 +6,13 @@ class Repository():
         self.entity = entity
 
     def get_one(self, query, params):
-        data = self.entity()
+        data = self.entity
         error = ""
         try:
             cursor = self.connection.cursor()
             cursor.execute(query, params)
-            if (len(cursor) > 0):
-                row = cursor.fetchone()
+            row = cursor.fetchone()
+            if (len(row) > 0):
                 data = self.entity(*row)
             else:
                 error = 'Não existem dados para essa consulta'
@@ -27,8 +27,8 @@ class Repository():
         try:
             cursor = self.connection.cursor()
             cursor.execute(query, params)
-            if (len(cursor) > 0):
-                rows = cursor.fetchall()
+            rows = cursor.fetchall()
+            if (len(rows) > 0):
                 for row in rows:
                     obj = self.entity(*row)
                     data.append(obj)

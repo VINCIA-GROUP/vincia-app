@@ -16,8 +16,8 @@ class Question:
       self.ability_id = ability_id
         
     def to_json(self):
-        for i, alternative in enumerate(self._alternatives):
-            self._alternatives[i] = alternative.to_json()
+        for i, alternative in enumerate(self.alternatives):
+            self.alternatives[i] = alternative.to_json()
         return {
             'id': self.id,
             'statement': self.statement,

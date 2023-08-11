@@ -9,7 +9,7 @@ class QuestionsRepository(Repository):
    def get_all(self):
       alternatives_repository = AlternativeRepository(self.connection)
       query = "SELECT * FROM questions;"
-      questions = super().get_many(query=query)
+      questions = super().get_many(query=query, params="")
       for question in questions:
          question.alternatives = alternatives_repository.get_by_question(question)
       return questions
@@ -31,7 +31,7 @@ class QuestionsRepository(Repository):
             conditions.append(condition)
          query += " AND ".join(conditions)
          query += ";"
-      questions = super().get_many(query=query)
+      questions = super().get_many(query=query, params="")
       for question in questions:
          question.alternatives = alternatives_repository.get_alternatives_by_question(question)
       return questions
@@ -47,7 +47,7 @@ class QuestionsRepository(Repository):
    
    def get_by_area_and_difficult(self, area_id, rating_low, rating_high):
       alternatives_repository = AlternativeRepository(self.connection)
-      query = "SELECT q.*, a.area_id FROM questions q JOIN abilities a ON q.ability_id = a.area_id WHERE q.is_essay = false AND a.area_id = %s AND rating BETWEEN %s AND %s;"
+      query = "SELECT q.* FROM questions q JOIN abilities a ON q.ability_id = a.id WHERE q.is_essay = false AND a.area_id = %s AND rating BETWEEN %s AND %s;"
       params = (area_id, rating_low, rating_high)
       questions = super().get_many(query=query, params=params)
       for question in questions:
