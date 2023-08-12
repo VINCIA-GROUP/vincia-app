@@ -38,13 +38,13 @@ class MockExamService:
       chosen_questions = []
       abilities = {}
       for question in questions:
-         abilities[question.ability_id] = None
-         
+         if question.ability_id in abilities:
+            abilities[question.ability_id].append(question)
+         else:
+            abilities[question.ability_id] = [question]
       while len(chosen_questions) < amount:
          for key, value in abilities.items():
-            print(len(value))
-            random_question_index = random.randint(0, len(value)-1)
-            print(random_question_index)
+            random_question_index = random.randint(0, len(value)-1) if len(value) > 0 else 0
             chosen_questions.append(value[random_question_index])
-            abilities[key].remove(random_question_index)
+            abilities[key].pop(random_question_index)
       return chosen_questions
