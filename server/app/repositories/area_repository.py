@@ -1,60 +1,21 @@
-from psycopg2 import DatabaseError
 from app.domain.entities.area import Area
+from app.repositories.repository import Repository
 
-class AreaRepository():
+class AreaRepository(Repository):
    def __init__(self, connection):
-      self.connection = connection
+      super().__init__(connection, Area)
 
    def get_all(self):
-      areas = []
-      try:
-         cursor = self.connection.cursor()
-         cursor.execute("SELECT * FROM areas;")
-         rows = self.cursor.fetchall()
-         for row in rows:
-            area = Area(*row)
-            areas.append(area)
-         cursor.close()
-      except DatabaseError as error:
-         print('AreaRepository - get_all - ' + error)
-      return areas
+      return super().get_many(query="SELECT * FROM areas;", params="")
 
    def get_by_id(self, id):
-      area = Area()
-      try:
-         cursor = self.connection.cursor()
-         cursor.execute("SELECT * FROM areas a WHERE a.id = %s;", (id,))
-         row = self.cursor.fetchall()[0]
-         area = Area(*row)
-         cursor.close()
-      except DatabaseError as error:
-         print('AreaRepository - get_by_id - ' + error)
-      return area
+      return super().get_one(
+         query="SELECT * FROM areas a WHERE a.id = %s;", 
+         params=(id,)
+      )
 
    def get_by_name(self, name): 
-      area = Area()
-      try:
-         cursor = self.connection.cursor()
-         cursor.execute("SELECT * FROM areas a WHERE a.name = %s;", (name,))
-         row = self.cursor.fetchone()
-         area = Area(*row)
-         cursor.close()
-      except DatabaseError as error:
-         print('AreaRepository - get_by_name - ' + error)
-      return area
-   
-   def commit(self):
-      try:
-         self.connection.commit()
-         return True
-      except DatabaseError as error:
-         print('QuestionsRepository - commit - ' + error)
-         return False
-
-   def rollback(self):
-      try:
-         self.connection.rollback()
-         return True
-      except DatabaseError as error:
-         print('QuestionsRepository - rollback - ' + error)
-         return False
+      return super().get_one(
+         query="SELECT * FROM areas a WHERE a.name = %s;", 
+         params=(name,)
+      )

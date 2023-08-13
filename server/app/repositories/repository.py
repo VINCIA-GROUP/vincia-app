@@ -1,19 +1,19 @@
 from psycopg2 import DatabaseError
 
 class Repository():
-    def __init__(self, connection, entity):
+    def __init__(self, connection, model):
         self.connection = connection
-        self.entity = entity
+        self.model = model
 
     def get_one(self, query, params):
-        data = self.entity
+        data = self.model
         error = ""
         try:
             cursor = self.connection.cursor()
             cursor.execute(query, params)
             row = cursor.fetchone()
             if (len(row) > 0):
-                data = self.entity(*row)
+                data = self.model(*row)
             else:
                 error = 'Não existem dados para essa consulta'
             cursor.close()
@@ -30,7 +30,7 @@ class Repository():
             rows = cursor.fetchall()
             if (len(rows) > 0):
                 for row in rows:
-                    obj = self.entity(*row)
+                    obj = self.model(*row)
                     data.append(obj)
             else:
                 error = 'Não existem dados para essa consulta'
