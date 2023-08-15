@@ -6,16 +6,16 @@ class AreaRepository(Repository):
       super().__init__(connection, Area)
 
    def get_all(self):
-      return super().get_many(query="SELECT * FROM areas;", params="")
+      return super().get_many(query="SELECT id, name, description FROM areas;", params="")
 
    def get_by_id(self, id):
       return super().get_one(
-         query="SELECT * FROM areas a WHERE a.id = %s;", 
+         query="SELECT id, name, description FROM areas  WHERE id = %s;", 
          params=(id,)
       )
 
    def get_by_name(self, name): 
       return super().get_one(
-         query="SELECT * FROM areas a WHERE a.name = %s;", 
+         query="SELECT id, name, description FROM areas WHERE name = %s;", 
          params=(name,)
       )

@@ -2,9 +2,9 @@ import openai
 import uuid
 import datetime
 from bs4 import BeautifulSoup
-from domain.entities.chat_messages import ChatMessages
-from domain.errors.api_exception import ApiException
-from domain.errors.domain_errors import ChatError, ChatNotFound, HistoryOfQuestionNotFound
+from app.domain.entities.chat_messages import ChatMessages
+from app.domain.errors.api_exception import ApiException
+from app.domain.errors.domain_errors import ChatError, ChatNotFound, HistoryOfQuestionNotFound
 
 class ChatService:
     def __init__(self, history_question_repository, question_repository, chat_repository):
@@ -15,7 +15,7 @@ class ChatService:
     def send_message(self, user_id, history_question_id, message):
 
         chat_messages = self.chat_repository.get_by_history_question_id(history_question_id, user_id)
-        if(chat_messages == None):
+        if(chat_messages == None or len(chat_messages) <= 0):
             chat_messages = self.create_new_chat(history_question_id, user_id)
 
         user_message = ChatMessages(str(uuid.uuid4()), history_question_id, "user", message, datetime.datetime.utcnow(), chat_messages[-1].sequence + 1)

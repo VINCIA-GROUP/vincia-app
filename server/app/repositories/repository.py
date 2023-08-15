@@ -1,66 +1,47 @@
 from psycopg2 import DatabaseError
 
+from app.domain.errors.api_exception import ApiException
+from app.domain.errors.domain_errors import DataNotFound
+
 class Repository():
     def __init__(self, connection, model):
         self.connection = connection
         self.model = model
 
     def get_one(self, query, params):
-        data = self.model
-        error = ""
-        try:
-            cursor = self.connection.cursor()
-            cursor.execute(query, params)
-            row = cursor.fetchone()
-            if (len(row) > 0):
-                data = self.model(*row)
-            else:
-                error = 'Não existem dados para essa consulta'
+        data = None
+        cursor = self.connection.cursor()
+        cursor.execute(query, params)
+        if(cursor.rowcount <= 0):
             cursor.close()
-        except DatabaseError as error:
-            print(self.__class__.__name__ + ' - ' + error.pgerror)
+            return data
+        row = cursor.fetchone()
+        data = self.model(*row)
+        cursor.close()
         return data
 
     def get_many(self, query, params):
         data = []
         error = ""
-        try:
-            cursor = self.connection.cursor()
-            cursor.execute(query, params)
-            rows = cursor.fetchall()
-            if (len(rows) > 0):
-                for row in rows:
-                    obj = self.model(*row)
-                    data.append(obj)
-            else:
-                error = 'Não existem dados para essa consulta'
+        cursor = self.connection.cursor()
+        cursor.execute(query, params)
+        if(cursor.rowcount <= 0):
             cursor.close()
-        except DatabaseError as error:
-            print(self.__class__.__name__ + ' - ' + error.pgerror)
+            return data
+        rows = cursor.fetchall()
+        for row in rows:
+            obj = self.model(*row)
+            data.append(obj)
+        cursor.close()
         return data
 
     def update(self, query, params):
-        try:
-            cursor = self.connection.cursor()
-            cursor.execute(query, params)
-            cursor.close()
-            return True
-        except DatabaseError as error:
-            print(self.__class__.__name__ + ' - ' + error.pgerror)
-            return False
+        cursor = self.connection.cursor()
+        cursor.execute(query, params)
+        cursor.close()
 
     def commit(self):
-        try:
-            self.connection.commit()
-            return True
-        except DatabaseError as error:
-            print(self.__class__.__name__ + ' - ' + error.pgerror)
-            return False
-      
+        self.connection.commit()
+
     def rollback(self):
-        try:
-            self.connection.rollback()
-            return True
-        except DatabaseError as error:
-            print(self.__class__.__name__ + ' - ' + error.pgerror)
-            return False
+        self.connection.rollback()
