@@ -12,6 +12,12 @@ from infra.repositories.questions_repository import QuestionsRepository
 from app.decorator.requires_auth import requires_auth
 from app import connection
 
+from app.dao.question_dao import QuestionDAO
+
+@app.route("/api/question/<string:id>", methods=["GET"])
+def get_question_teste(id):
+        question = QuestionDAO().get_question_by_id(id)
+        return success_api_response(data=question.to_json())
 
 @app.route("/api/question", methods=["GET"], endpoint="question")
 @requires_auth(None)

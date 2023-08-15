@@ -1,5 +1,5 @@
 from app import app
-from domain.errors.api_exception import ApiException
+from app.domain.errors.api_exception import ApiException
 from flask import jsonify, request
 
 @app.errorhandler(ApiException)
