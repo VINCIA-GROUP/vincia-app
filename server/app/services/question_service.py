@@ -1,11 +1,11 @@
-from domain.entities.history_of_question_rating_update import HistoryOfQuestionRatingUpdate
-from domain.entities.history_of_user_rating_update import HistoryOfUserRatingUpdate
-from domain.errors.api_exception import *
+from app.domain.entities.history_of_question_rating_update import HistoryOfQuestionRatingUpdate
+from app.domain.entities.history_of_user_rating_update import HistoryOfUserRatingUpdate
+from app.domain.errors.api_exception import *
 from datetime import datetime, timedelta
 import uuid
 
-from domain.errors.domain_errors import AbilityNotFound, AbilityRatingCreateFailed, HistoryOfQuestionIdInvalid, QuestionNotFound
-from services import glicko2
+from app.domain.errors.domain_errors import AbilityNotFound, AbilityRatingCreateFailed, HistoryOfQuestionIdInvalid, QuestionNotFound
+from app.services import glicko2
 
 class QuestionService:
     def __init__(self, question_repository, history_question_repository, abilities_rating_repository, abilities_repository, history_of_user_rating_update_repository, history_of_question_rating_update_repository):
@@ -32,7 +32,7 @@ class QuestionService:
         if(ability_rating  == None):
             ability_rating, ability_id = self.create_abilities(user_id, ability_id_restriction)
         
-        questions = self.question_repository.get_question_by_rating(ability_rating, limit_question, ability_id)
+        questions = self.question_repository.get_by_rating(ability_rating, limit_question, ability_id)
         result_history_id = str(uuid.uuid4())
         for question in questions:
             history_id = str(uuid.uuid4())
@@ -68,7 +68,7 @@ class QuestionService:
         
     def calculate_rating_user_and_return_ability_id(self, user_id):
         histories = self.history_question_repository.get_all_history_without_calculate_rating(user_id)
-        if(histories == None):
+        if(histories == None or len(histories) <= 0):
             return None
         rating_list = []
         RD_list = []
@@ -82,7 +82,7 @@ class QuestionService:
             ability_id = question.ability_id
             
         
-        ability = self.abilities_rating_repository.get_ability_by_id(ability_id, user_id)
+        ability = self.abilities_rating_repository.get_by_id(ability_id, user_id)
         
         glicko = glicko2.Player(rating= ability.rating, rd= ability.rating_deviation, vol =ability.volatility)
         glicko.update_player(rating_list, RD_list, outcome_list)
@@ -102,20 +102,19 @@ class QuestionService:
             rating = 1500
             rating_deviation = 350
             volatility = 0.6
-            abilities = self.abilities_repository.get_abilities_list()
+            abilities = self.abilities_repository.get_all()
             for ability in abilities:
                 result = self.abilities_rating_repository.create(str(uuid.uuid4()), rating, rating_deviation, volatility, ability.id, user_id)
             return result
         except:
             raise ApiException(AbilityRatingCreateFailed())
         
-    
     def update_rating_question(self, question, user_id):
         tau = 0.1
         update_time = (datetime.utcnow() + timedelta(days=1)).date()
         if(question.last_rating_update <  update_time):
             histories = self.history_question_repository.get_all_histories(question.last_rating_update, question.id)
-            if(len(histories) <= 0):
+            if(histories == None or len(histories) <= 0):
                 return
             rating_list = []
             RD_list = []

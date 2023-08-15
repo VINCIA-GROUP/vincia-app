@@ -7,5 +7,5 @@ class AlternativeRepository(Repository):
 
    def get_by_question(self, question):
       return super().get_many(
-         query="SELECT * FROM alternatives a WHERE a.question_id = %s;",
+         query="SELECT id, text, question_id FROM alternatives WHERE question_id = %s;",
          params=(question.id,))
