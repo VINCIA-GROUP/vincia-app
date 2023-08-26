@@ -25,7 +25,7 @@ class AdaptiveQuestionService implements IAdaptiveQuestionService {
         headers: {
           'Authorization': 'Bearer $token',
           'Accept': 'application/json',
-          'Connection': 'keep-alive',
+          'Connection': 'Keep-Alive',
         },
       );
       if (response.statusCode == 200) {

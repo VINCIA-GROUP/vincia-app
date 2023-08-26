@@ -7,7 +7,7 @@ class AbilitiesRatingRepository(Repository):
         
     def get_ability_with_min_rating(self, restriction, user_id):
         cursor = self.connection.cursor()
-        cursor.execute("SELECT q.rating, q.ability_id FROM abilities_rating q WHERE q.user_id = %s AND q.id != %s ORDER BY rating LIMIT 1;", (user_id, restriction))
+        cursor.execute("SELECT q.rating, q.ability_id FROM abilities_rating q WHERE q.user_id = %s ORDER BY rating LIMIT 1;", (user_id,))
         if(cursor.rowcount <= 0):
             cursor.close()
             return (None, None)

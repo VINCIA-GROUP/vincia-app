@@ -39,7 +39,7 @@ CREATE TABLE abilities_rating(
   rating INTEGER NOT NULL,
   rating_deviation INTEGER NOT NULL,
   volatility FLOAT4 NOT NULL,
-  ability_id uuid UNIQUE NOT NULL,
+  ability_id uuid NOT NULL,
   user_id VARCHAR NOT NULL,
   FOREIGN KEY (ability_id) REFERENCES abilities(id)
 );

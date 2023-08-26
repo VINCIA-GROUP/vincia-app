@@ -303,11 +303,7 @@ class _AdaptiveQuestionPageState extends State<AdaptiveQuestionPage>
                     ),
                   ),
                 ),
-                Expanded(
-                  child: Text(
-                    alternative.text,
-                  ),
-                ),
+                Expanded(child: HtmlWidget(alternative.text)),
               ],
             ),
           ),

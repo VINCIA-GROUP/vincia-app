@@ -30,7 +30,8 @@ class QuestionService:
         
         ability_rating, ability_id = self.abilities_rating_repository.get_ability_with_min_rating(ability_id_restriction, user_id)
         if(ability_rating  == None):
-            ability_rating, ability_id = self.create_abilities(user_id, ability_id_restriction)
+            self.create_abilities(user_id)
+            ability_rating, ability_id = self.abilities_rating_repository.get_ability_with_min_rating(ability_id_restriction, user_id)
         
         questions = self.question_repository.get_by_rating(ability_rating, limit_question, ability_id)
         result_history_id = str(uuid.uuid4())
@@ -96,18 +97,14 @@ class QuestionService:
             
         return ability.id
     
-    def create_abilities(self, user_id, ability_id_restriction):
-        try:
-            result = None
-            rating = 1500
-            rating_deviation = 350
-            volatility = 0.6
-            abilities = self.abilities_repository.get_all()
-            for ability in abilities:
-                result = self.abilities_rating_repository.create(str(uuid.uuid4()), rating, rating_deviation, volatility, ability.id, user_id)
-            return result
-        except:
-            raise ApiException(AbilityRatingCreateFailed())
+    def create_abilities(self, user_id):
+        rating = 1500
+        rating_deviation = 350
+        volatility = 0.6
+        abilities = self.abilities_repository.get_all()
+        for ability in abilities:
+            self.abilities_rating_repository.create(str(uuid.uuid4()), rating, rating_deviation, volatility, ability.id, user_id)
+
         
     def update_rating_question(self, question, user_id):
         tau = 0.1
