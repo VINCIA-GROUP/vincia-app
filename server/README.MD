@@ -8,3 +8,5 @@
 4 - .\venv\Scripts\pip.exe intall -r requirements.txt
 - desativar env
     deactivate
+
+PRODUCTION
