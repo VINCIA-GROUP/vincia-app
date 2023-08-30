@@ -98,8 +98,9 @@ class Player:
         tau = self.tau
         x0 = a
         x1 = 0
-        
-        while x0 != x1:
+        count = 100000
+        while (round(x0, 12) != round(x1, 12)) and count > 0:
+            count -=1
             # New iteration, so x(i) becomes x(i-1)
             x0 = x1
             d = math.pow(self.__rating, 2) + v + math.exp(x0)

@@ -24,6 +24,22 @@ mixin _$HomeController on _HomeController, Store {
     });
   }
 
+  late final _$ratingAtom =
+      Atom(name: '_HomeController.rating', context: context);
+
+  @override
+  int get rating {
+    _$ratingAtom.reportRead();
+    return super.rating;
+  }
+
+  @override
+  set rating(int value) {
+    _$ratingAtom.reportWrite(value, super.rating, () {
+      super.rating = value;
+    });
+  }
+
   late final _$initAsyncAction =
       AsyncAction('_HomeController.init', context: context);
 
@@ -35,7 +51,8 @@ mixin _$HomeController on _HomeController, Store {
   @override
   String toString() {
     return '''
-user: ${user}
+user: ${user},
+rating: ${rating}
     ''';
   }
 }

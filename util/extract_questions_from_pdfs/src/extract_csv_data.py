@@ -158,7 +158,7 @@ class ExtractCsvData:
                 except:
                     continue
                 
-                if linha[12] == '1':
+                if linha[12] == '1' or linha[13] == '1':
                     continue
 
                 # Verifica se o valor da coluna cod é igual a 1007

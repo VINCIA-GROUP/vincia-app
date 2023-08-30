@@ -116,14 +116,15 @@ class QuestionRepository:
         question_id = str(uuid.uuid4())
         answer_id = str(uuid.uuid4())
         ability_id = self.key_table_ability[question_info['area']][question_info['ability']]
+        statement = f'<p>[{title_statment}-N{str(question.info.num_question)}]</p>' + str({question.statement})
 
-        cursor.execute(f"INSERT INTO questions (id, statement, answer, rating, rating_deviation, volatility, last_rating_update, is_essay, ability_id) VALUES ('{question_id}', '<p>[{title_statment}-N{str(question.info.num_question)}]</p>{question.statement}' , '{answer_id}', '{int(question_info['rating'])}', 50, 0.2, %s, false, '{ability_id}');", (datetime.utcnow().date(),))
+        cursor.execute(f"INSERT INTO questions (id, statement, answer, rating, rating_deviation, volatility, last_rating_update, is_essay, ability_id) VALUES ('{question_id}', %s , '{answer_id}', '{int(question_info['rating'])}', 50, 0.2, %s, false, '{ability_id}');", (statement, datetime.utcnow().date()))
 
         for alternative in question.alternatives:
             alt_id = str(uuid.uuid4())
             if(alternative.letter == question_info['answer']):
                 alt_id = answer_id
-            cursor.execute(f"INSERT INTO alternatives (id, text, question_id) VALUES ('{alt_id}', '{alternative.text}', '{question_id}');")
+            cursor.execute(f"INSERT INTO alternatives (id, text, question_id) VALUES ('{alt_id}', %s, '{question_id}');", (alternative.text, ))
         cursor.close()
     
     

@@ -6,6 +6,7 @@ import '../../interfaces/ilogin_service.dart';
 
 part 'login_controller.g.dart';
 
+// ignore: library_private_types_in_public_api
 class LoginController = _LoginController with _$LoginController;
 
 abstract class _LoginController with Store {

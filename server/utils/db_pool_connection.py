@@ -3,7 +3,7 @@ import psycopg2
 import psycopg2.pool
 
 class DatabaseConnection:
-   def __init__(self, min_connections=1, max_connections=5):
+   def __init__(self, min_connections=1, max_connections=10):
       connection_string = os.environ["CONNECTION_STRING_DB"]
       self._pool = psycopg2.pool.ThreadedConnectionPool(
          minconn=min_connections,

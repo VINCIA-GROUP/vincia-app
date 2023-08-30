@@ -14,6 +14,7 @@ class HomePage extends StatelessWidget {
 
   HomePage({super.key}) {
     _homeController.init();
+    _homeController.getRating();
   }
 
   @override
@@ -48,28 +49,11 @@ class HomePage extends StatelessWidget {
                   border: Border.all(width: 1),
                   borderRadius: const BorderRadius.all(Radius.circular(8)),
                 ),
-                child: Row(
-                  children: [
-                    const Text(
-                      "1255",
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: const [
-                        Icon(
-                          Icons.arrow_drop_up,
-                          color: Colors.green,
-                        ),
-                        Text(
-                          "20",
-                          style: TextStyle(
-                              color: Colors.green,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 10),
-                        ),
-                      ],
-                    )
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Observer(builder: (context) {
+                    return Text(_homeController.rating.toString());
+                  }),
                 ),
               ),
             ),

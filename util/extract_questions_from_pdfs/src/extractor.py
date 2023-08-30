@@ -53,7 +53,9 @@ class Extractor:
                 continue 
 
             try:
-                statement += elements[index]['Text']
+                statement += elements[index]['Text'] 
+                if len(elements[index]['Text']) <= 70:
+                    statement += '<br>'
             except:
                 imagen_in_text = self._extract_image_if_its_in_the_text(elements, index,  path)
                 if len(imagen_in_text) > 0:
@@ -148,14 +150,14 @@ class Extractor:
         i = 1
         while i < len(elements):
             try:         
-                if len(elements[i]['Text']) <= 2 and elements[i]['Font']['weight'] == 700 and letters_alternatives_elements[i_alternatives_elements] in elements[i]['Text']:                    
+                if len(elements[i]['Text']) <= 4 and elements[i]['Font']['weight'] == 700 and letters_alternatives_elements[i_alternatives_elements] in elements[i]['Text'].upper().strip():                    
                     
                     alternatives_elements_info.append({"letter":  letters_alternatives_elements[i_alternatives_elements], "init": i, "final": i+1})                    
                     
-                    if(i_alternatives_elements > 0):
+                    if (i_alternatives_elements > 0):
                         alternatives_elements_info[i_alternatives_elements -1]['final'] = i - 1
                         
-                    elif (i_alternatives_elements >= len(letters_alternatives_elements)-1):
+                    if (i_alternatives_elements >= len(letters_alternatives_elements)-1):
                         alternatives_elements_info[i_alternatives_elements]['final'] = len(elements)-1 
                         
                     i_alternatives_elements += 1 
