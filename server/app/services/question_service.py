@@ -2,6 +2,7 @@ from app.domain.entities.history_of_question_rating_update import HistoryOfQuest
 from app.domain.entities.history_of_user_rating_update import HistoryOfUserRatingUpdate
 from app.domain.errors.api_exception import *
 from datetime import datetime, timedelta
+import random
 import uuid
 
 from app.domain.errors.domain_errors import AbilityNotFound, AbilityRatingCreateFailed, HistoryOfQuestionIdInvalid, QuestionNotFound
@@ -26,22 +27,46 @@ class QuestionService:
             self.history_question_repository.commit(); 
             return {"historyOfQuestion": history_of_question.id, "question": question.to_json()}
         
-        ability_id_restriction = self.calculate_rating_user_and_return_ability_id(user_id)
+        self.calculate_rating_user_and_return_ability_id(user_id)
+        abilities_restrictions = self.history_of_user_rating_update_repository.get_ability_id_last_updates(user_id, 5)
         
-        ability_rating, ability_id = self.abilities_rating_repository.get_ability_with_min_rating(ability_id_restriction, user_id)
-        if(ability_rating  == None):
-            ability_rating, ability_id = self.create_abilities(user_id, ability_id_restriction)
+        abilities = self.get_all_abilities(user_id)
         
-        questions = self.question_repository.get_by_rating(ability_rating, limit_question, ability_id)
-        result_history_id = str(uuid.uuid4())
-        for question in questions:
-            history_id = str(uuid.uuid4())
-            if question.id == questions[0].id:
-                history_id = result_history_id
-            self.history_question_repository.create(history_id, datetime.utcnow(), question.id, user_id)
+        questions = []
+        for ability in abilities:
+            
+            ability_rating, ability_id = ability
+            if abilities_restrictions != None and ability_id in abilities_restrictions:
+                continue
+            
+            random_number = random.uniform (0.2, 0.2)
+            random_ability_rating = ability_rating * random_number
+            
+            questions = self.question_repository.get_by_rating(random_ability_rating, limit_question, ability_id)
+            
+            result_history_id = str(uuid.uuid4())
+            for question in questions:
+                history_id = str(uuid.uuid4())
+                if question.id == questions[0].id:
+                    history_id = result_history_id
+                self.history_question_repository.create(history_id, datetime.utcnow(), question.id, user_id)
+                
+            if len(questions) > 0:
+                self.history_question_repository.commit();          
+                return {"historyOfQuestion": result_history_id, "question":questions[0].to_json()}
+
+            abilities_restrictions.append(ability_id)
+            
+        raise ApiException(QuestionNotFound())
+
         
-        self.history_question_repository.commit();          
-        return {"historyOfQuestion": result_history_id, "question":questions[0].to_json()}
+    def get_all_abilities(self, user_id):
+        abilities = self.abilities_rating_repository.get_all_ability_id_and_rating(user_id)
+        if(abilities  == None):
+            self.create_abilities(user_id)
+            abilities = self.abilities_rating_repository.get_all_ability_id_and_rating(user_id)
+        return abilities
+        
     
     def insert_question_answer(self, history_question_id, user_id, answer, duration):   
         try:
@@ -65,6 +90,8 @@ class QuestionService:
             if question.answer == answer:
                 return 1
             return 0
+    
+        
         
     def calculate_rating_user_and_return_ability_id(self, user_id):
         histories = self.history_question_repository.get_all_history_without_calculate_rating(user_id)
@@ -72,8 +99,7 @@ class QuestionService:
             return None
         rating_list = []
         RD_list = []
-        outcome_list = []
-        ability_id = None        
+        outcome_list = []    
         for history in histories:
             question = self.question_repository.get_by_id(history.question_id)
             rating_list.append(question.rating)
@@ -81,7 +107,6 @@ class QuestionService:
             outcome_list.append(history.hit_level)
             ability_id = question.ability_id
             
-        
         ability = self.abilities_rating_repository.get_by_id(ability_id, user_id)
         
         glicko = glicko2.Player(rating= ability.rating, rd= ability.rating_deviation, vol =ability.volatility)
@@ -91,23 +116,17 @@ class QuestionService:
         self.history_of_user_rating_update_repository.create(HistoryOfUserRatingUpdate(history_of_user_rating_update_id, datetime.utcnow(), glicko.getRating(), glicko.getRd(), glicko.vol, user_id, ability_id))
         self.abilities_rating_repository.update_rating(ability.id, glicko.getRating(), glicko.getRd(), glicko.vol, user_id)
         
-        for history in histories:
+        for history in histories:            
             self.history_question_repository.update_calculate_rating(history.id, user_id, True, history_of_user_rating_update_id )
-            
-        return ability.id
-    
-    def create_abilities(self, user_id, ability_id_restriction):
-        try:
-            result = None
-            rating = 1500
-            rating_deviation = 350
-            volatility = 0.6
-            abilities = self.abilities_repository.get_all()
-            for ability in abilities:
-                result = self.abilities_rating_repository.create(str(uuid.uuid4()), rating, rating_deviation, volatility, ability.id, user_id)
-            return result
-        except:
-            raise ApiException(AbilityRatingCreateFailed())
+
+    def create_abilities(self, user_id):
+        rating = 1500
+        rating_deviation = 350
+        volatility = 0.6
+        abilities = self.abilities_repository.get_all()
+        for ability in abilities:
+            self.abilities_rating_repository.create(str(uuid.uuid4()), rating, rating_deviation, volatility, ability.id, user_id)
+
         
     def update_rating_question(self, question, user_id):
         tau = 0.1

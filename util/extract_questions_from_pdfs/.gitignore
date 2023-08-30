@@ -1,5 +1,9 @@
 credentials/*
 resources/
+data/
 temp/
 output/
 src/__pycache__/
+**/__pycache__
+**/venv
+.env

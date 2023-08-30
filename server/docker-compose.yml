@@ -1,0 +1,17 @@
+version: '3.4'
+
+services:
+  vincia.api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: vincia-api
+    restart: always
+    environment:
+      API_ENVIRONMENT: "PRODUCTION"
+    volumes:
+      - ./data:/data
+    ports:
+      - 8080:8080
+    dns:
+      - 8.8.8.8

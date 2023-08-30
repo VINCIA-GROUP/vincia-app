@@ -3,13 +3,11 @@ import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
-import 'package:uuid/uuid.dart';
 import 'package:vincia/modules/adaptive_question/model/alternative_model.dart';
 import 'package:vincia/modules/adaptive_question/page/controller/adaptive_question_controller.dart';
 import 'package:vincia/modules/adaptive_question/page/controller/states/question_states.dart';
 import 'package:vincia/shared/components/error_message_component.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class AdaptiveQuestionPage extends StatefulWidget {
   const AdaptiveQuestionPage({super.key});
@@ -303,11 +301,7 @@ class _AdaptiveQuestionPageState extends State<AdaptiveQuestionPage>
                     ),
                   ),
                 ),
-                Expanded(
-                  child: Text(
-                    alternative.text,
-                  ),
-                ),
+                Expanded(child: HtmlWidget(alternative.text)),
               ],
             ),
           ),

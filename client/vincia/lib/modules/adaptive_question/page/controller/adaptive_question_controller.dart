@@ -10,6 +10,7 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 part 'adaptive_question_controller.g.dart';
 
+// ignore: library_private_types_in_public_api
 class AdaptiveQuestionController = _AdaptiveQuestionController
     with _$AdaptiveQuestionController;
 
@@ -82,7 +83,7 @@ abstract class _AdaptiveQuestionController with Store {
 
   @action
   void answerQuestion(alternativeId) {
-    if (state is InitialState) {
+    if (state is InitialState && state is! AnsweredQuestionState) {
       timeWatcher?.cancel();
       _questionService.sendAnswerQuestion(
           alternativeId, duration, question!.historyOfQuestionId);

@@ -18,4 +18,4 @@ samples, guidance on mobile development, and a full API reference.
 
 ## Commands
 
-flutter packages pub run build_runner build
+dart run build_runner build
