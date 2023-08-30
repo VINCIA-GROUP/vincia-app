@@ -15,7 +15,7 @@ openai.api_key= os.getenv("OPENAI_KEY")
 
 app = Flask(__name__)
 CORS(app)
-app.secret_key = os.environ["APP_SECRET_KEY"]
+app.secret_key = os.getenv("APP_SECRET_KEY")
 
 connection_pool = DatabaseConnection(1, 5)
 

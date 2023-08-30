@@ -40,8 +40,8 @@ def requires_auth(permissions):
     def wrapper(func):
         def decorated(*args, **kwargs):      
                   
-            AUTH0_DOMAIN = os.environ["AUTH0_DOMAIN"]
-            API_AUDIENCE = os.environ["AUDIENCE"]
+            AUTH0_DOMAIN = os.getenv("AUTH0_DOMAIN")
+            API_AUDIENCE = os.getenv("AUDIENCE")
             
             token = get_token_auth_header()
             jsonurl = urlopen("https://"+AUTH0_DOMAIN+"/.well-known/jwks.json")
