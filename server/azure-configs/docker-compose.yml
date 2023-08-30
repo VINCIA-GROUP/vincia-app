@@ -1,0 +1,20 @@
+version: '3.4'
+
+services:
+  vincia.api:
+      container_name: vincia-api
+      image: igorcoura/vincia-api
+      restart: always
+      environment:
+          API_ENVIRONMENT: "PRODUCTION"
+          AUTH0_DOMAIN: 
+          AUDIENCE: 
+          APP_SECRET_KEY: 
+          CONNECTION_STRING_DB: 
+          OPENAI_KEY: 
+      volumes:
+          - ./data:/data
+      ports:
+          - 8080:8080
+      dns:
+          - 8.8.8.8
