@@ -28,7 +28,7 @@ class QuestionService:
             return {"historyOfQuestion": history_of_question.id, "question": question.to_json()}
         
         self.calculate_rating_user_and_return_ability_id(user_id)
-        abilities_restrictions = self.history_of_user_rating_update_repository.get_ability_id_last_updates(user_id, 5)
+        abilities_restrictions = self.history_of_user_rating_update_repository.get_ability_id_last_updates(user_id, 3)
         
         abilities = self.get_all_abilities(user_id)
         
@@ -39,7 +39,7 @@ class QuestionService:
             if abilities_restrictions != None and ability_id in abilities_restrictions:
                 continue
             
-            random_number = random.uniform (0.2, 0.2)
+            random_number = random.uniform(-0.2, 0.2)
             random_ability_rating = ability_rating * random_number
             
             questions = self.question_repository.get_by_rating(random_ability_rating, limit_question, ability_id)
