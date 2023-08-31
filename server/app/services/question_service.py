@@ -40,7 +40,7 @@ class QuestionService:
                 continue
             
             random_number = random.uniform(-0.2, 0.2)
-            random_ability_rating = ability_rating * random_number
+            random_ability_rating = ability_rating + ability_rating * random_number
             
             questions = self.question_repository.get_by_rating(random_ability_rating, limit_question, ability_id)
             
