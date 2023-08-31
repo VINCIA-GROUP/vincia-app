@@ -16,9 +16,7 @@ async def extract_question(nome_prova, file_name_prova, file_name_data, dic_cod_
     pdf_path_temp = f"temp/{nome_prova}/{file_name_prova}.zip"
     data_path = f"data/{file_name_data}"
     
-    if(count <= 24):
-        return
-
+  
     if os.path.isfile(pdf_path_temp) == False:
         await AdobeApiFunctions.extract_info_from_pdf(pdf_path_in, pdf_path_temp)
 
@@ -49,25 +47,25 @@ async def main_async():
     html_questions = []
     
     
-    file_name_data = 'ITENS_PROVA_2020.csv'
-    nome_prova = 'Enem-2020'
-    dic_cod_prova = {
-        'MT' : '695',
-        'LC' : '691',
-        'CN' : '699',
-        'CH' : '687'
-    }
-    list_file_names = os.listdir(f"{base_path}/resources/{nome_prova}")
-    
-    # list_file_names = os.listdir(f"{base_path}/resources/Enem-2021")
-    # file_name_data = 'ITENS_PROVA_2021.csv'
-    # nome_prova = 'Enem-2021'
+    # file_name_data = 'ITENS_PROVA_2020.csv'
+    # nome_prova = 'Enem-2020'
     # dic_cod_prova = {
-    #     'MT': '1007',
-    #     'LC':'1003',
-    #     'CN':'1011',
-    #     'CH':'999'
+    #     'MT' : '695',
+    #     'LC' : '691',
+    #     'CN' : '699',
+    #     'CH' : '687'
     # }
+    # list_file_names = os.listdir(f"{base_path}/resources/{nome_prova}")
+    
+    list_file_names = os.listdir(f"{base_path}/resources/Enem-2021")
+    file_name_data = 'ITENS_PROVA_2021.csv'
+    nome_prova = 'Enem-2021'
+    dic_cod_prova = {
+        'MT': '1007',
+        'LC':'1003',
+        'CN':'1011',
+        'CH':'999'
+    }
     
     question_repository = QuestionRepository(connection)
     question_repository.insert_areas_and_abilities()
