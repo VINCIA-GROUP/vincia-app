@@ -30,7 +30,10 @@ class Player:
     # The system constant, which constrains
     
     def getRating(self):
-        return (self.__rating * 173.7178) + 1500 
+        result = (self.__rating * 173.7178) + 1500 
+        if(result < 0):
+            return 100
+        return result
 
     def setRating(self, rating):
         self.__rating = (rating - 1500) / 173.7178
