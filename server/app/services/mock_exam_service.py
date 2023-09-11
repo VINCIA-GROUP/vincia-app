@@ -3,19 +3,16 @@ from app.domain.enums.areas_id import AreasID
 
 class MockExamService:
 
-   def __init__(self, question_repository):
+   def __init__(self, question_repository, history_of_questions_repository):
       self.question_repository = question_repository
+      self.history_of_questions_repository = history_of_questions_repository
 
    def get_mock_exam_questions(self): #90 questoes
       questions = {"natural_science": [], "humanities": [], "languages": [], "mathematics": []}
-      natural_science = self.get_areas_questions(AreasID.NATURAL_SCIENCE.value)
-      questions["natural_science"] = natural_science
-      humanities = self.get_areas_questions(AreasID.HUMANITIES.value)
-      questions["humanities"] = humanities
-      # languages = self.get_areas_questions(AreasID.LANGUAGES.value)
-      # questions["languages"] = languages
-      # mathematics = self.get_areas_questions(AreasID.MATHEMATICS.value)
-      # questions["mathematics"] = mathematics
+      questions["natural_science"] = self.get_areas_questions(AreasID.NATURAL_SCIENCE.value)
+      questions["humanities"] = self.get_areas_questions(AreasID.HUMANITIES.value)
+      # questions["languages"] = self.get_areas_questions(AreasID.LANGUAGES.value)
+      # questions["mathematics"] = self.get_areas_questions(AreasID.MATHEMATICS.value)
       return questions
 
    def get_areas_questions(self, area): #45 questoes  11 facil / 23 normal / 11 dificil
@@ -45,3 +42,6 @@ class MockExamService:
                chosen_questions.append(value[random_question_index].to_json())
                abilities[key].pop(random_question_index)
       return chosen_questions
+   
+   def submit_answer(self, user_id, answers):
+      

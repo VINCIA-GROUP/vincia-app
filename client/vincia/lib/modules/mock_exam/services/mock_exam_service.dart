@@ -34,7 +34,7 @@ class MockExamQuestionService implements IMockExamService {
     try {
       final token = await getAcessToken();
       final response = await client.get(
-        Uri.parse("$apiUrl/api/question"),
+        Uri.parse("$apiUrl/api/mock-exam/questions"),
         headers: {
           'Authorization': 'Bearer $token',
           'Accept': 'application/json',
@@ -54,14 +54,30 @@ class MockExamQuestionService implements IMockExamService {
   }
 
   @override
-  Future<Either<FailureModel, SuccessModel>> sendMockExamAnswer(String answer, Duration duration) async {
+  Future<Either<FailureModel, SuccessModel>> sendMockExamAnswer(List<MockExamAnswerModel> answers) async {
     try {
-      final token =await getAcessToken();
-      final Map<String, dynamic> requestData = {
-        'answer': answer,
-        'duration': duration.toString(),
+      final token = await getAcessToken();
 
+      var answersJson = answers.map((answer) {
+        jsonEncode(answer.toJson());
+      }).toList();
+      
+      final response = await client.post(Uri.parse("$apiUrl/api/mock-exam/submmit"),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: answersJson
+      );
+
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body)["data"];
+        return Right(body);
+      } else {
+        final body = jsonDecode(response.body)["errors"];
+        return Left(FailureModel.fromJson(body));
       }
+
     } catch (e) {
       return Left(FailureModel.fromEnum(AplicationErrors.internalError));
     }
