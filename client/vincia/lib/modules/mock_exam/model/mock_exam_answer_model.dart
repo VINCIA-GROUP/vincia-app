@@ -1,13 +1,15 @@
 class MockExamAnswerModel {
   String answer;
-  Duratio duration;
+  Duration duration;
+  int difficulty;
 
-  MockExamAnswerModel(this.answer, this.duration);
+  MockExamAnswerModel(this.answer, this.duration, this.difficulty);
 
   factory MockExamAnswerModel.fromJson(Map<String, dynamic> json) {
     return MockExamAnswerModel(
       json['answer'] as String,
       Duration(milliseconds: json['duration'] as int),
+      json['difficulty'] as int
       );
     }
 
@@ -15,6 +17,7 @@ class MockExamAnswerModel {
     return {
       'answer': answer,
       'duration': duration,
+      'difficulty': difficulty
     };
   }
 }

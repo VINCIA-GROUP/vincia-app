@@ -44,4 +44,7 @@ class MockExamService:
       return chosen_questions
    
    def submit_answer(self, user_id, answers):
-      
+      for answer in answers:
+         
+
+   def calculate_grade():

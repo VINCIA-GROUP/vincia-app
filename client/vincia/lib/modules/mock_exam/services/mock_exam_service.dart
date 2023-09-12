@@ -5,6 +5,7 @@ import 'package:dartz/dartz.dart';
 import 'package:vincia/modules/mock_exam/interfaces/i_mock_exam_service.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:vincia/modules/mock_exam/model/mock_exam_answer_model.dart';
 import 'package:vincia/modules/mock_exam/model/mock_exam_areas_model.dart';
 import 'package:vincia/shared/errors/aplication_errors.dart';
 import 'package:vincia/shared/model/failure_model.dart';
