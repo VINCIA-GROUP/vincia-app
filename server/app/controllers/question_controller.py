@@ -1,5 +1,7 @@
 from flask import jsonify, request, session
 from app import app
+from app.repositories.adaptive_question_selection_repository import AdaptiveQuestionSelectionRepository
+from app.services.ability_service import AbilityService
 from app.services.question_service import QuestionService
 from app.domain.errors.api_exception import ApiException
 from app.controllers.base_controller import *
@@ -11,6 +13,7 @@ from app.repositories.ability_repository import AbilityRepository
 from app.repositories.history_of_user_rating_update_repository import HistoryOfUserRatingUpdateRepository
 from app.repositories.history_of_question_rating_update_repository import HistoryOfQuestionRatingUpdateRepository
 from app import connection_pool
+from app.services.rating_service import RatingService
 
 
 @app.route("/api/question/<string:id>", methods=["GET"])
@@ -28,7 +31,10 @@ def get_question():
         abilities_repository = AbilityRepository(connection)
         history_of_user_rating_update_repository = HistoryOfUserRatingUpdateRepository(connection)
         history_of_question_rating_update_repository = HistoryOfQuestionRatingUpdateRepository(connection)
-        service = QuestionService(questions_repository, history_question_repository, abilities_rating_repository, abilities_repository, history_of_user_rating_update_repository, history_of_question_rating_update_repository)
+        adaptive_question_selection_repository = AdaptiveQuestionSelectionRepository(connection)
+        ability_service = AbilityService(abilities_rating_repository, abilities_repository)
+        rating_service = RatingService(history_question_repository, history_of_user_rating_update_repository, abilities_rating_repository, questions_repository, history_of_question_rating_update_repository, ability_service)
+        service = QuestionService(questions_repository, history_question_repository, abilities_rating_repository, history_of_user_rating_update_repository,  adaptive_question_selection_repository, ability_service, rating_service)
         
         user_id = session.get('current_user').get('sub')
         response = service.get_question(user_id)
@@ -47,14 +53,18 @@ def post_answer():
         abilities_repository = AbilityRepository(connection)
         history_of_user_rating_update_repository = HistoryOfUserRatingUpdateRepository(connection)
         history_of_question_rating_update_repository = HistoryOfQuestionRatingUpdateRepository(connection)
-        service = QuestionService(questions_repository, history_question_repository, abilities_rating_repository, abilities_repository, history_of_user_rating_update_repository, history_of_question_rating_update_repository)
+        adaptive_question_selection_repository = AdaptiveQuestionSelectionRepository(connection)
+        ability_service = AbilityService(abilities_rating_repository, abilities_repository)
+        rating_service = RatingService(history_question_repository, history_of_user_rating_update_repository, abilities_rating_repository, questions_repository, history_of_question_rating_update_repository, ability_service)
+        service = QuestionService(questions_repository, history_question_repository, abilities_rating_repository, history_of_user_rating_update_repository,  adaptive_question_selection_repository, ability_service, rating_service)
+        
         
         user_id = session.get('current_user').get('sub')
         data = request.get_json()
         answer = data.get('answer')
         duration = data.get('duration')
-        history_question_id = data.get('historyQuestionId')
+        question_id = data.get('questionId')
         
-        response = service.insert_question_answer(history_question_id, user_id, answer, duration)
+        response = service.insert_question_answer(question_id, user_id, answer, duration)
         connection_pool.release_connection(connection)
         return success_api_response(data=response)
