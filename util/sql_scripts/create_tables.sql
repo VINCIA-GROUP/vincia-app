@@ -44,6 +44,13 @@ CREATE TABLE abilities_rating(
   FOREIGN KEY (ability_id) REFERENCES abilities(id)
 );
 
+CREATE TABLE adaptive_question_selection(
+  id uuid PRIMARY KEY NOT NULL,
+  create_at DATE NOT NULL,
+  question_id uuid NOT NULL,
+  user_id VARCHAR NOT NULL,
+  FOREIGN KEY (question_id) REFERENCES questions(id)
+);
 
 CREATE TABLE history_of_user_rating_updates(
   id uuid PRIMARY KEY NOT NULL,
@@ -60,10 +67,8 @@ CREATE TABLE history_of_user_rating_updates(
 CREATE TABLE history_of_questions(
   id uuid PRIMARY KEY NOT NULL,
   create_at DATE NOT NULL,
-  answer_at DATE,
-  hit_level INTEGER,
-  time INTERVAL,
-  calculate_rating BOOLEAN NOT NULL,
+  hit_level INTEGER NOT NULL,
+  time interval ,
   question_id uuid NOT NULL,
   history_of_user_rating_update_id uuid,
   user_id VARCHAR NOT NULL,

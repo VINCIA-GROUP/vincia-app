@@ -12,13 +12,13 @@ class ChatService:
         self.question_repository = question_repository
         self.chat_repository = chat_repository
         
-    def send_message(self, user_id, history_question_id, message):
+    def send_message(self, user_id, question_id, message):
 
-        chat_messages = self.chat_repository.get_by_history_question_id(history_question_id, user_id)
+        chat_messages = self.chat_repository.get_by_history_question_id(question_id, user_id)
         if(chat_messages == None or len(chat_messages) <= 0):
-            chat_messages = self.create_new_chat(history_question_id, user_id)
+            chat_messages = self.create_new_chat(question_id, user_id)
 
-        user_message = ChatMessages(str(uuid.uuid4()), history_question_id, "user", message, datetime.datetime.utcnow(), chat_messages[-1].sequence + 1)
+        user_message = ChatMessages(str(uuid.uuid4()), question_id, "user", message, datetime.datetime.utcnow(), chat_messages[-1].sequence + 1)
         chat_messages.append(user_message)
         messages = list(map(lambda x : x.to_json(), chat_messages))
         
@@ -28,7 +28,7 @@ class ChatService:
             messages = messages,
             temperature = 0.3
             )
-            assistant_message = ChatMessages(str(uuid.uuid4()), history_question_id, "assistant", response.choices[0].message.content, datetime.datetime.utcnow(), chat_messages[-1].sequence + 1)
+            assistant_message = ChatMessages(str(uuid.uuid4()), question_id, "assistant", response.choices[0].message.content, datetime.datetime.utcnow(), chat_messages[-1].sequence + 1)
             self.chat_repository.insert_range_messages([user_message, assistant_message], user_id)
             self.chat_repository.commit()
             return response.choices[0].message.content

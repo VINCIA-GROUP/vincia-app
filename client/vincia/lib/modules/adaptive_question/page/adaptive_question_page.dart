@@ -71,7 +71,7 @@ class _AdaptiveQuestionPageState extends State<AdaptiveQuestionPage>
           IconButton(
             iconSize: 32,
             onPressed: () {
-              Modular.to.popAndPushNamed('/question');
+              _questionController.nextQuestion();
             },
             color: Colors.green,
             icon: const Icon(Icons.arrow_forward),
@@ -263,21 +263,28 @@ class _AdaptiveQuestionPageState extends State<AdaptiveQuestionPage>
       BuildContext context, int index, AlternativeModel alternative) {
     var letter = String.fromCharCode(index + 65);
     var buttonColor = Theme.of(context).colorScheme.primary;
+    var borderColor = Theme.of(context).colorScheme.primary;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Observer(builder: (context) {
         if (_questionController.state is AnsweredQuestionState) {
           var state = _questionController.state as AnsweredQuestionState;
+          borderColor = alternative.id == _questionController.question!.answer
+              ? Colors.green
+              : Theme.of(context).colorScheme.primary;
           if (state.alternativeId == alternative.id) {
             buttonColor = state.isCorrect ? Colors.green : Colors.red;
+            borderColor = buttonColor;
           }
         }
         return ElevatedButton(
           style: ElevatedButton.styleFrom(
             backgroundColor: buttonColor,
             foregroundColor: Theme.of(context).colorScheme.onPrimary,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            shape: RoundedRectangleBorder(
+              borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+              side: BorderSide(
+                  color: borderColor, width: 3.0), // <--- borda verde aqui
             ),
           ),
           onPressed: () => _questionController.answerQuestion(alternative.id),
