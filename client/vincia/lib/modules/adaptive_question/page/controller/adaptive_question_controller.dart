@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:dartz/dartz.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:uuid/uuid.dart';
 import 'package:vincia/modules/adaptive_question/interfaces/i_adaptive_question_service.dart';
@@ -20,6 +22,8 @@ abstract class _AdaptiveQuestionController with Store {
   final _chatBotUser = const types.User(
     id: '82091009-a484-4a89-ae75-a22bf8d6f3ac',
   );
+
+  Future<Either<FailureModel, String>>? _historyOfQuestionId;
 
   Timer? timeWatcher;
 
@@ -82,16 +86,16 @@ abstract class _AdaptiveQuestionController with Store {
   }
 
   @action
-  void answerQuestion(alternativeId) {
+  Future<void> answerQuestion(alternativeId) async {
     if (state is InitialState && state is! AnsweredQuestionState) {
       timeWatcher?.cancel();
-      _questionService.sendAnswerQuestion(
-          alternativeId, duration, question!.historyOfQuestionId);
       if (alternativeId == question!.answer) {
         state = AnsweredQuestionState(true, alternativeId);
       } else {
         state = AnsweredQuestionState(false, alternativeId);
       }
+      _historyOfQuestionId = _questionService.sendAnswerQuestion(
+          alternativeId, duration, question!.id);
     }
   }
 
@@ -101,7 +105,21 @@ abstract class _AdaptiveQuestionController with Store {
   }
 
   @action
+  Future<void> nextQuestion() async {
+    question = null;
+    await _historyOfQuestionId;
+    Modular.to.popAndPushNamed('/question');
+  }
+
+  @action
   Future<void> handleSendPressed(types.PartialText message) async {
+    var historyOfQuestion = await _historyOfQuestionId;
+    if (historyOfQuestion == null || historyOfQuestion.isLeft()) {
+      FailureModel value = (historyOfQuestion as Left).value;
+      state = FailureState(value);
+      return;
+    }
+    var hId = (historyOfQuestion as Right).value;
     final textMessage = types.TextMessage(
       author: user!,
       createdAt: DateTime.now().millisecondsSinceEpoch,
@@ -109,8 +127,7 @@ abstract class _AdaptiveQuestionController with Store {
       text: message.text,
     );
     messages = List.from(messages..insert(0, textMessage));
-    var result = await _questionService.sendMessage(
-        message.text, question!.historyOfQuestionId);
+    var result = await _questionService.sendMessage(message.text, hId);
     if (result.isRight()) {
       var response = (result as Right).value;
       final textMessage = types.TextMessage(

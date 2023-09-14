@@ -120,6 +120,24 @@ mixin _$AdaptiveQuestionController on _AdaptiveQuestionController, Store {
     return _$initAsyncAction.run(() => super.init());
   }
 
+  late final _$answerQuestionAsyncAction = AsyncAction(
+      '_AdaptiveQuestionController.answerQuestion',
+      context: context);
+
+  @override
+  Future<void> answerQuestion(dynamic alternativeId) {
+    return _$answerQuestionAsyncAction
+        .run(() => super.answerQuestion(alternativeId));
+  }
+
+  late final _$nextQuestionAsyncAction =
+      AsyncAction('_AdaptiveQuestionController.nextQuestion', context: context);
+
+  @override
+  Future<void> nextQuestion() {
+    return _$nextQuestionAsyncAction.run(() => super.nextQuestion());
+  }
+
   late final _$handleSendPressedAsyncAction = AsyncAction(
       '_AdaptiveQuestionController.handleSendPressed',
       context: context);
@@ -132,17 +150,6 @@ mixin _$AdaptiveQuestionController on _AdaptiveQuestionController, Store {
 
   late final _$_AdaptiveQuestionControllerActionController =
       ActionController(name: '_AdaptiveQuestionController', context: context);
-
-  @override
-  void answerQuestion(dynamic alternativeId) {
-    final _$actionInfo = _$_AdaptiveQuestionControllerActionController
-        .startAction(name: '_AdaptiveQuestionController.answerQuestion');
-    try {
-      return super.answerQuestion(alternativeId);
-    } finally {
-      _$_AdaptiveQuestionControllerActionController.endAction(_$actionInfo);
-    }
-  }
 
   @override
   void chatOpen() {

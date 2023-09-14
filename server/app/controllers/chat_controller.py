@@ -21,8 +21,8 @@ def send_message():
 
         data = request.get_json()
         user_id = session.get('current_user').get('sub')
-        history_question_id = data.get('historyQuestionId')
+        question_id = data.get('questionId')
         message = data.get('message') 
-        response = service.send_message(user_id, history_question_id, message)
+        response = service.send_message(user_id, question_id, message)
         connection_pool.release_connection(connection)
         return success_api_response(data=response)
