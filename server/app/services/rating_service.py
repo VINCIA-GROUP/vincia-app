@@ -7,7 +7,7 @@ from app.services import glicko2
 class RatingService:
     
     tau = 0.1
-    day_to_update = 3
+    day_to_update = 1
     
     def __init__(self, history_question_repository, history_of_user_rating_update_repository, abilities_rating_repository, question_repository, history_of_question_rating_update_repository, ability_service):
         self.history_question_repository = history_question_repository
@@ -20,8 +20,12 @@ class RatingService:
     def check_rating_user(self, user_id):
         date = self.history_of_user_rating_update_repository.get_date_last_update(user_id)
         update_time = (datetime.utcnow() + timedelta(days=self.day_to_update)).date()
-        if(date == None or date > update_time):
-            abilities = self.history_question_repository.get_all_abilities_history_without_rating_id(user_id)
+        delta = date - update_time
+        if(date == None or delta >= 0):
+            abilities = self.history_question_repository.get_all_abilities_history_without_rating_id(user_id) 
+            if(abilities == None):
+                self.update_user_rating(user_id, None)     
+                return  
             for ability in abilities:
                 self.update_user_rating(user_id, ability)
             
@@ -29,12 +33,12 @@ class RatingService:
     def check_rating_question(self, question_id):
         last_rating_update = self.question_repository.get_date_last_update(question_id)
         update_time = (datetime.utcnow() + timedelta(days=self.day_to_update)).date()
-        if(last_rating_update >  update_time):            
+        delta = last_rating_update - update_time
+        if(delta >= 0):           
             self.update_rating_question(question_id)
             
             
     def update_user_rating(self, user_id, ability_id):
-        histories = self.history_question_repository.get_all_history_without_rating_id(user_id, ability_id)
         
         ability = self.abilities_rating_repository.get_by_id(ability_id, user_id)
         if(ability == None):
@@ -43,6 +47,8 @@ class RatingService:
             
         glicko = glicko2.Player(rating= ability.rating, rd= ability.rating_deviation, vol =ability.volatility)
         
+        histories = self.history_question_repository.get_all_history_without_rating_id(user_id, ability_id)
+
         if(histories == None or len(histories) <= 0):
             glicko.did_not_compete()
         else:
@@ -59,9 +65,10 @@ class RatingService:
         
     def update_rating_question(self, question_id):
         question = self.question_repository.get_by_id(question_id)
-        histories = self.history_question_repository.get_all_histories(question.last_rating_update, question.id)
-        
+            
         glicko = glicko2.Player(rating= question.rating, rd= question.rating_deviation, vol =question.volatility, tau=self.tau)
+        
+        histories = self.history_question_repository.get_all_histories(question.last_rating_update, question.id)
         
         if(histories == None or len(histories) <= 0):
             glicko.did_not_compete()
