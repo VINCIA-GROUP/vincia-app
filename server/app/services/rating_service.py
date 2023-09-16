@@ -20,8 +20,7 @@ class RatingService:
     def check_rating_user(self, user_id):
         date = self.history_of_user_rating_update_repository.get_date_last_update(user_id)
         update_time = (datetime.utcnow() + timedelta(days=self.day_to_update)).date()
-        delta = date - update_time
-        if(date == None or delta >= 0):
+        if(date == None or date > update_time):
             abilities = self.history_question_repository.get_all_abilities_history_without_rating_id(user_id) 
             if(abilities == None):
                 self.update_user_rating(user_id, None)     
@@ -33,8 +32,7 @@ class RatingService:
     def check_rating_question(self, question_id):
         last_rating_update = self.question_repository.get_date_last_update(question_id)
         update_time = (datetime.utcnow() + timedelta(days=self.day_to_update)).date()
-        delta = last_rating_update - update_time
-        if(delta >= 0):           
+        if(last_rating_update >  update_time):                
             self.update_rating_question(question_id)
             
             
@@ -42,8 +40,8 @@ class RatingService:
         
         ability = self.abilities_rating_repository.get_by_id(ability_id, user_id)
         if(ability == None):
-            ability_service = self.ability_service.create_abilities(user_id)
-            ability = self.abilities_rating_repository.get_by_id(ability_id, user_id)
+            self.ability_service.create_abilities(user_id)
+            return
             
         glicko = glicko2.Player(rating= ability.rating, rd= ability.rating_deviation, vol =ability.volatility)
         

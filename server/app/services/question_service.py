@@ -67,10 +67,10 @@ class QuestionService:
         return {"historyQuestionId":new_id} 
     
     def _create_question_selection(self, questions, user_id):
-        result = ""
+        result = None
         for question in questions:
             new_id = str(uuid.uuid4())
-            if(question[0].id == question.id):
+            if result == None:
                 result = new_id
             entity = AdaptiveQuestionSelection(new_id, datetime.utcnow(), question.id, user_id)
             self.adaptive_question_selection_repository.insert(entity)
