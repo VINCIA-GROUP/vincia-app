@@ -7,6 +7,7 @@ import 'package:vincia/modules/mock_exam/interfaces/i_mock_exam_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:vincia/modules/mock_exam/model/mock_exam_answer_model.dart';
 import 'package:vincia/modules/mock_exam/model/mock_exam_areas_model.dart';
+// import 'package:vincia/modules/mock_exam/model/mock_exam_question_model.dart';
 import 'package:vincia/shared/errors/aplication_errors.dart';
 import 'package:vincia/shared/model/failure_model.dart';
 import 'package:vincia/shared/model/success_model.dart';
@@ -32,6 +33,7 @@ class MockExamQuestionService implements IMockExamService {
 
   @override
   Future<Either<FailureModel, MockExamAreasModel>> getQuestions() async {
+
     try {
       final token = await getAcessToken();
       final response = await client.get(
@@ -53,6 +55,13 @@ class MockExamQuestionService implements IMockExamService {
       return Left(FailureModel.fromEnum(AplicationErrors.internalError));
     }
   }
+
+  // @override
+  // Future<Either<FailureModel, SuccessModel>> saveQuestionState(MockExamQuestionModel question, MockExamAnswerModel answer) async {
+  //   try {
+
+  //   }
+  // }
 
   @override
   Future<Either<FailureModel, SuccessModel>> sendMockExamAnswer(List<MockExamAnswerModel> answers) async {
