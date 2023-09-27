@@ -22,10 +22,10 @@ class HistoryOfQuestionsRepository(Repository):
       cursor.close()
       return result
    
-   def get_all_history_without_rating_id(self, user_id, ability_id):
+   def get_all_history_without_rating_id(self, user_id, ability_id, date):
       return super().get_many(
-         query="SELECT h.id, h.create_at, h.hit_level, h.time, h.question_id, h.history_of_user_rating_update_id, h.user_id  FROM history_of_questions h JOIN questions q ON h.question_id = q.id WHERE h.history_of_user_rating_update_id IS NULL AND h.user_id = %s AND q.ability_id = %s;",
-         params=(user_id, ability_id)
+         query="SELECT h.id, h.create_at, h.hit_level, h.time, h.question_id, h.history_of_user_rating_update_id, h.user_id  FROM history_of_questions h JOIN questions q ON h.question_id = q.id WHERE h.history_of_user_rating_update_id IS NULL AND h.user_id = %s AND q.ability_id = %s AND h.create_at = %s;",
+         params=(user_id, ability_id, date)
       )
    
    def get_all_histories(self, date, question_id):
@@ -37,6 +37,17 @@ class HistoryOfQuestionsRepository(Repository):
       result = cursor.fetchall()
       cursor.close()
       return result
+   
+   def get_last_abilities_use(self, quantity, user_id):
+      cursor = self.connection.cursor()
+      cursor.execute("SELECT DISTINCT ar.id, hq.create_at FROM history_of_questions hq JOIN questions q ON q.id = hq.question_id JOIN abilities a ON a.id = q.ability_id JOIN abilities_rating ar ON ar.ability_id = a.id WHERE ar.user_id = %s AND hq.user_id = %s ORDER BY hq.create_at LIMIT %s", (user_id, user_id, quantity))
+      if(cursor.rowcount <= 0):
+         cursor.close()
+         return None
+      result = cursor.fetchall()
+      cursor.close()
+      return result
+      
 
    def create(self, id, create_at, hit_level, duration, question_id, user_id):
       super().update(
