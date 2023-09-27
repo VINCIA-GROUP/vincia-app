@@ -19,6 +19,11 @@ class RatingService:
     def check_rating_user(self, user_id):
         list_abilities = self.abilities_rating_repository.get_all_ability(user_id)
         current_date = datetime.utcnow().date()
+        
+        if list_abilities == None or len(list_abilities) <= 0:
+            self.ability_service.create_abilities(user_id)
+            return
+         
         for ability in list_abilities:
             data_range = range((current_date - ability.last_rating_update).days + 1)
             for i in data_range:
