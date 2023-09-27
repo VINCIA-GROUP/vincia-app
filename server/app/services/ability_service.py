@@ -1,9 +1,10 @@
 import uuid
+from datetime import datetime
 
 
 class AbilityService:
     
-    rating = 1500
+    rating = 100
     rating_deviation = 350
     volatility = 0.6
     
@@ -29,4 +30,4 @@ class AbilityService:
     def create_abilities(self, user_id):
         abilities = self.abilities_repository.get_all()
         for ability in abilities:
-            self.ability_rating_repository.create(str(uuid.uuid4()), self.rating, self.rating_deviation, self.volatility, ability.id, user_id)
+            self.ability_rating_repository.create(str(uuid.uuid4()), self.rating, self.rating_deviation, self.volatility, ability.id, user_id, datetime.utcnow())
