@@ -21,10 +21,10 @@ abstract class _MockExamController with Store {
   Duration duration = const Duration(seconds: 0);
 
   @observable
-  MockExamQuestionModel? question;
-
-  @observable
   types.User? user;
+  
+  @observable
+  MockExamQuestionModel? question;
 
   @observable
   QuestionState state = InitialState();
@@ -40,16 +40,15 @@ abstract class _MockExamController with Store {
   @action
   Future<void> init() async {
     state = InitialState();
-    question = null;
     duration = const Duration(seconds: 0);
     timeWatcher?.cancel();
     var sub = await _mockExamService.getUserId();
+    final cache = MockExamCache.instance;
+
     user = types.User(id: sub);
     var result = await _mockExamService.getQuestions();
     if (result.isRight()) {
-      question = (result as Right).value;
-      
-      //implementar o banco de dados
+      question = (result as Right).value[0];
     }
     if (result.isLeft()) {
       FailureModel value = (result as Left).value;

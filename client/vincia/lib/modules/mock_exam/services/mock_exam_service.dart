@@ -15,6 +15,7 @@ import 'package:vincia/shared/model/success_model.dart';
 class MockExamQuestionService implements IMockExamService {
   final Auth0 auth;
   final http.Client client;
+  final MockExamCache mockExamCache = MockExamCache.instance;
   static const String apiUrl = String.fromEnvironment("API_URL");
 
   MockExamQuestionService(this.auth, this.client);
@@ -32,8 +33,7 @@ class MockExamQuestionService implements IMockExamService {
   }
 
   @override
-  Future<Either<FailureModel, MockExamAreasModel>> getQuestions() async {
-
+  Future<Either<FailureModel, MockExamAreasModel>> getQuestionsFromAPI() async {
     try {
       final token = await getAcessToken();
       final response = await client.get(
@@ -55,6 +55,28 @@ class MockExamQuestionService implements IMockExamService {
       return Left(FailureModel.fromEnum(AplicationErrors.internalError));
     }
   }
+
+  Future<void> getQuestions() async {
+    final cache = await MockExamCache.database;
+    final tableExists = await cache.query(
+      'sqlite_master',
+      where: 'name = ?', 
+      whereArgs: ['mock_exam']
+    );
+    if (tableExists.isEmpty) { //cria tabela, pega dados da api e coloca na tabela //NAO ESQUECER DE TRANSFORMAR NO MODELO CRIADO PARA O CACHE
+      await mockExamCache._createTable(cache, 1);
+      final questions = await getQuestionsFromAPI();
+      for (var question in questions) {
+        await mockExamCache.insert(question);
+      }
+      return questions
+    } else { //pega questões da tabela //NAO ESQUECER DE TRANSFORMAR NO MODELO CRIADO PARA O CACHE
+      final questions = await cache.query('mock_exam');
+      return questions
+    }
+  }
+
+  
 
   // @override
   // Future<Either<FailureModel, SuccessModel>> saveQuestionState(MockExamQuestionModel question, MockExamAnswerModel answer) async {

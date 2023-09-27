@@ -43,7 +43,7 @@ class MockExamCache {
     await db.insert('mock_exam', question);
   }
 
-  Future<void> updateExam(Map<String, dynamic> question) async {
+  Future<void> update(Map<String, dynamic> question) async {
     final db = await database;
     final id = question['id'];
     await db.update(
