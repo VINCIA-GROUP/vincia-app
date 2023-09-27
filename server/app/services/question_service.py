@@ -11,6 +11,7 @@ class QuestionService:
     
     max_question = 10
     min_question = 5
+    abilities_restrictions_num = 5
     
     def __init__(self, question_repository, history_question_repository, abilities_rating_repository, history_of_user_rating_update_repository,  adaptive_question_selection_repository, ability_service, rating_service):
         self.question_repository = question_repository
@@ -32,7 +33,8 @@ class QuestionService:
             return {"question": question.to_json()}
         
         self.rating_service.check_rating_user(user_id)
-        abilities_restrictions = self.history_of_user_rating_update_repository.get_ability_id_last_updates(user_id, 3)
+        
+        abilities_restrictions = self.history_question_repository.get_last_abilities_use(self.abilities_restrictions_num, user_id)
         
         abilities = self._get_all_abilities(user_id)
         

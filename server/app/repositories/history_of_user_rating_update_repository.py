@@ -20,16 +20,3 @@ class HistoryOfUserRatingUpdateRepository(Repository):
         cursor.close()
         return result
         
-    def get_ability_id_last_updates(self, user_id, quantity):
-        cursor = self.connection.cursor()
-        cursor.execute('SELECT DISTINCT ability_id FROM (SELECT ability_id, create_at FROM history_of_user_rating_updates WHERE user_id = %s ORDER BY create_at) AS subquery GROUP BY ability_id LIMIT %s', (user_id, quantity))
-        if(cursor.rowcount <= 0):
-            cursor.close()
-            return None
-        datas = cursor.fetchall() 
-        result = []
-        for data in datas:
-            id, = data
-            result.append(id)
-        cursor.close()
-        return result

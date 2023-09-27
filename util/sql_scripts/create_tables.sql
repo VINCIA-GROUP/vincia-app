@@ -41,6 +41,7 @@ CREATE TABLE abilities_rating(
   volatility FLOAT4 NOT NULL,
   ability_id uuid NOT NULL,
   user_id VARCHAR NOT NULL,
+  last_rating_update DATE NOT NULL,
   FOREIGN KEY (ability_id) REFERENCES abilities(id)
 );
 
