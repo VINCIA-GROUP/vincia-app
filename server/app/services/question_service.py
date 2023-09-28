@@ -80,7 +80,7 @@ class QuestionService:
     
 
     def _select_question(self, ability_rating, ability_id):
-        random_number = random.uniform(-0.2, 0.2)
+        random_number = random.uniform(-0.1, 0.1)
         random_question = random.uniform(self.min_question, self.max_question)
         random_ability_rating = ability_rating + ability_rating * random_number
         return self.question_repository.get_by_rating(random_ability_rating, random_question, ability_id) 
