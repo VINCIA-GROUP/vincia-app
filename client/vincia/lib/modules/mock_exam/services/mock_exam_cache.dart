@@ -14,8 +14,7 @@ class MockExamCache {
   }
 
   Future<Database> _initDatabase() async {
-    final String path = '${await getDatabasesPath()}exam_database.db';
-
+    final String path = '${await getDatabasesPath()}mock_exam.db';
     return await openDatabase(
       path,
       version: 1,
@@ -26,7 +25,8 @@ class MockExamCache {
   Future<void> _createTable(Database db, int version) async {
     await db.execute("""
       CREATE TABLE $_tableName ( 
-        id INTEGER PRIMARY KEY, 
+        id TEXT PRIMARY KEY, 
+        area TEXT
         statement TEXT, 
         alternatives TEXT,
         answer TEXT,

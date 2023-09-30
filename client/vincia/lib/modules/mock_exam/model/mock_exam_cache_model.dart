@@ -1,19 +1,24 @@
+import 'package:vincia/modules/mock_exam/model/mock_exam_alternative_model.dart';
+import 'package:vincia/modules/mock_exam/model/mock_exam_question_model.dart';
+
 class MockExamCacheModel {
-  int id;
+  String id;
+  String area;
   String statement;
-  String alternatives;
+  List<MockExamAlternativeModel> alternatives;
   String answer;
-  bool is_essay;
+  bool isEssay;
   int rating;
   String answered;
   Duration duration;
 
   MockExamCacheModel({
     required this.id, 
+    required this.area,
     required this.statement, 
     required this.alternatives, 
     required this.answer, 
-    required this.is_essay, 
+    required this.isEssay, 
     required this.rating, 
     required this.answered, 
     required this.duration
@@ -22,10 +27,11 @@ class MockExamCacheModel {
   static MockExamCacheModel fromMap(Map<String, dynamic> map) {
     return MockExamCacheModel(
       id: map['id'],
+      area: map['area'],
       statement: map['statement'],
       alternatives: map['alternatives'],
       answer: map['answer'],
-      is_essay: map['is_essay'],
+      isEssay: map['is_essay'],
       rating: map['rating'],
       answered: map['answered'],
       duration: map['duration'],
@@ -35,13 +41,25 @@ class MockExamCacheModel {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'area': area,
       'statement': statement,
       'alternatives': alternatives,
       'answer': answer,
-      'is_essay': is_essay,
+      'is_essay': isEssay,
       'rating': rating,
       'answered': answered,
       'duration': duration,
     };
+  }
+
+  MockExamQuestionModel toQuestion() {
+    return MockExamQuestionModel(
+      id, 
+      statement, 
+      answer, 
+      rating, 
+      isEssay, 
+      alternatives
+    );
   }
 }

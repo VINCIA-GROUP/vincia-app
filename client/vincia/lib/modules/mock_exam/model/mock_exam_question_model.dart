@@ -1,4 +1,5 @@
 import 'package:vincia/modules/mock_exam/model/mock_exam_alternative_model.dart';
+import 'package:vincia/modules/mock_exam/model/mock_exam_cache_model.dart';
 
 class MockExamQuestionModel {
   String id;
@@ -24,6 +25,20 @@ class MockExamQuestionModel {
       json['rating'] as int, 
       json['is_essay'] as bool,
       alternativesList
+    );
+  }
+
+  MockExamCacheModel toCache(String area, Duration duration, String answered) {
+    return MockExamCacheModel(
+      id: id, 
+      area: area, 
+      statement: statement, 
+      alternatives: alternatives, 
+      answer: answer, 
+      isEssay: isEssay, 
+      rating: difficulty, 
+      answered: answered, 
+      duration: duration
     );
   }
 }

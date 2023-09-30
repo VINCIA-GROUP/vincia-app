@@ -4,18 +4,16 @@ import 'package:mobx/mobx.dart';
 import 'package:vincia/modules/mock_exam/model/mock_exam_question_model.dart';
 import 'package:vincia/modules/mock_exam/page/controller/state/question_state.dart';
 import 'package:vincia/modules/mock_exam/interfaces/i_mock_exam_service.dart';
+import 'package:vincia/modules/mock_exam/services/mock_exam_cache.dart';
 import 'package:vincia/shared/model/failure_model.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
-part 'mock_exam_controller.g.dart';
-
-class MockExamController = _MockExamController
-    with _$MockExamController;
-
-abstract class _MockExamController with Store {
+abstract class MockExamController with Store {
   final IMockExamService _mockExamService;
 
   Timer? timeWatcher;
+
+  final cache = MockExamCache.instance;
 
   @observable
   Duration duration = const Duration(seconds: 0);
@@ -29,7 +27,7 @@ abstract class _MockExamController with Store {
   @observable
   QuestionState state = InitialState();
 
-  _MockExamController(this._mockExamService);
+  MockExamController(this._mockExamService);
 
   @computed
   String get time {
@@ -43,7 +41,6 @@ abstract class _MockExamController with Store {
     duration = const Duration(seconds: 0);
     timeWatcher?.cancel();
     var sub = await _mockExamService.getUserId();
-    final cache = MockExamCache.instance;
 
     user = types.User(id: sub);
     var result = await _mockExamService.getQuestions();
@@ -60,17 +57,17 @@ abstract class _MockExamController with Store {
     });
   }
 
-  @action
-  void answerQuestion(alternativeId) {
-    if (state is InitialState && state is! AnsweredQuestionState) {
-      timeWatcher?.cancel();
-      _mockExamService.sendAnswerQuestion(
-          alternativeId, duration, question!.historyOfQuestionId);
-      if (alternativeId == question!.answer) {
-        state = AnsweredQuestionState(true, alternativeId);
-      } else {
-        state = AnsweredQuestionState(false, alternativeId);
-      }
-    }
-  }
+  // @action
+  // void answerQuestion(alternativeId) {
+  //   if (state is InitialState && state is! AnsweredQuestionState) {
+  //     timeWatcher?.cancel();
+  //     _mockExamService.sendAnswerQuestion(
+  //         alternativeId, duration, question!.historyOfQuestionId);
+  //     if (alternativeId == question!.answer) {
+  //       state = AnsweredQuestionState(true, alternativeId);
+  //     } else {
+  //       state = AnsweredQuestionState(false, alternativeId);
+  //     }
+  //   }
+  // }
 }
