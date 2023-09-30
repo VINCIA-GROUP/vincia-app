@@ -41,8 +41,8 @@ abstract class MockExamController with Store {
     duration = const Duration(seconds: 0);
     timeWatcher?.cancel();
     var sub = await _mockExamService.getUserId();
-
     user = types.User(id: sub);
+    
     var result = await _mockExamService.getQuestions();
     if (result.isRight()) {
       question = (result as Right).value[0];

@@ -42,6 +42,14 @@ class _MockExamPageState extends State<MockExamPage>
             ),
             IconButton(
               iconSize: 32,
+              icon: const Icon(Icons.arrow_back),
+              color: Colors.grey,
+              onPressed: () {
+                //
+              },
+            ),
+            IconButton(
+              iconSize: 32,
               icon: const Icon(Icons.menu),
               color: Colors.grey,
               onPressed: () {
@@ -50,42 +58,31 @@ class _MockExamPageState extends State<MockExamPage>
             ),
           ],
         ), 
-        title: Center(
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                width: 1,
-                color: Theme.of(context).colorScheme.onBackground),
-              borderRadius: BorderRadius.circular(30)),
-            padding: const EdgeInsets.symmetric(
-              vertical: 2.0, 
-              horizontal: 8.0),
-            child: Observer(builder: (context) {
-              return Text(
-                _mockExamController.time,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Theme.of(context).colorScheme.onBackground),
-              );
-            })
-          )
-        ),
-        actions: [
+        title:
           IconButton(
             iconSize: 32,
+            icon: const Icon(Icons.menu),
+            color: Colors.grey,
             onPressed: () {
               //
             },
+          ),
+        actions: [
+          IconButton(
+            iconSize: 32,
+            icon: const Icon(Icons.arrow_forward),
             color: Colors.grey,
-            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              //
+            },
           ),
           IconButton(
             iconSize: 32,
+            icon: const Icon(Icons.check),
+            color: Colors.green,
             onPressed: () {
               //
             }, 
-            color: Colors.grey,
-            icon: const Icon(Icons.arrow_forward),
           )
         ],
       ),
