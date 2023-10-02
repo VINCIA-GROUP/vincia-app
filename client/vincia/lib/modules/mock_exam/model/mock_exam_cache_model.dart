@@ -3,7 +3,7 @@ import 'package:vincia/modules/mock_exam/model/mock_exam_question_model.dart';
 
 class MockExamCacheModel {
   String id;
-  String area;
+  int area;
   String statement;
   List<MockExamAlternativeModel> alternatives;
   String answer;

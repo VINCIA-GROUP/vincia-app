@@ -7,7 +7,6 @@ import 'package:vincia/modules/mock_exam/interfaces/i_mock_exam_service.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:vincia/modules/mock_exam/model/mock_exam_answer_model.dart';
-import 'package:vincia/modules/mock_exam/model/mock_exam_areas_model.dart';
 import 'package:vincia/modules/mock_exam/model/mock_exam_cache_model.dart';
 import 'package:vincia/modules/mock_exam/model/mock_exam_question_model.dart';
 import 'package:vincia/modules/mock_exam/services/mock_exam_cache.dart';
@@ -36,7 +35,7 @@ class MockExamQuestionService implements IMockExamService {
   }
 
   @override
-  Future<Either<FailureModel, MockExamAreasModel>> getQuestionsFromAPI() async {
+  Future<Either<FailureModel, List<List<MockExamQuestionModel>>>> getQuestionsFromAPI() async {
     try {
       final token = await getAcessToken();
       final response = await client.get(
@@ -49,7 +48,7 @@ class MockExamQuestionService implements IMockExamService {
       );
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body)["data"];
-        return Right(MockExamAreasModel.fromJson(body));
+        return Right(body);
       } else {
         final body = jsonDecode(response.body)["errors"];
         return Left(FailureModel.fromJson(body));
@@ -60,19 +59,16 @@ class MockExamQuestionService implements IMockExamService {
   }
 
   @override
-  Future<Either<FailureModel, MockExamAreasModel>> getQuestions() async {
+  Future<Either<FailureModel, List<List<MockExamQuestionModel>>>> getQuestions() async {
     try {
       final cache = await mockExamCache.database;
-      MockExamAreasModel result = MockExamAreasModel([], [], [], []);
+      List<List<MockExamQuestionModel>> result = [[], [], [], []];
       final hasData = firstIntValue(await cache.rawQuery('SELECT COUNT(*) FROM mock_exam'))! > 0;
       if (hasData) {
         final List<Map<String, dynamic>> questions = await cache.query('mock_exam');
         for (var question in questions) {
           MockExamCacheModel q = MockExamCacheModel.fromMap(question);
-          if (q.area == "natural_science") result.naturalScience.add(q.toQuestion());
-          if (q.area == "humanities") result.humanities.add(q.toQuestion());
-          if (q.area == "mathematics") result.mathematics.add(q.toQuestion());
-          if (q.area == "languages") result.languages.add(q.toQuestion());
+          result[q.area].add(q.toQuestion());
         }
         return Right(result);
       } else {
@@ -82,21 +78,11 @@ class MockExamQuestionService implements IMockExamService {
             return Left(FailureModel.fromEnum(AplicationErrors.internalError));
           },
           (areas) async {
-            for (MockExamQuestionModel questions in areas.naturalScience) {
-              MockExamCacheModel q = questions.toCache("natural_science", Duration.zero, "");
-              await mockExamCache.insert(q.toMap());
-            }
-            for (MockExamQuestionModel questions in areas.humanities) {
-              MockExamCacheModel q = questions.toCache("humanities", Duration.zero, "");
-              await mockExamCache.insert(q.toMap());
-            }
-            for (MockExamQuestionModel questions in areas.languages) {
-              MockExamCacheModel q = questions.toCache("languges", Duration.zero, "");
-              await mockExamCache.insert(q.toMap());
-            }
-            for (MockExamQuestionModel questions in areas.mathematics) {
-              MockExamCacheModel q = questions.toCache("mathematics", Duration.zero, "");
-              await mockExamCache.insert(q.toMap());
+            for (int i = 0; i < areas.length; i++) {
+              for (MockExamQuestionModel question in areas[i]) {
+                MockExamCacheModel q = question.toCache(i, Duration.zero, "");
+                await mockExamCache.insert(q.toMap());
+              }
             }
             return Right(areas);
           });

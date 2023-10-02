@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
+import 'package:vincia/modules/mock_exam/model/mock_exam_areas_enum.dart';
 import 'package:vincia/modules/mock_exam/model/mock_exam_question_model.dart';
 import 'package:vincia/modules/mock_exam/page/controller/state/question_state.dart';
 import 'package:vincia/modules/mock_exam/interfaces/i_mock_exam_service.dart';
@@ -20,6 +21,9 @@ abstract class MockExamController with Store {
 
   @observable
   types.User? user;
+
+  @observable
+  List<List<MockExamQuestionModel>>? questions;
   
   @observable
   MockExamQuestionModel? question;
@@ -45,7 +49,8 @@ abstract class MockExamController with Store {
     
     var result = await _mockExamService.getQuestions();
     if (result.isRight()) {
-      question = (result as Right).value[0];
+      questions = (result as Right).value;
+      question = questions?[Areas.languages.index][0];
     }
     if (result.isLeft()) {
       FailureModel value = (result as Left).value;
@@ -55,6 +60,11 @@ abstract class MockExamController with Store {
     timeWatcher = Timer.periodic(const Duration(seconds: 1), (timer) {
       duration += const Duration(seconds: 1);
     });
+  }
+
+  @action
+  getNextQuestion(int qArea, int qPosition) {
+    question = questions?[qArea][qPosition];
   }
 
   // @action

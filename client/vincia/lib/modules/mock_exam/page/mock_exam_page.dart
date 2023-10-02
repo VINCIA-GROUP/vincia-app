@@ -20,6 +20,9 @@ class _MockExamPageState extends State<MockExamPage>
 
   late final Future _initQuestion;
 
+  int qPosition = 0;
+  int qArea = 0;
+
   @override
   void initState() {
     super.initState();
@@ -37,6 +40,7 @@ class _MockExamPageState extends State<MockExamPage>
               icon: const Icon(Icons.close),
               color: Colors.red,
               onPressed: () {
+                //SAVE ANSWERS
                 Modular.to.pop("/home");
               },
             ),
@@ -45,7 +49,15 @@ class _MockExamPageState extends State<MockExamPage>
               icon: const Icon(Icons.arrow_back),
               color: Colors.grey,
               onPressed: () {
-                //
+                //SAVE ANSWERS
+                if (qArea != 0 && qPosition != 0) {
+                  if (qPosition != 0) {
+                    qPosition -= 1;
+                  } else {
+                    qArea -= 1;
+                  }
+                  _mockExamController.getNextQuestion(qArea, qPosition);
+                }
               },
             ),
             IconButton(
@@ -73,7 +85,15 @@ class _MockExamPageState extends State<MockExamPage>
             icon: const Icon(Icons.arrow_forward),
             color: Colors.grey,
             onPressed: () {
-              //
+              // SAVE ANSWERS
+              if (qArea != 3 && qPosition != 45) {
+                  if (qPosition != 45) {
+                    qPosition += 1;
+                  } else {
+                    qArea += 1;
+                  }
+                  _mockExamController.getNextQuestion(qArea, qPosition);
+                }
             },
           ),
           IconButton(
@@ -81,7 +101,7 @@ class _MockExamPageState extends State<MockExamPage>
             icon: const Icon(Icons.check),
             color: Colors.green,
             onPressed: () {
-              //
+              // SUBMMIT QUESTIONS
             }, 
           )
         ],
@@ -155,7 +175,7 @@ class _MockExamPageState extends State<MockExamPage>
               borderRadius: BorderRadius.all(Radius.circular(10.0)),
             ),
           ),
-          onPressed: () => _mockExamController.answerQuestion(alternative.id),
+          onPressed: () {},//_mockExamController.answerQuestion(alternative.id),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Row(

@@ -8,11 +8,9 @@ class MockExamService:
       self.history_of_questions_repository = history_of_questions_repository
 
    def get_mock_exam_questions(self): #90 questoes
-      questions = {"natural_science": [], "humanities": [], "languages": [], "mathematics": []}
-      questions["natural_science"] = self.get_areas_questions(AreasID.NATURAL_SCIENCE.value)
-      questions["humanities"] = self.get_areas_questions(AreasID.HUMANITIES.value)
-      # questions["languages"] = self.get_areas_questions(AreasID.LANGUAGES.value)
-      # questions["mathematics"] = self.get_areas_questions(AreasID.MATHEMATICS.value)
+      questions = [[], [], [], []]
+      for areaIndex, area in enumerate(AreasID):
+         questions[areaIndex] = self.get_areas_questions(area.value)
       return questions
 
    def get_areas_questions(self, area): #45 questoes  11 facil / 23 normal / 11 dificil

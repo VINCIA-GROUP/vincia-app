@@ -26,7 +26,7 @@ class MockExamCache {
     await db.execute("""
       CREATE TABLE $_tableName ( 
         id TEXT PRIMARY KEY, 
-        area TEXT
+        area INTEGER
         statement TEXT, 
         alternatives TEXT,
         answer TEXT,
