@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
+import 'package:vincia/modules/mock_exam/model/mock_exam_answer_model.dart';
 import 'package:vincia/modules/mock_exam/model/mock_exam_areas_enum.dart';
-import 'package:vincia/modules/mock_exam/model/mock_exam_question_model.dart';
+import 'package:vincia/modules/mock_exam/model/mock_exam_cache_model.dart';
 import 'package:vincia/modules/mock_exam/page/controller/state/question_state.dart';
 import 'package:vincia/modules/mock_exam/interfaces/i_mock_exam_service.dart';
 import 'package:vincia/modules/mock_exam/services/mock_exam_cache.dart';
@@ -23,10 +24,10 @@ abstract class MockExamController with Store {
   types.User? user;
 
   @observable
-  List<List<MockExamQuestionModel>>? questions;
+  List<List<MockExamCacheModel>>? questions;
   
   @observable
-  MockExamQuestionModel? question;
+  MockExamCacheModel? question;
 
   @observable
   QuestionState state = InitialState();
@@ -67,17 +68,21 @@ abstract class MockExamController with Store {
     question = questions?[qArea][qPosition];
   }
 
-  // @action
-  // void answerQuestion(alternativeId) {
-  //   if (state is InitialState && state is! AnsweredQuestionState) {
-  //     timeWatcher?.cancel();
-  //     _mockExamService.sendAnswerQuestion(
-  //         alternativeId, duration, question!.historyOfQuestionId);
-  //     if (alternativeId == question!.answer) {
-  //       state = AnsweredQuestionState(true, alternativeId);
-  //     } else {
-  //       state = AnsweredQuestionState(false, alternativeId);
-  //     }
-  //   }
-  // }
+  @action
+  void answerQuestion(alternativeId, int qArea, int qPosition) {
+    if (state is InitialState && state is! AnsweredQuestionState) {
+      timeWatcher?.cancel();
+      final answer = MockExamAnswerModel(alternativeId, duration);
+      _mockExamService.sendAnswerQuestion(
+        question!, answer);
+      state = AnsweredQuestionState(alternativeId);
+      questions?[qArea][qPosition].answered = alternativeId;
+      questions?[qArea][qPosition].duration = duration;
+    }
+  }
+
+  @action
+  void submmitExam() {
+    
+  }
 }

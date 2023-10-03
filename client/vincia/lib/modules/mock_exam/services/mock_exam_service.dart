@@ -19,7 +19,7 @@ class MockExamQuestionService implements IMockExamService {
   final http.Client client;
   final MockExamCache mockExamCache = MockExamCache.instance;
   static const String apiUrl = String.fromEnvironment("API_URL");
-
+  
   MockExamQuestionService(this.auth, this.client);
 
   @override
@@ -59,16 +59,16 @@ class MockExamQuestionService implements IMockExamService {
   }
 
   @override
-  Future<Either<FailureModel, List<List<MockExamQuestionModel>>>> getQuestions() async {
+  Future<Either<FailureModel, List<List<MockExamCacheModel>>>> getQuestions() async {
     try {
       final cache = await mockExamCache.database;
-      List<List<MockExamQuestionModel>> result = [[], [], [], []];
+      List<List<MockExamCacheModel>> result = [[], [], [], []];
       final hasData = firstIntValue(await cache.rawQuery('SELECT COUNT(*) FROM mock_exam'))! > 0;
       if (hasData) {
         final List<Map<String, dynamic>> questions = await cache.query('mock_exam');
         for (var question in questions) {
           MockExamCacheModel q = MockExamCacheModel.fromMap(question);
-          result[q.area].add(q.toQuestion());
+          result[q.area].add(q);
         }
         return Right(result);
       } else {
@@ -81,10 +81,11 @@ class MockExamQuestionService implements IMockExamService {
             for (int i = 0; i < areas.length; i++) {
               for (MockExamQuestionModel question in areas[i]) {
                 MockExamCacheModel q = question.toCache(i, Duration.zero, "");
+                result[i].add(q);
                 await mockExamCache.insert(q.toMap());
               }
             }
-            return Right(areas);
+            return Right(result);
           });
       }
     } catch (e) {
@@ -92,14 +93,15 @@ class MockExamQuestionService implements IMockExamService {
     } 
   }
 
-  // @override
-  // Future<Either<FailureModel, SuccessModel>> saveQuestionState(MockExamQuestionModel question, MockExamAnswerModel answer) async {
-  //   try {
-
-  //   } catch (e) {
-  // 
-  //   }
-  // }
+  @override
+  Future<Either<FailureModel, SuccessModel>> sendAnswerQuestion(MockExamCacheModel? question, MockExamAnswerModel answer) async {
+    try {
+      await mockExamCache.update(question!.toMap());
+      return Right(SuccessModel());
+    } catch (e) {
+      return Left(FailureModel.fromEnum(AplicationErrors.internalError));
+    }
+  }
 
   @override
   Future<Either<FailureModel, SuccessModel>> sendMockExamAnswer(List<MockExamAnswerModel> answers) async {
