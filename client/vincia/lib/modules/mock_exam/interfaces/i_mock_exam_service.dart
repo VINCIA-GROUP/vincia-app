@@ -12,5 +12,5 @@ abstract class IMockExamService {
   Future<Either<FailureModel, List<List<MockExamCacheModel>>>> getQuestions();
   Future<Either<FailureModel, SuccessModel>> sendAnswerQuestion(
     MockExamCacheModel question, MockExamAnswerModel answer);
-  Future<Either<FailureModel, SuccessModel>> sendMockExamAnswer(List<MockExamAnswerModel> answer);
+  Future<Either<FailureModel, SuccessModel>> sendMockExamAnswer();
 }

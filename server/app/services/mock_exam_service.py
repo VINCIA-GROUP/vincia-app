@@ -3,9 +3,10 @@ from app.domain.enums.areas_id import AreasID
 
 class MockExamService:
 
-   def __init__(self, question_repository, history_of_questions_repository):
+   def __init__(self, question_repository, history_of_questions_repository, history_of_mock_exam_repository):
       self.question_repository = question_repository
       self.history_of_questions_repository = history_of_questions_repository
+      self.history_of_mock_exam_repository = history_of_mock_exam_repository
 
    def get_mock_exam_questions(self): #90 questoes
       questions = [[], [], [], []]
@@ -41,8 +42,10 @@ class MockExamService:
                abilities[key].pop(random_question_index)
       return chosen_questions
    
-   # def submit_answer(self, user_id, answers):
-   #    for answer in answers:
+   def submit_answer(self, user_id, answers):
+      for answer in answers:
+         None#save answer in database
          
 
-   # def calculate_grade():
+   def calculate_grade():
+      None

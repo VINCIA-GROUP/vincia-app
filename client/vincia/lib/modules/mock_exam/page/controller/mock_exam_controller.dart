@@ -83,6 +83,6 @@ abstract class MockExamController with Store {
 
   @action
   void submmitExam() {
-    
+    _mockExamService.sendMockExamAnswer();
   }
 }

@@ -104,18 +104,18 @@ class MockExamQuestionService implements IMockExamService {
   }
 
   @override
-  Future<Either<FailureModel, SuccessModel>> sendMockExamAnswer(List<MockExamAnswerModel> answers) async {
+  Future<Either<FailureModel, SuccessModel>> sendMockExamAnswer() async {
     try {
       final token = await getAcessToken();
-      var answersJson = answers.map((answer) {
-        jsonEncode(answer.toJson());
-      }).toList();
+      final cache = await mockExamCache.database;
+      final List<Map<String, dynamic>> questions = await cache.query('mock_exam');
+      
       final response = await client.post(Uri.parse("$apiUrl/api/mock-exam/submmit"),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        body: answersJson
+        body: questions
       );
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body)["data"];
