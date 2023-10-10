@@ -10,19 +10,21 @@ class MockExamService:
 
    def get_mock_exam_questions(self): #90 questoes
       questions = [[], [], [], []]
-      for areaIndex, area in enumerate(AreasID):
-         questions[areaIndex] = self.get_areas_questions(area.value)
+      questions[0] = self.get_areas_questions(AreasID.LANGUAGES.value, 815, 1462)
+      questions[1] = self.get_areas_questions(AreasID.HUMANITIES.value, 1000, 1500)
+      questions[2] = self.get_areas_questions(AreasID.NATURAL_SCIENCE.value, 1000, 1500)
+      questions[3] = self.get_areas_questions(AreasID.MATHEMATICS.value, 1350, 1750)
       return questions
 
-   def get_areas_questions(self, area): #45 questoes  11 facil / 23 normal / 11 dificil
+   def get_areas_questions(self, area, rating_low, rating_high): #45 questoes  11 facil / 23 normal / 11 dificil
       questions = []
-      easy_questions = self.question_repository.get_by_area_and_difficult(area, 0, 1000)
-      list(map(lambda question: questions.append(question), self.choose_questions(easy_questions, 11)))
-      normal_questions = self.question_repository.get_by_area_and_difficult(area, 1000, 1500)
-      list(map(lambda question: questions.append(question), self.choose_questions(normal_questions, 23)))
-      hard_questions = self.question_repository.get_by_area_and_difficult(area, 1500, 9999)
-      list(map(lambda question: questions.append(question), self.choose_questions(hard_questions, 11)))
-      if (len(easy_questions) == 0 or len(normal_questions) == 0 or len(hard_questions) == 0):
+      list(map(lambda question: questions.append(question.to_json()),
+         self.question_repository.get_random_by_difficult(area, 0, rating_low, 11)))
+      list(map(lambda question: questions.append(question.to_json()),
+         self.question_repository.get_random_by_difficult(area, rating_low, rating_high, 23)))
+      list(map(lambda question: questions.append(question.to_json()),
+         self.question_repository.get_random_by_difficult(area, rating_high, 9999, 11)))
+      if (len(questions) < 45):
          return []
       return questions
    

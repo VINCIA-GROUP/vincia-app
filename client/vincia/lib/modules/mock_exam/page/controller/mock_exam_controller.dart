@@ -10,7 +10,13 @@ import 'package:vincia/modules/mock_exam/services/mock_exam_cache.dart';
 import 'package:vincia/shared/model/failure_model.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
-abstract class MockExamController with Store {
+part 'mock_exam_controller.g.dart';
+
+// ignore: library_private_types_in_public_api
+class MockExamController = _MockExamController
+    with _$MockExamController;
+
+abstract class _MockExamController with Store {
   final IMockExamService _mockExamService;
 
   Timer? timeWatcher;
@@ -32,7 +38,7 @@ abstract class MockExamController with Store {
   @observable
   QuestionState state = InitialState();
 
-  MockExamController(this._mockExamService);
+  _MockExamController(this._mockExamService);
 
   @computed
   String get time {

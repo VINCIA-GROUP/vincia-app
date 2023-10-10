@@ -157,7 +157,9 @@ class HomePage extends StatelessWidget {
                     _carouselButton(
                       "Simulado",
                       Icons.ballot_sharp,
-                      () {},
+                      () {
+                        Modular.to.pushNamed("/mock-exam");
+                      },
                     ),
                     _carouselButton(
                       "Redação",
