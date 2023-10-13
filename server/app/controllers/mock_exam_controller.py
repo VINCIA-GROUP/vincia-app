@@ -12,11 +12,22 @@ from app.services.mock_exam_service import MockExamService
 @requires_auth(None)
 def questions():
    connection = connection_pool.get_connection()
-   questions = MockExamService(QuestionsRepository(connection), 
+   user_id = session.get('current_user').get('sub')
+   result = MockExamService(QuestionsRepository(connection), 
                                HistoryOfQuestionsRepository(connection),
-                               HistoryOfMockExamRepository(connection)).get_mock_exam_questions()
+                               HistoryOfMockExamRepository(connection)).get_mock_exam_questions(user_id)
    connection_pool.release_connection(connection)
-   return success_api_response(data=questions)
+   return success_api_response(data=result)
+
+@app.route("/api/mock-exam/question/<string:id>", methods=["GET"], endpoint="mock-exam/question")
+@requires_auth(None)
+def question(id):
+   connection = connection_pool.get_connection()
+   question = MockExamService(QuestionsRepository(connection), 
+                               HistoryOfQuestionsRepository(connection),
+                               HistoryOfMockExamRepository(connection)).get_question(id)
+   connection_pool.release_connection(connection)
+   return success_api_response(data=question)
 
 @app.route("/api/mock-exam/submmit", methods=["POST"], endpoint="mock-exam/submmit")
 @requires_auth(None)

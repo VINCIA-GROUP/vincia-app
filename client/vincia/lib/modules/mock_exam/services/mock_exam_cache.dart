@@ -26,7 +26,7 @@ class MockExamCache {
     await db.execute("""
       CREATE TABLE $_tableName ( 
         id TEXT PRIMARY KEY, 
-        area INTEGER
+        area TEXT,
         statement TEXT, 
         alternatives TEXT,
         answer TEXT,
@@ -40,14 +40,14 @@ class MockExamCache {
 
   Future<void> insert(Map<String, dynamic> question) async {
     final db = await database;
-    await db.insert('mock_exam', question);
+    await db.insert(_tableName, question, conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   Future<void> update(Map<String, dynamic> question) async {
     final db = await database;
     final id = question['id'];
     await db.update(
-      'mock_exam',
+      _tableName,
       question,
       where: 'id = ?',
       whereArgs: [id],
@@ -56,7 +56,14 @@ class MockExamCache {
 
   Future<void> deleteTable() async {
     final db = await database;
-    await db.delete('mock_exam');
+    await db.delete(_tableName);
+  }
+
+  Future<bool> doesTableExists(Database db, String tableName) async {
+    List<Map<String, dynamic>> tables = await db.rawQuery(
+      "SELECT name FROM sqlite_master WHERE type='table'");
+
+    return tables.any((table) => table['name'] == tableName);
   }
 
 }

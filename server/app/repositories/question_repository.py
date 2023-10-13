@@ -51,12 +51,11 @@ class QuestionsRepository(Repository):
       return questions
    
    def get_random_by_difficult(self, area_id, rating_low, rating_high, limit):
-      questions = super().get_many(
-         query="SELECT q.id, q.statement, q.answer, q.is_essay, q.ability_id, q.rating, q.rating_deviation, q.volatility, q.last_rating_update FROM questions q JOIN abilities a ON q.ability_id = a.id WHERE q.is_essay = false AND a.area_id = %s AND rating BETWEEN %s AND %s ORDER BY RANDOM() LIMIT %s;", 
+      questions = super().get_raw(
+         # query="SELECT q.id, q.statement, q.answer, q.is_essay, q.ability_id, q.rating, q.rating_deviation, q.volatility, q.last_rating_update FROM questions q JOIN abilities a ON q.ability_id = a.id WHERE q.is_essay = false AND a.area_id = %s AND rating BETWEEN %s AND %s ORDER BY RANDOM() LIMIT %s;", 
+         query="SELECT q.id FROM questions q JOIN abilities a ON q.ability_id = a.id WHERE q.is_essay = false AND a.area_id = %s AND rating BETWEEN %s AND %s ORDER BY RANDOM() LIMIT %s;",
          params=(area_id, rating_low, rating_high, limit)
       )
-      for question in questions:
-         question.alternatives = self._get_alternatives(question.id)
       return questions
 
    def update_rating(self, id, rating, rating_deviation, volatility):

@@ -52,15 +52,47 @@ mixin _$MockExamController on _MockExamController, Store {
       Atom(name: '_MockExamController.questions', context: context);
 
   @override
-  List<List<MockExamCacheModel>>? get questions {
+  List<String>? get questions {
     _$questionsAtom.reportRead();
     return super.questions;
   }
 
   @override
-  set questions(List<List<MockExamCacheModel>>? value) {
+  set questions(List<String>? value) {
     _$questionsAtom.reportWrite(value, super.questions, () {
       super.questions = value;
+    });
+  }
+
+  late final _$answersAtom =
+      Atom(name: '_MockExamController.answers', context: context);
+
+  @override
+  List<String>? get answers {
+    _$answersAtom.reportRead();
+    return super.answers;
+  }
+
+  @override
+  set answers(List<String>? value) {
+    _$answersAtom.reportWrite(value, super.answers, () {
+      super.answers = value;
+    });
+  }
+
+  late final _$durationsAtom =
+      Atom(name: '_MockExamController.durations', context: context);
+
+  @override
+  List<String>? get durations {
+    _$durationsAtom.reportRead();
+    return super.durations;
+  }
+
+  @override
+  set durations(List<String>? value) {
+    _$durationsAtom.reportWrite(value, super.durations, () {
+      super.durations = value;
     });
   }
 
@@ -68,13 +100,13 @@ mixin _$MockExamController on _MockExamController, Store {
       Atom(name: '_MockExamController.question', context: context);
 
   @override
-  MockExamCacheModel? get question {
+  MockExamQuestionModel? get question {
     _$questionAtom.reportRead();
     return super.question;
   }
 
   @override
-  set question(MockExamCacheModel? value) {
+  set question(MockExamQuestionModel? value) {
     _$questionAtom.reportWrite(value, super.question, () {
       super.question = value;
     });
@@ -146,6 +178,8 @@ mixin _$MockExamController on _MockExamController, Store {
 duration: ${duration},
 user: ${user},
 questions: ${questions},
+answers: ${answers},
+durations: ${durations},
 question: ${question},
 state: ${state},
 time: ${time}

@@ -34,6 +34,19 @@ class Repository():
             data.append(obj)
         cursor.close()
         return data
+    
+    def get_raw(self, query, params):
+        data = []
+        cursor = self.connection.cursor()
+        cursor.execute(query, params)
+        if(cursor.rowcount <= 0):
+            cursor.close()
+            return data
+        rows = cursor.fetchall()
+        for row in rows:
+            data.append(row[0])
+        cursor.close()
+        return data
 
     def update(self, query, params):
         cursor = self.connection.cursor()

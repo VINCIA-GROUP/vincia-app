@@ -34,68 +34,74 @@ class _MockExamPageState extends State<MockExamPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: Row(
-          children: [
-            IconButton(
-              iconSize: 32,
-              icon: const Icon(Icons.close),
-              color: Colors.red,
-              onPressed: () {
-                Modular.to.pop("/home");
-              },
-            ),
-            IconButton(
-              iconSize: 32,
-              icon: const Icon(Icons.arrow_back),
-              color: Colors.grey,
-              onPressed: () {
-                if (qArea != 0 && qPosition != 0) {
-                  if (qPosition != 0) {
-                    qPosition -= 1;
-                  } else {
-                    qArea -= 1;
-                  }
-                  _mockExamController.getNextQuestion(qArea, qPosition);
-                }
-              },
-            ),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kToolbarHeight),
+        child: AppBar(
+          automaticallyImplyLeading: false,
+          actions: <Widget>[
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  IconButton(
+                    iconSize: 32,
+                    icon: const Icon(Icons.close),
+                    color: Colors.red,
+                    onPressed: () {
+                      Modular.to.pop("/home");
+                    },
+                  ),
+                  IconButton(
+                    iconSize: 32,
+                    icon: const Icon(Icons.arrow_back),
+                    color: Theme.of(context).colorScheme.primary,
+                    onPressed: () {
+                      if (qArea != 0 && qPosition != 0) {
+                        if (qPosition != 0) {
+                          qPosition -= 1;
+                        } else {
+                          qArea -= 1;
+                        }
+                        _mockExamController.getNextQuestion(qArea, qPosition);
+                      }
+                    },
+                  ),
+                  IconButton(
+                    iconSize: 32,
+                    icon: const Icon(Icons.menu),
+                    color: Theme.of(context).colorScheme.primary,
+                    onPressed: () {
+                      // _chooseQuestions(context, _mockExamController.questions);
+                    },
+                  ),
+                  IconButton(
+                    iconSize: 32,
+                    icon: const Icon(Icons.arrow_forward),
+                    color: Theme.of(context).colorScheme.primary,
+                    onPressed: () {
+                      if (qArea != 3 && qPosition != 45) {
+                          if (qPosition != 45) {
+                            qPosition += 1;
+                          } else {
+                            qArea += 1;
+                          }
+                          _mockExamController.getNextQuestion(qArea, qPosition);
+                        }
+                    },
+                  ),
+                  IconButton(
+                    iconSize: 32,
+                    icon: const Icon(Icons.check),
+                    color: Colors.green,
+                    onPressed: () {
+                      _mockExamController.submmitExam();
+                    }, 
+                  )
+                ],
+              )
+            )
           ],
-        ), 
-        title:
-          IconButton(
-            iconSize: 32,
-            icon: const Icon(Icons.menu),
-            color: Colors.grey,
-            onPressed: () {
-              _chooseQuestions(context, _mockExamController.questions);
-            },
-          ),
-        actions: [
-          IconButton(
-            iconSize: 32,
-            icon: const Icon(Icons.arrow_forward),
-            color: Colors.grey,
-            onPressed: () {
-              if (qArea != 3 && qPosition != 45) {
-                  if (qPosition != 45) {
-                    qPosition += 1;
-                  } else {
-                    qArea += 1;
-                  }
-                  _mockExamController.getNextQuestion(qArea, qPosition);
-                }
-            },
-          ),
-          IconButton(
-            iconSize: 32,
-            icon: const Icon(Icons.check),
-            color: Colors.green,
-            onPressed: () {
-              _mockExamController.submmitExam();
-            }, 
-          )
-        ],
+        ),
       ),
       body: Stack(
         children: [
@@ -115,17 +121,17 @@ class _MockExamPageState extends State<MockExamPage>
                   children: [
                     _equestionStatement(
                       context,
-                      question.statement),
+                      question.statement!),
                     ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount:
-                          _mockExamController.question?.alternatives.length,
+                          _mockExamController.question?.alternatives!.length,
                       itemBuilder: (BuildContext context, int index) {
                         return _alternatives(
                           context, 
                           index,
-                          _mockExamController.question!.alternatives[index]);
+                          _mockExamController.question!.alternatives![index]);
                       },
                     ),
                   ],
@@ -198,7 +204,7 @@ class _MockExamPageState extends State<MockExamPage>
     );
   }
 
-  Future _chooseQuestions(BuildContext context, List<List<MockExamCacheModel>>? questionsLists) {
+  Future _chooseQuestions(BuildContext context, List<List<String>>? questionLists) {
     return showDialog(
       context: context, 
       builder: (BuildContext context) {

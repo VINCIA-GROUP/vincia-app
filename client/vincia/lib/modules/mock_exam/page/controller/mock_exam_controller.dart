@@ -3,7 +3,9 @@ import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
 import 'package:vincia/modules/mock_exam/model/mock_exam_answer_model.dart';
 import 'package:vincia/modules/mock_exam/model/mock_exam_areas_enum.dart';
+import 'package:vincia/modules/mock_exam/model/mock_exam_areas_model.dart';
 import 'package:vincia/modules/mock_exam/model/mock_exam_cache_model.dart';
+import 'package:vincia/modules/mock_exam/model/mock_exam_question_model.dart';
 import 'package:vincia/modules/mock_exam/page/controller/state/question_state.dart';
 import 'package:vincia/modules/mock_exam/interfaces/i_mock_exam_service.dart';
 import 'package:vincia/modules/mock_exam/services/mock_exam_cache.dart';
@@ -30,10 +32,16 @@ abstract class _MockExamController with Store {
   types.User? user;
 
   @observable
-  List<List<MockExamCacheModel>>? questions;
+  List<String>? questions;
+
+  @observable
+  List<String>? answers;
   
   @observable
-  MockExamCacheModel? question;
+  List<String>? durations;
+  
+  @observable
+  MockExamQuestionModel? question;
 
   @observable
   QuestionState state = InitialState();
@@ -56,8 +64,13 @@ abstract class _MockExamController with Store {
     
     var result = await _mockExamService.getQuestions();
     if (result.isRight()) {
-      questions = (result as Right).value;
-      question = questions?[Areas.languages.index][0];
+      questions = (result as Right).value.questions;
+      answers = (result as Right).value.answers;
+      durations = (result as Right).value.durations;
+      var questionData = await _mockExamService.getQuestion(questions![0]);
+      if (questionData.isRight()) {
+        question = (questionData as Right).value;
+      }
     }
     if (result.isLeft()) {
       FailureModel value = (result as Left).value;
@@ -71,19 +84,19 @@ abstract class _MockExamController with Store {
 
   @action
   getNextQuestion(int qArea, int qPosition) {
-    question = questions?[qArea][qPosition];
+    // question = questions?[qArea][qPosition];
   }
 
   @action
   void answerQuestion(alternativeId, int qArea, int qPosition) {
     if (state is InitialState && state is! AnsweredQuestionState) {
       timeWatcher?.cancel();
-      final answer = MockExamAnswerModel(alternativeId, duration);
-      _mockExamService.sendAnswerQuestion(
-        question!, answer);
+      // final answer = MockExamAnswerModel(alternativeId, duration);
+      // _mockExamService.sendAnswerQuestion(
+        // question!, answer);
       state = AnsweredQuestionState(alternativeId);
-      questions?[qArea][qPosition].answered = alternativeId;
-      questions?[qArea][qPosition].duration = duration;
+      // questions?[qArea][qPosition].answered = alternativeId;
+      // questions?[qArea][qPosition].duration = duration;
     }
   }
 

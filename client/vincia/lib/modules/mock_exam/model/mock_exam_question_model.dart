@@ -28,7 +28,7 @@ class MockExamQuestionModel {
     );
   }
 
-  MockExamCacheModel toCache(int area, Duration duration, String answered) {
+  MockExamCacheModel toCache(String area, Duration duration, String answered) {
     return MockExamCacheModel(
       id: id, 
       area: area, 

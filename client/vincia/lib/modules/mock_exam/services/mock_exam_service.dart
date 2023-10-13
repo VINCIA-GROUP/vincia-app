@@ -7,6 +7,7 @@ import 'package:vincia/modules/mock_exam/interfaces/i_mock_exam_service.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:vincia/modules/mock_exam/model/mock_exam_answer_model.dart';
+import 'package:vincia/modules/mock_exam/model/mock_exam_areas_model.dart';
 import 'package:vincia/modules/mock_exam/model/mock_exam_cache_model.dart';
 import 'package:vincia/modules/mock_exam/model/mock_exam_question_model.dart';
 import 'package:vincia/modules/mock_exam/services/mock_exam_cache.dart';
@@ -17,7 +18,6 @@ import 'package:vincia/shared/model/success_model.dart';
 class MockExamQuestionService implements IMockExamService {
   final Auth0 auth;
   final http.Client client;
-  final MockExamCache mockExamCache = MockExamCache.instance;
   static const String apiUrl = String.fromEnvironment("API_URL");
   
   MockExamQuestionService(this.auth, this.client);
@@ -35,7 +35,7 @@ class MockExamQuestionService implements IMockExamService {
   }
 
   @override
-  Future<Either<FailureModel, List<List<MockExamQuestionModel>>>> getQuestionsFromAPI() async {
+  Future<Either<FailureModel, Map<String, dynamic>>> getQuestionsFromAPI() async {
     try {
       final token = await getAcessToken();
       final response = await client.get(
@@ -59,44 +59,72 @@ class MockExamQuestionService implements IMockExamService {
   }
 
   @override
-  Future<Either<FailureModel, List<List<MockExamCacheModel>>>> getQuestions() async {
+  Future<Either<FailureModel, Map<String, dynamic>>> getQuestionFromAPI(String id) async {
     try {
-      final cache = await mockExamCache.database;
-      List<List<MockExamCacheModel>> result = [[], [], [], []];
-      final hasData = firstIntValue(await cache.rawQuery('SELECT COUNT(*) FROM mock_exam'))! > 0;
-      if (hasData) {
-        final List<Map<String, dynamic>> questions = await cache.query('mock_exam');
-        for (var question in questions) {
-          MockExamCacheModel q = MockExamCacheModel.fromMap(question);
-          result[q.area].add(q);
+      final token = await getAcessToken();
+      final response = await client.get(
+        Uri.parse("$apiUrl/api/mock-exam/question/$id"),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+          'Connection': 'Keep-Alive'
         }
-        return Right(result);
+      );
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body)["data"];
+        return Right(body);
       } else {
-        final areas = await getQuestionsFromAPI();
-        return areas.fold(
-          (failure) {
-            return Left(FailureModel.fromEnum(AplicationErrors.internalError));
-          },
-          (areas) async {
-            for (int i = 0; i < areas.length; i++) {
-              for (MockExamQuestionModel question in areas[i]) {
-                MockExamCacheModel q = question.toCache(i, Duration.zero, "");
-                result[i].add(q);
-                await mockExamCache.insert(q.toMap());
-              }
-            }
-            return Right(result);
-          });
+        final body = jsonDecode(response.body)["errors"];
+        return Left(FailureModel.fromJson(body));
       }
+    } catch (e) {
+      return Left(FailureModel.fromEnum(AplicationErrors.internalError));
+    }
+  }
+
+  @override
+  Future<Either<FailureModel, MockExamQuestionsModel>> getQuestions() async {
+    try {
+      MockExamQuestionsModel result = MockExamQuestionsModel([], [], []);
+      final areas = await getQuestionsFromAPI();
+      return areas.fold(
+        (failure) {
+          throw Exception();
+        },
+        (resp) {
+          result.questions = resp["questions"].cast<String>();
+          result.answers = resp["answers"].cast<String>();
+          result.durations = resp["durations"].cast<String>();
+          return Right(result);
+        });
     } catch (e) {
       return Left(FailureModel.fromEnum(AplicationErrors.internalError));
     } 
   }
 
   @override
+  Future<Either<FailureModel, MockExamQuestionModel>> getQuestion(String id) async {
+    try {
+      MockExamQuestionModel result;
+      final question = await getQuestionFromAPI(id);
+      return question.fold(
+        (failure) {
+          throw Exception();
+        }, 
+        (resp) {
+          result = MockExamQuestionModel.fromJson(resp);
+          return Right(result);
+        }
+      );
+    } catch (e) {
+      return Left(FailureModel.fromEnum(AplicationErrors.internalError));
+    } 
+  }
+
+
+  @override
   Future<Either<FailureModel, SuccessModel>> sendAnswerQuestion(MockExamCacheModel? question, MockExamAnswerModel answer) async {
     try {
-      await mockExamCache.update(question!.toMap());
       return Right(SuccessModel());
     } catch (e) {
       return Left(FailureModel.fromEnum(AplicationErrors.internalError));
@@ -107,9 +135,7 @@ class MockExamQuestionService implements IMockExamService {
   Future<Either<FailureModel, SuccessModel>> sendMockExamAnswer() async {
     try {
       final token = await getAcessToken();
-      final cache = await mockExamCache.database;
-      final List<Map<String, dynamic>> questions = await cache.query('mock_exam');
-      
+      var questions = [];      
       final response = await client.post(Uri.parse("$apiUrl/api/mock-exam/submmit"),
         headers: {
           'Authorization': 'Bearer $token',
