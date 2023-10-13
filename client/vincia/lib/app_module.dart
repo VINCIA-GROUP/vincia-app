@@ -5,7 +5,6 @@ import 'package:vincia/modules/home/services/home_service.dart';
 import 'package:vincia/modules/login/services/login_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:vincia/modules/mock_exam/mock_exam_module.dart';
-import 'package:vincia/modules/mock_exam/page/controller/mock_exam_controller.dart';
 import 'modules/Initial/page/initial_page.dart';
 import 'modules/home/page/controller/home_controller.dart';
 import 'modules/home/page/controller/profile_controller.dart';

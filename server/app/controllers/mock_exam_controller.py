@@ -29,7 +29,7 @@ def question(id):
    connection_pool.release_connection(connection)
    return success_api_response(data=question)
 
-@app.route("/api/mock-exam/submmit", methods=["POST"], endpoint="mock-exam/submmit")
+@app.route("/api/mock-exam/answer", methods=["POST"], endpoint="mock-exam/answer")
 @requires_auth(None)
 def submmit():
    connection = connection_pool.get_connection()

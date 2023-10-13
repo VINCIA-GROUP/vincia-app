@@ -2,9 +2,6 @@ import 'dart:async';
 import 'package:dartz/dartz.dart';
 import 'package:mobx/mobx.dart';
 import 'package:vincia/modules/mock_exam/model/mock_exam_answer_model.dart';
-import 'package:vincia/modules/mock_exam/model/mock_exam_areas_enum.dart';
-import 'package:vincia/modules/mock_exam/model/mock_exam_areas_model.dart';
-import 'package:vincia/modules/mock_exam/model/mock_exam_cache_model.dart';
 import 'package:vincia/modules/mock_exam/model/mock_exam_question_model.dart';
 import 'package:vincia/modules/mock_exam/page/controller/state/question_state.dart';
 import 'package:vincia/modules/mock_exam/interfaces/i_mock_exam_service.dart';
@@ -50,8 +47,7 @@ abstract class _MockExamController with Store {
 
   @computed
   String get time {
-    final value = duration.toString().split(':');
-    return "${value[1]}:${value[2].split('.').first}";
+    return duration.inSeconds.toString();
   }
 
   @action
@@ -83,20 +79,37 @@ abstract class _MockExamController with Store {
   }
 
   @action
-  getNextQuestion(int qArea, int qPosition) {
-    // question = questions?[qArea][qPosition];
+  Future<void> getNextQuestion(int questionIndex) async {
+    // durations![questionIndex] = 
+
+    state = InitialState();
+    duration = const Duration(seconds: 0);
+    timeWatcher?.cancel();
+    question = null;
+
+    String questionId = questions![questionIndex];
+    var questionData = await _mockExamService.getQuestion(questionId);
+    if (questionData.isRight()) {
+      question = (questionData as Right).value;
+    } 
+    if (questionData.isLeft()) {
+      FailureModel value = (questionData as Left).value;
+      state = FailureState(value);
+      return;
+    }
+    timeWatcher = Timer.periodic(const Duration(seconds: 1), (timer) {
+      duration += const Duration(seconds: 1);
+    });
   }
 
   @action
-  void answerQuestion(alternativeId, int qArea, int qPosition) {
+  Future<void> answerQuestion(String alternativeId, int questionIndex) async {
     if (state is InitialState && state is! AnsweredQuestionState) {
-      timeWatcher?.cancel();
-      // final answer = MockExamAnswerModel(alternativeId, duration);
-      // _mockExamService.sendAnswerQuestion(
-        // question!, answer);
       state = AnsweredQuestionState(alternativeId);
-      // questions?[qArea][qPosition].answered = alternativeId;
-      // questions?[qArea][qPosition].duration = duration;
+      answers![questionIndex] = alternativeId;
+      durations![questionIndex] = (int.parse(durations![questionIndex]) + int.parse(time)) as String;
+      final answer = MockExamAnswerModel(answers!, durations!);
+      await _mockExamService.sendAnswerQuestion(answer);
     }
   }
 
@@ -104,4 +117,10 @@ abstract class _MockExamController with Store {
   void submmitExam() {
     _mockExamService.sendMockExamAnswer();
   }
+
+  // String calculateDuration(int questionIndex) {
+  //   if (durations![questionIndex] != None) {
+  //     (int.parse(durations![questionIndex]) + int.parse(time)) as String;
+  //   }
+  // }
 }

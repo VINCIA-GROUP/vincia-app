@@ -136,30 +136,26 @@ mixin _$MockExamController on _MockExamController, Store {
     return _$initAsyncAction.run(() => super.init());
   }
 
+  late final _$getNextQuestionAsyncAction =
+      AsyncAction('_MockExamController.getNextQuestion', context: context);
+
+  @override
+  Future getNextQuestion(int questionIndex) {
+    return _$getNextQuestionAsyncAction
+        .run(() => super.getNextQuestion(questionIndex));
+  }
+
+  late final _$answerQuestionAsyncAction =
+      AsyncAction('_MockExamController.answerQuestion', context: context);
+
+  @override
+  Future answerQuestion(String alternativeId, int questionIndex) {
+    return _$answerQuestionAsyncAction
+        .run(() => super.answerQuestion(alternativeId, questionIndex));
+  }
+
   late final _$_MockExamControllerActionController =
       ActionController(name: '_MockExamController', context: context);
-
-  @override
-  dynamic getNextQuestion(int qArea, int qPosition) {
-    final _$actionInfo = _$_MockExamControllerActionController.startAction(
-        name: '_MockExamController.getNextQuestion');
-    try {
-      return super.getNextQuestion(qArea, qPosition);
-    } finally {
-      _$_MockExamControllerActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void answerQuestion(dynamic alternativeId, int qArea, int qPosition) {
-    final _$actionInfo = _$_MockExamControllerActionController.startAction(
-        name: '_MockExamController.answerQuestion');
-    try {
-      return super.answerQuestion(alternativeId, qArea, qPosition);
-    } finally {
-      _$_MockExamControllerActionController.endAction(_$actionInfo);
-    }
-  }
 
   @override
   void submmitExam() {

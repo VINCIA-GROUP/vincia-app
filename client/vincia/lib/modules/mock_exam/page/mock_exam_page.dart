@@ -3,7 +3,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:vincia/modules/mock_exam/model/mock_exam_alternative_model.dart';
-import 'package:vincia/modules/mock_exam/model/mock_exam_cache_model.dart';
 import 'package:vincia/modules/mock_exam/page/controller/mock_exam_controller.dart';
 import 'package:vincia/modules/mock_exam/page/controller/state/question_state.dart';
 import 'package:vincia/shared/components/error_message_component.dart';
@@ -22,8 +21,7 @@ class _MockExamPageState extends State<MockExamPage>
 
   late final Future _initQuestion;
 
-  int qPosition = 0;
-  int qArea = 0;
+  int questionIndex = 0;
 
   @override
   void initState() {
@@ -56,13 +54,9 @@ class _MockExamPageState extends State<MockExamPage>
                     icon: const Icon(Icons.arrow_back),
                     color: Theme.of(context).colorScheme.primary,
                     onPressed: () {
-                      if (qArea != 0 && qPosition != 0) {
-                        if (qPosition != 0) {
-                          qPosition -= 1;
-                        } else {
-                          qArea -= 1;
-                        }
-                        _mockExamController.getNextQuestion(qArea, qPosition);
+                      if (questionIndex != 0) {
+                        questionIndex -= 1;
+                        _mockExamController.getNextQuestion(questionIndex);
                       }
                     },
                   ),
@@ -71,7 +65,7 @@ class _MockExamPageState extends State<MockExamPage>
                     icon: const Icon(Icons.menu),
                     color: Theme.of(context).colorScheme.primary,
                     onPressed: () {
-                      // _chooseQuestions(context, _mockExamController.questions);
+                      _chooseQuestions(context);
                     },
                   ),
                   IconButton(
@@ -79,14 +73,10 @@ class _MockExamPageState extends State<MockExamPage>
                     icon: const Icon(Icons.arrow_forward),
                     color: Theme.of(context).colorScheme.primary,
                     onPressed: () {
-                      if (qArea != 3 && qPosition != 45) {
-                          if (qPosition != 45) {
-                            qPosition += 1;
-                          } else {
-                            qArea += 1;
-                          }
-                          _mockExamController.getNextQuestion(qArea, qPosition);
-                        }
+                      if (questionIndex != 179) {
+                        questionIndex += 1;
+                        _mockExamController.getNextQuestion(questionIndex);
+                      }
                     },
                   ),
                   IconButton(
@@ -119,19 +109,32 @@ class _MockExamPageState extends State<MockExamPage>
                 return ListView(
                   scrollDirection: Axis.vertical,
                   children: [
+                    Container(
+                      margin: const EdgeInsets.only(left: 16.0),
+                      decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.background,
+                      borderRadius: BorderRadius.circular(8)),
+                      child: Text(
+                        (questionIndex + 1).toString(), 
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.bold
+                        ),
+                      ),
+                    ),
                     _equestionStatement(
                       context,
-                      question.statement!),
+                      question.statement),
                     ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount:
-                          _mockExamController.question?.alternatives!.length,
+                          _mockExamController.question?.alternatives.length,
                       itemBuilder: (BuildContext context, int index) {
                         return _alternatives(
                           context, 
                           index,
-                          _mockExamController.question!.alternatives![index]);
+                          _mockExamController.question!.alternatives[index]);
                       },
                     ),
                   ],
@@ -173,7 +176,7 @@ class _MockExamPageState extends State<MockExamPage>
             ),
           ),
           onPressed: () {
-            _mockExamController.answerQuestion(alternative.id, qArea, qPosition);
+            _mockExamController.answerQuestion(alternative.id, questionIndex);
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -204,7 +207,7 @@ class _MockExamPageState extends State<MockExamPage>
     );
   }
 
-  Future _chooseQuestions(BuildContext context, List<List<String>>? questionLists) {
+  Future _chooseQuestions(BuildContext context) {
     return showDialog(
       context: context, 
       builder: (BuildContext context) {
@@ -226,6 +229,60 @@ class _MockExamPageState extends State<MockExamPage>
                       },
                     )
                   ],
+                ),
+                const Text(
+                  'Linguagens, Códigos e suas Tecnologias',
+                  style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16.0),
+                Expanded(
+                  child: GridView.builder(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 5
+                    ), 
+                    itemCount: 45,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Center(
+                        child: Text((index + 1).toString()),
+                      );
+                    },
+                  )
+                ),
+                const Text(
+                  'Linguagens, Códigos e suas Tecnologias',
+                  style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16.0),
+                Expanded(
+                  child: GridView.builder(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 5
+                    ), 
+                    itemCount: 45,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Center(
+                        child: Text((index + 1).toString()),
+                      );
+                    },
+                  )
+                ),
+                const Text(
+                  'Linguagens, Códigos e suas Tecnologias',
+                  style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16.0),
+                Expanded(
+                  child: GridView.builder(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 5
+                    ), 
+                    itemCount: 45,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Center(
+                        child: Text((index + 1).toString()),
+                      );
+                    },
+                  )
                 ),
                 const Text(
                   'Linguagens, Códigos e suas Tecnologias',
