@@ -123,7 +123,7 @@ class MockExamQuestionService implements IMockExamService {
   Future<Either<FailureModel, SuccessModel>> sendAnswerQuestion(MockExamAnswerModel answer) async {
     try {
       final token = await getAcessToken();
-      final response = await client.post(Uri.parse("$apiUrl/api/mock-exam/answers"),
+      final response = await client.post(Uri.parse("$apiUrl/api/mock-exam/answer"),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',

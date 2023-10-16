@@ -21,7 +21,7 @@ class MockExamService:
             self.get_areas_questions(AreasID.MATHEMATICS.value, 1350, 1750)
          )
          answers = [None] * 180
-         durations = [None] * 180
+         durations = ["0"] * 180
          history_id = str(uuid.uuid4())
          self.history_of_mock_exam_repository.create_exam(history_id, questions, answers, durations, user_id)
          return {"questions": questions, "answers": answers, "durations": durations}
@@ -44,8 +44,7 @@ class MockExamService:
       return question.to_json()
       
    def submit_answer(self, user_id, answers):
-      for answer in answers:
-         None#save answer in database
+      None
 
    def calculate_grade():
       None

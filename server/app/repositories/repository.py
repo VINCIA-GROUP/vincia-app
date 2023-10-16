@@ -1,5 +1,3 @@
-from psycopg2 import DatabaseError
-
 from app.domain.errors.api_exception import ApiException
 from app.domain.errors.domain_errors import DataNotFound
 

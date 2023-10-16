@@ -80,7 +80,7 @@ abstract class _MockExamController with Store {
 
   @action
   Future<void> getNextQuestion(int questionIndex) async {
-    // durations![questionIndex] = 
+    durations![questionIndex] = calculateDuration(questionIndex);
 
     state = InitialState();
     duration = const Duration(seconds: 0);
@@ -104,23 +104,19 @@ abstract class _MockExamController with Store {
 
   @action
   Future<void> answerQuestion(String alternativeId, int questionIndex) async {
-    if (state is InitialState && state is! AnsweredQuestionState) {
-      state = AnsweredQuestionState(alternativeId);
-      answers![questionIndex] = alternativeId;
-      durations![questionIndex] = (int.parse(durations![questionIndex]) + int.parse(time)) as String;
-      final answer = MockExamAnswerModel(answers!, durations!);
-      await _mockExamService.sendAnswerQuestion(answer);
-    }
-  }
+    state = AnsweredQuestionState(alternativeId);
+    answers![questionIndex] = alternativeId;
+    durations![questionIndex] = calculateDuration(questionIndex);
+    final answer = MockExamAnswerModel(answers!, durations!);
+    await _mockExamService.sendAnswerQuestion(answer);
+}
 
   @action
   void submmitExam() {
     _mockExamService.sendMockExamAnswer();
   }
 
-  // String calculateDuration(int questionIndex) {
-  //   if (durations![questionIndex] != None) {
-  //     (int.parse(durations![questionIndex]) + int.parse(time)) as String;
-  //   }
-  // }
+  String calculateDuration(int questionIndex) {
+    return (int.parse(durations![questionIndex]) + int.parse(time)).toString();
+  }
 }

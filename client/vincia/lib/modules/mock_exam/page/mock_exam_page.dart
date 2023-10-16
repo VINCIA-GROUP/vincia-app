@@ -167,6 +167,12 @@ class _MockExamPageState extends State<MockExamPage>
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Observer(builder: (context) {
+        if (_mockExamController.state is AnsweredQuestionState) {
+          var state = _mockExamController.state as AnsweredQuestionState;
+          if (state.alternativeId == alternative.id) {
+            buttonColor = Theme.of(context).colorScheme.secondary;
+          }
+        }
         return ElevatedButton(
           style: ElevatedButton.styleFrom(
             backgroundColor: buttonColor,
@@ -230,80 +236,164 @@ class _MockExamPageState extends State<MockExamPage>
                     )
                   ],
                 ),
-                const Text(
-                  'Linguagens, Códigos e suas Tecnologias',
-                  style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 16.0),
                 Expanded(
-                  child: GridView.builder(
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 5
-                    ), 
-                    itemCount: 45,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Center(
-                        child: Text((index + 1).toString()),
-                      );
-                    },
-                  )
-                ),
-                const Text(
-                  'Linguagens, Códigos e suas Tecnologias',
-                  style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 16.0),
-                Expanded(
-                  child: GridView.builder(
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 5
-                    ), 
-                    itemCount: 45,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Center(
-                        child: Text((index + 1).toString()),
-                      );
-                    },
-                  )
-                ),
-                const Text(
-                  'Linguagens, Códigos e suas Tecnologias',
-                  style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 16.0),
-                Expanded(
-                  child: GridView.builder(
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 5
-                    ), 
-                    itemCount: 45,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Center(
-                        child: Text((index + 1).toString()),
-                      );
-                    },
-                  )
-                ),
-                const Text(
-                  'Linguagens, Códigos e suas Tecnologias',
-                  style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 16.0),
-                Expanded(
-                  child: GridView.builder(
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 5
-                    ), 
-                    itemCount: 45,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Center(
-                        child: Text((index + 1).toString()),
-                      );
-                    },
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        const Text(
+                          'Linguagens, Códigos e suas Tecnologias',
+                          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 10.0),
+                        GridView.builder(
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 5,
+                          ),
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: 45,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: TextButton(
+                                onPressed: () async {
+                                  if (index != questionIndex) {
+                                    await _mockExamController.getNextQuestion(index);
+                                    questionIndex = index;
+                                  }
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor: questionIndex == index 
+                                    ? MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.onPrimary)
+                                    : MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.secondary), // Define a cor de fundo
+                                ),
+                                child: Text(
+                                  (index + 1).toString(),
+                                  style: questionIndex == index
+                                  ? TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.secondary)
+                                  : TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.onPrimary),
+                                ),
+                              ),
+                            );
+                          },  
+                        ),
+                        const Text(
+                          'Ciências Humanas e suas Tecnologias',
+                          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 10.0),
+                        GridView.builder(
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 5,
+                          ),
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: 45,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: TextButton(
+                                onPressed: () async {
+                                  if (index != questionIndex + 45) {
+                                    await _mockExamController.getNextQuestion(index + 45);
+                                    questionIndex = index + 45;
+                                  }
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor: questionIndex == index + 45
+                                    ? MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.onPrimary)
+                                    : MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.secondary), // Define a cor de fundo
+                                ),
+                                child: Text(
+                                  (index + 46).toString(),
+                                  style: questionIndex == index + 45
+                                  ? TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.secondary)
+                                  : TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.onPrimary),
+                                ),
+                              ),
+                            );
+                          },  
+                        ),
+                        const Text(
+                          'Ciências da Natureza e suas Tecnologias',
+                          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 10.0),
+                        GridView.builder(
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 5,
+                          ),
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: 45,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: TextButton(
+                                onPressed: () async {
+                                  if (index != questionIndex + 90) {
+                                    await _mockExamController.getNextQuestion(index + 90);
+                                    questionIndex = index + 90;
+                                  }
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor: questionIndex == index + 90
+                                    ? MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.onPrimary)
+                                    : MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.secondary), // Define a cor de fundo
+                                ),
+                                child: Text(
+                                  (index + 91).toString(),
+                                  style: questionIndex == index + 90
+                                  ? TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.secondary)
+                                  : TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.onPrimary),
+                                ),
+                              ),
+                            );
+                          },  
+                        ),
+                        const Text(
+                          'Matemática e suas Tecnologias',
+                          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 10.0),
+                        GridView.builder(
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 4,
+                          ),
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: 45,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.all(6.0),
+                              child: TextButton(
+                                onPressed: () async {
+                                  if (index != questionIndex) {
+                                    await _mockExamController.getNextQuestion(index + 135);
+                                    questionIndex = index + 135;
+                                  }
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor: questionIndex == index + 135 
+                                    ? MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.onPrimary)
+                                    : MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.secondary), // Define a cor de fundo
+                                ),
+                                child: Text(
+                                  (index + 136).toString(),
+                                  style: questionIndex == index + 135
+                                  ? TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.secondary)
+                                  : TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.onPrimary),
+                                ),
+                              ),
+                            );
+                          },  
+                        ),
+                      ]
+                    ),
                   )
                 )
               ],
-            ),
+            )
           )
         );
       }
