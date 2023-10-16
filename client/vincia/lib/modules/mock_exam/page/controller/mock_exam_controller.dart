@@ -108,12 +108,12 @@ abstract class _MockExamController with Store {
     answers![questionIndex] = alternativeId;
     durations![questionIndex] = calculateDuration(questionIndex);
     final answer = MockExamAnswerModel(answers!, durations!);
-    await _mockExamService.sendAnswerQuestion(answer);
+    await _mockExamService.sendQuestionAnswer(answer);
 }
 
   @action
   void submmitExam() {
-    _mockExamService.sendMockExamAnswer();
+    _mockExamService.submmitMockExam();
   }
 
   String calculateDuration(int questionIndex) {

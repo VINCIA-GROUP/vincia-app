@@ -44,7 +44,13 @@ class MockExamService:
       return question.to_json()
       
    def submit_answer(self, user_id, answers):
-      None
+      self.history_of_questions_repository.update_exam(
+         answers.answerList,
+         answers.durationList,
+         user_id
+      )
 
-   def calculate_grade():
+   def submmit():
+      #calcular notas
+      #atualizar linha no bd
       None

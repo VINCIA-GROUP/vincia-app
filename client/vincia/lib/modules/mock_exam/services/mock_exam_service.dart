@@ -120,7 +120,7 @@ class MockExamQuestionService implements IMockExamService {
 
 
   @override
-  Future<Either<FailureModel, SuccessModel>> sendAnswerQuestion(MockExamAnswerModel answer) async {
+  Future<Either<FailureModel, SuccessModel>> sendQuestionAnswer(MockExamAnswerModel answer) async {
     try {
       final token = await getAcessToken();
       final response = await client.post(Uri.parse("$apiUrl/api/mock-exam/answer"),
@@ -142,7 +142,7 @@ class MockExamQuestionService implements IMockExamService {
   }
 
   @override
-  Future<Either<FailureModel, SuccessModel>> sendMockExamAnswer() async {
+  Future<Either<FailureModel, SuccessModel>> submmitMockExam() async {
     try {
       final token = await getAcessToken();
       var questions = [];      

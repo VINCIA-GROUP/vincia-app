@@ -27,7 +27,7 @@ class HistoryOfMockExamRepository(Repository):
          query="INSERT INTO history_of_mock_exam (id, user_id, created_at, questions, answers, durations, is_open) VALUES (%s, %s, %s, %s, %s, %s, %s);",
          params=(id, user_id, datetime.utcnow(), questions, answers, durations, True),)
    
-   def update_exam(self, id, questions, answers, durations, user_id, is_open):
+   def update_exam(self, answers, durations, user_id):
       return super().update(
-         query="INSERT INTO history_of_mock_exam (id, user_id, questions, answers, durations, is_open) VALUES (%s, %s, %s, %s, %s);",
-         params=(id, user_id, questions, answers, durations, is_open),)
+         query="UPDATE history_of_mock_exam SET answers = ?, durations = ? WHERE user_id = ? AND created_at = (SELECT MAX (created_at) FROM history_of_mock_exam WHERE user_id = ?",
+         params=(answers, durations, user_id, user_id),)

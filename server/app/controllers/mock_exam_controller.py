@@ -42,12 +42,12 @@ def submmit():
    connection_pool.release_connection(connection)
    return success_api_response(data=result)
 
-@app.route("/api/mock-exam/grade", methods=["GET"], endpoint="mock-exam/grade")
+@app.route("/api/mock-exam/submmit", methods=["GET"], endpoint="mock-exam/submmit")
 @requires_auth(None)
 def submmit():
    connection = connection_pool.get_connection()
    grade = MockExamService(QuestionsRepository(connection),
                            HistoryOfQuestionsRepository(connection),
-                           HistoryOfMockExamRepository(connection)).calculate_grade()
+                           HistoryOfMockExamRepository(connection)).submmit()
    connection_pool.release_connection(connection)
    return success_api_response(data=grade)
