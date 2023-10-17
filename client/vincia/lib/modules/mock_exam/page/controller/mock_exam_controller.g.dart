@@ -84,15 +84,47 @@ mixin _$MockExamController on _MockExamController, Store {
       Atom(name: '_MockExamController.durations', context: context);
 
   @override
-  List<String>? get durations {
+  List<int>? get durations {
     _$durationsAtom.reportRead();
     return super.durations;
   }
 
   @override
-  set durations(List<String>? value) {
+  set durations(List<int>? value) {
     _$durationsAtom.reportWrite(value, super.durations, () {
       super.durations = value;
+    });
+  }
+
+  late final _$ratingsAtom =
+      Atom(name: '_MockExamController.ratings', context: context);
+
+  @override
+  List<int>? get ratings {
+    _$ratingsAtom.reportRead();
+    return super.ratings;
+  }
+
+  @override
+  set ratings(List<int>? value) {
+    _$ratingsAtom.reportWrite(value, super.ratings, () {
+      super.ratings = value;
+    });
+  }
+
+  late final _$correctAnswersAtom =
+      Atom(name: '_MockExamController.correctAnswers', context: context);
+
+  @override
+  List<String>? get correctAnswers {
+    _$correctAnswersAtom.reportRead();
+    return super.correctAnswers;
+  }
+
+  @override
+  set correctAnswers(List<String>? value) {
+    _$correctAnswersAtom.reportWrite(value, super.correctAnswers, () {
+      super.correctAnswers = value;
     });
   }
 
@@ -140,7 +172,7 @@ mixin _$MockExamController on _MockExamController, Store {
       AsyncAction('_MockExamController.getNextQuestion', context: context);
 
   @override
-  Future getNextQuestion(int questionIndex) {
+  Future<void> getNextQuestion(int questionIndex) {
     return _$getNextQuestionAsyncAction
         .run(() => super.getNextQuestion(questionIndex));
   }
@@ -149,7 +181,7 @@ mixin _$MockExamController on _MockExamController, Store {
       AsyncAction('_MockExamController.answerQuestion', context: context);
 
   @override
-  Future answerQuestion(String alternativeId, int questionIndex) {
+  Future<void> answerQuestion(String alternativeId, int questionIndex) {
     return _$answerQuestionAsyncAction
         .run(() => super.answerQuestion(alternativeId, questionIndex));
   }
@@ -176,6 +208,8 @@ user: ${user},
 questions: ${questions},
 answers: ${answers},
 durations: ${durations},
+ratings: ${ratings},
+correctAnswers: ${correctAnswers},
 question: ${question},
 state: ${state},
 time: ${time}

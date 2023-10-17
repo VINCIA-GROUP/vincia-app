@@ -33,7 +33,7 @@ class _MockExamPageState extends State<MockExamPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight),
+        preferredSize: const Size.fromHeight(kToolbarHeight),
         child: AppBar(
           automaticallyImplyLeading: false,
           actions: <Widget>[
@@ -247,14 +247,14 @@ class _MockExamPageState extends State<MockExamPage>
                         const SizedBox(height: 10.0),
                         GridView.builder(
                           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 5,
+                            crossAxisCount: 4,
                           ),
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: 45,
                           itemBuilder: (context, index) {
                             return Padding(
-                              padding: const EdgeInsets.all(4.0),
+                              padding: const EdgeInsets.all(6.0),
                               child: TextButton(
                                 onPressed: () async {
                                   if (index != questionIndex) {
@@ -265,7 +265,7 @@ class _MockExamPageState extends State<MockExamPage>
                                 style: ButtonStyle(
                                   backgroundColor: questionIndex == index 
                                     ? MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.onPrimary)
-                                    : MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.secondary), // Define a cor de fundo
+                                    : MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.secondary),
                                 ),
                                 child: Text(
                                   (index + 1).toString(),
@@ -284,14 +284,14 @@ class _MockExamPageState extends State<MockExamPage>
                         const SizedBox(height: 10.0),
                         GridView.builder(
                           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 5,
+                            crossAxisCount: 4,
                           ),
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: 45,
                           itemBuilder: (context, index) {
                             return Padding(
-                              padding: const EdgeInsets.all(4.0),
+                              padding: const EdgeInsets.all(6.0),
                               child: TextButton(
                                 onPressed: () async {
                                   if (index != questionIndex + 45) {
@@ -321,14 +321,14 @@ class _MockExamPageState extends State<MockExamPage>
                         const SizedBox(height: 10.0),
                         GridView.builder(
                           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 5,
+                            crossAxisCount: 4,
                           ),
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: 45,
                           itemBuilder: (context, index) {
                             return Padding(
-                              padding: const EdgeInsets.all(4.0),
+                              padding: const EdgeInsets.all(6.0),
                               child: TextButton(
                                 onPressed: () async {
                                   if (index != questionIndex + 90) {

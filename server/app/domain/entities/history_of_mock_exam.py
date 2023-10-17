@@ -1,5 +1,5 @@
 class History_of_Mock_exam:
-    def __init__(self, id, duration, languages_grade,  humanities_grade, mathematics_grade, natural_science_grade, general_grade, user_id, created_at, questions, answers, durations, is_open):
+    def __init__(self, id, duration, languages_grade,  humanities_grade, mathematics_grade, natural_science_grade, general_grade, user_id, created_at, questions, is_open, answers, durations, ratings, correct_answers):
       self.id = id
       self.duration = duration
       self.languages_grade = languages_grade       
@@ -12,6 +12,8 @@ class History_of_Mock_exam:
       self.questions = questions
       self.answers = answers
       self.durations = durations
+      self.ratings = ratings
+      self.correct_answers = correct_answers
       self.is_open = is_open
         
     def to_json(self):
@@ -27,5 +29,8 @@ class History_of_Mock_exam:
          'created_at': self.created_at,
          'questions': self.questions,
          'answers': self.answers,
+         'durations': self.durations,
+         'ratings': self.ratings,
+         'correct_answers': self.correct_answers,
          'is_open': self.is_open
       }

@@ -35,7 +35,13 @@ abstract class _MockExamController with Store {
   List<String>? answers;
   
   @observable
-  List<String>? durations;
+  List<int>? durations;
+
+  @observable
+  List<int>? ratings;
+
+  @observable
+  List<String>? correctAnswers;
   
   @observable
   MockExamQuestionModel? question;
@@ -63,9 +69,13 @@ abstract class _MockExamController with Store {
       questions = (result as Right).value.questions;
       answers = (result as Right).value.answers;
       durations = (result as Right).value.durations;
+      ratings = (result as Right).value.ratings;
+      correctAnswers = (result as Right).value.correctAnswers;
       var questionData = await _mockExamService.getQuestion(questions![0]);
       if (questionData.isRight()) {
         question = (questionData as Right).value;
+        ratings![0] = question!.difficulty;
+        correctAnswers![0] = question!.answer.toString();
       }
     }
     if (result.isLeft()) {
@@ -80,8 +90,7 @@ abstract class _MockExamController with Store {
 
   @action
   Future<void> getNextQuestion(int questionIndex) async {
-    durations![questionIndex] = calculateDuration(questionIndex);
-
+    // durations![questionIndex] = calculateDuration(questionIndex);
     state = InitialState();
     duration = const Duration(seconds: 0);
     timeWatcher?.cancel();
@@ -91,6 +100,8 @@ abstract class _MockExamController with Store {
     var questionData = await _mockExamService.getQuestion(questionId);
     if (questionData.isRight()) {
       question = (questionData as Right).value;
+      ratings![questionIndex] = question!.difficulty;
+      correctAnswers![questionIndex] = question!.answer.toString();
     } 
     if (questionData.isLeft()) {
       FailureModel value = (questionData as Left).value;
@@ -107,7 +118,7 @@ abstract class _MockExamController with Store {
     state = AnsweredQuestionState(alternativeId);
     answers![questionIndex] = alternativeId;
     durations![questionIndex] = calculateDuration(questionIndex);
-    final answer = MockExamAnswerModel(answers!, durations!);
+    final answer = MockExamAnswerModel(answers!, durations!, ratings!, correctAnswers!);
     await _mockExamService.sendQuestionAnswer(answer);
 }
 
@@ -116,7 +127,7 @@ abstract class _MockExamController with Store {
     _mockExamService.submmitMockExam();
   }
 
-  String calculateDuration(int questionIndex) {
-    return (int.parse(durations![questionIndex]) + int.parse(time)).toString();
+  int calculateDuration(int questionIndex) {
+    return (durations![questionIndex] + int.parse(time));
   }
 }

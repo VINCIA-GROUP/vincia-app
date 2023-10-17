@@ -82,7 +82,7 @@ class MockExamQuestionService implements IMockExamService {
   @override
   Future<Either<FailureModel, MockExamQuestionsModel>> getQuestions() async {
     try {
-      MockExamQuestionsModel result = MockExamQuestionsModel([], [], []);
+      MockExamQuestionsModel result = MockExamQuestionsModel([], [], [], [], []);
       final areas = await getQuestionsFromAPI();
       return areas.fold(
         (failure) {
@@ -91,7 +91,9 @@ class MockExamQuestionService implements IMockExamService {
         (resp) {
           result.questions = resp["questions"].cast<String>();
           result.answers = resp["answers"].cast<String>();
-          result.durations = resp["durations"].cast<String>();
+          result.durations = resp["durations"].cast<int>();
+          result.ratings = resp["ratings"].cast<int>();
+          result.correctAnswers = resp["correctAnswers"].cast<String>();
           return Right(result);
         });
     } catch (e) {
@@ -128,7 +130,7 @@ class MockExamQuestionService implements IMockExamService {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        body: answer
+        body: json.encode(answer.toJson())
       );
       if (response.statusCode == 200) {
         return Right(SuccessModel());

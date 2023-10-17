@@ -35,10 +35,13 @@ def submmit():
    connection = connection_pool.get_connection()
    user_id = session.get('current_user').get('sub')
    data = request.get_json()
-   answers = data.get('answers')
+   answers = data.get('answer')
+   durations = data.get('duration')
+   ratings = data.get('ratings')
+   correct_answers = data.get('correctAnwers')
    result = MockExamService(QuestionsRepository(connection),
                             HistoryOfQuestionsRepository(connection),
-                            HistoryOfMockExamRepository(connection)).submit_answer(user_id, answers)
+                            HistoryOfMockExamRepository(connection)).submit_answer(user_id, answers, durations, ratings, correct_answers)
    connection_pool.release_connection(connection)
    return success_api_response(data=result)
 
