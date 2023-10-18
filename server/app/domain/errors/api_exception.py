@@ -16,5 +16,3 @@ class ApiException(Exception):
     
     def to_json(self):
         return list(map(lambda x: x.to_json(), self.errors))
-
-

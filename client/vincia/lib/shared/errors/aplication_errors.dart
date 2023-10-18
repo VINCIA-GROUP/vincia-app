@@ -4,7 +4,7 @@ enum AplicationErrors {
       message: "Houve um erro no aplicativo. Tente novamente mais tarde."),
   unauthorizedAccess(
       code: "1000",
-      message: "Você não tem autozatição para efetuar essa função.");
+      message: "Você não tem autorizatição para efetuar essa função.");
 
   const AplicationErrors({required this.code, required this.message});
 

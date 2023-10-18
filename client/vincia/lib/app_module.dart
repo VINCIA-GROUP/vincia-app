@@ -5,6 +5,7 @@ import 'package:vincia/modules/home/services/home_service.dart';
 import 'package:vincia/modules/login/services/login_service.dart';
 import 'package:http/http.dart' as http;
 import 'modules/Initial/page/initial_page.dart';
+import 'modules/essay/essay_module.dart';
 import 'modules/home/page/controller/home_controller.dart';
 import 'modules/home/page/controller/profile_controller.dart';
 import 'modules/home/page/home_page.dart';
@@ -34,5 +35,7 @@ class AppModule extends Module {
         ChildRoute('/login', child: (context, args) => LoginPage()),
         ModuleRoute('/question', module: AdaptiveQuestionModule()),
         ChildRoute('/profile', child: (context, args) => ProfilePage()),
+        ModuleRoute('/essay', module: EssayModule()),
+        ModuleRoute('/essay/edit', module: EssayModule()),
       ];
 }

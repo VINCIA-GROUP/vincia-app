@@ -99,7 +99,10 @@ CREATE TABLE history_of_question_rating_updates(
   FOREIGN KEY (question_id) REFERENCES questions(id)
 );
 
-
+CREATE TABLE teste(
+	id uuid PRIMARY KEY NOT NULL,
+	message VARCHAR NOT NULL
+);
 
 
 
