@@ -1,5 +1,3 @@
-from psycopg2 import DatabaseError
-
 from app.domain.errors.api_exception import ApiException
 from app.domain.errors.domain_errors import DataNotFound
 
@@ -32,6 +30,19 @@ class Repository():
         for row in rows:
             obj = self.model(*row)
             data.append(obj)
+        cursor.close()
+        return data
+    
+    def get_raw(self, query, params):
+        data = []
+        cursor = self.connection.cursor()
+        cursor.execute(query, params)
+        if(cursor.rowcount <= 0):
+            cursor.close()
+            return data
+        rows = cursor.fetchall()
+        for row in rows:
+            data.append(row[0])
         cursor.close()
         return data
 
