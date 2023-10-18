@@ -89,11 +89,11 @@ class MockExamQuestionService implements IMockExamService {
           throw Exception();
         },
         (resp) {
-          result.questions = resp["questions"].cast<String>();
-          result.answers = resp["answers"].cast<String>();
-          result.durations = resp["durations"].cast<int>();
-          result.ratings = resp["ratings"].cast<int>();
-          result.correctAnswers = resp["correctAnswers"].cast<String>();
+          result.questions = resp["questions"].cast<String>().toList();
+          result.answers = resp["answers"].cast<String>().toList();
+          result.durations = resp["durations"].cast<int>().toList();
+          result.ratings = resp["ratings"].cast<int>().toList();
+          result.correctAnswers = resp["correctAnswers"].cast<String>().toList();
           return Right(result);
         });
     } catch (e) {
@@ -147,13 +147,11 @@ class MockExamQuestionService implements IMockExamService {
   Future<Either<FailureModel, SuccessModel>> submmitMockExam() async {
     try {
       final token = await getAcessToken();
-      var questions = [];      
       final response = await client.post(Uri.parse("$apiUrl/api/mock-exam/submmit"),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        body: questions
       );
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body)["data"];

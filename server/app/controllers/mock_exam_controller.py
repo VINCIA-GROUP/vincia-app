@@ -31,7 +31,7 @@ def question(id):
 
 @app.route("/api/mock-exam/answer", methods=["POST"], endpoint="mock-exam/answer")
 @requires_auth(None)
-def submmit():
+def answer():
    connection = connection_pool.get_connection()
    user_id = session.get('current_user').get('sub')
    data = request.get_json()
@@ -45,9 +45,9 @@ def submmit():
    connection_pool.release_connection(connection)
    return success_api_response(data=result)
 
-@app.route("/api/mock-exam/submmit", methods=["GET"], endpoint="mock-exam/submmit")
+@app.route("/api/mock-exam/submmit", methods=["POST"], endpoint="mock-exam/submmit")
 @requires_auth(None)
-def submmit():
+def finish():
    connection = connection_pool.get_connection()
    grade = MockExamService(QuestionsRepository(connection),
                            HistoryOfQuestionsRepository(connection),

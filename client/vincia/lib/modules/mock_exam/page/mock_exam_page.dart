@@ -21,8 +21,6 @@ class _MockExamPageState extends State<MockExamPage>
 
   late final Future _initQuestion;
 
-  int questionIndex = 0;
-
   @override
   void initState() {
     super.initState();
@@ -54,9 +52,9 @@ class _MockExamPageState extends State<MockExamPage>
                     icon: const Icon(Icons.arrow_back),
                     color: Theme.of(context).colorScheme.primary,
                     onPressed: () {
-                      if (questionIndex != 0) {
-                        questionIndex -= 1;
-                        _mockExamController.getNextQuestion(questionIndex);
+                      if (_mockExamController.questionIndex != 0) {
+                        _mockExamController.questionIndex -= 1;
+                        _mockExamController.getNextQuestion(_mockExamController.questionIndex);
                       }
                     },
                   ),
@@ -73,9 +71,9 @@ class _MockExamPageState extends State<MockExamPage>
                     icon: const Icon(Icons.arrow_forward),
                     color: Theme.of(context).colorScheme.primary,
                     onPressed: () {
-                      if (questionIndex != 179) {
-                        questionIndex += 1;
-                        _mockExamController.getNextQuestion(questionIndex);
+                      if (_mockExamController.questionIndex != 179) {
+                        _mockExamController.questionIndex += 1;
+                        _mockExamController.getNextQuestion(_mockExamController.questionIndex);
                       }
                     },
                   ),
@@ -85,6 +83,7 @@ class _MockExamPageState extends State<MockExamPage>
                     color: Colors.green,
                     onPressed: () {
                       _mockExamController.submmitExam();
+                      Modular.to.pop("/home");
                     }, 
                   )
                 ],
@@ -115,7 +114,7 @@ class _MockExamPageState extends State<MockExamPage>
                       color: Theme.of(context).colorScheme.background,
                       borderRadius: BorderRadius.circular(8)),
                       child: Text(
-                        (questionIndex + 1).toString(), 
+                        (_mockExamController.questionIndex + 1).toString(), 
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.bold
@@ -182,7 +181,7 @@ class _MockExamPageState extends State<MockExamPage>
             ),
           ),
           onPressed: () {
-            _mockExamController.answerQuestion(alternative.id, questionIndex);
+            _mockExamController.answerQuestion(alternative.id, _mockExamController.questionIndex);
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -257,21 +256,21 @@ class _MockExamPageState extends State<MockExamPage>
                               padding: const EdgeInsets.all(6.0),
                               child: TextButton(
                                 onPressed: () async {
-                                  if (index != questionIndex) {
+                                  if (index != _mockExamController.questionIndex) {
                                     await _mockExamController.getNextQuestion(index);
-                                    questionIndex = index;
+                                    _mockExamController.questionIndex = index;
                                   }
                                 },
                                 style: ButtonStyle(
-                                  backgroundColor: questionIndex == index 
-                                    ? MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.onPrimary)
+                                  backgroundColor: _mockExamController.answers![index] != "" 
+                                    ? null
                                     : MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.secondary),
                                 ),
                                 child: Text(
                                   (index + 1).toString(),
-                                  style: questionIndex == index
+                                  style: _mockExamController.answers![index] != ""
                                   ? TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.secondary)
-                                  : TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.onPrimary),
+                                  : TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.background),
                                 ),
                               ),
                             );
@@ -294,21 +293,21 @@ class _MockExamPageState extends State<MockExamPage>
                               padding: const EdgeInsets.all(6.0),
                               child: TextButton(
                                 onPressed: () async {
-                                  if (index != questionIndex + 45) {
+                                  if (index != _mockExamController.questionIndex + 45) {
                                     await _mockExamController.getNextQuestion(index + 45);
-                                    questionIndex = index + 45;
+                                    _mockExamController.questionIndex = index + 45;
                                   }
                                 },
                                 style: ButtonStyle(
-                                  backgroundColor: questionIndex == index + 45
-                                    ? MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.onPrimary)
-                                    : MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.secondary), // Define a cor de fundo
+                                  backgroundColor: _mockExamController.answers![index + 45] != "" 
+                                    ? null
+                                    : MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.secondary),
                                 ),
                                 child: Text(
                                   (index + 46).toString(),
-                                  style: questionIndex == index + 45
+                                  style: _mockExamController.answers![index + 45] != ""
                                   ? TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.secondary)
-                                  : TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.onPrimary),
+                                  : TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.background),
                                 ),
                               ),
                             );
@@ -331,21 +330,21 @@ class _MockExamPageState extends State<MockExamPage>
                               padding: const EdgeInsets.all(6.0),
                               child: TextButton(
                                 onPressed: () async {
-                                  if (index != questionIndex + 90) {
+                                  if (index != _mockExamController.questionIndex + 90) {
                                     await _mockExamController.getNextQuestion(index + 90);
-                                    questionIndex = index + 90;
+                                    _mockExamController.questionIndex = index + 90;
                                   }
                                 },
                                 style: ButtonStyle(
-                                  backgroundColor: questionIndex == index + 90
-                                    ? MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.onPrimary)
-                                    : MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.secondary), // Define a cor de fundo
+                                  backgroundColor: _mockExamController.answers![index + 90] != "" 
+                                    ? null
+                                    : MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.secondary),
                                 ),
                                 child: Text(
                                   (index + 91).toString(),
-                                  style: questionIndex == index + 90
+                                  style: _mockExamController.answers![index + 90] != ""
                                   ? TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.secondary)
-                                  : TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.onPrimary),
+                                  : TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.background),
                                 ),
                               ),
                             );
@@ -368,21 +367,21 @@ class _MockExamPageState extends State<MockExamPage>
                               padding: const EdgeInsets.all(6.0),
                               child: TextButton(
                                 onPressed: () async {
-                                  if (index != questionIndex) {
+                                  if (index != _mockExamController.questionIndex) {
                                     await _mockExamController.getNextQuestion(index + 135);
-                                    questionIndex = index + 135;
+                                    _mockExamController.questionIndex = index + 135;
                                   }
                                 },
                                 style: ButtonStyle(
-                                  backgroundColor: questionIndex == index + 135 
-                                    ? MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.onPrimary)
-                                    : MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.secondary), // Define a cor de fundo
+                                  backgroundColor: _mockExamController.answers![index + 135] != "" 
+                                    ? null
+                                    : MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.secondary),
                                 ),
                                 child: Text(
                                   (index + 136).toString(),
-                                  style: questionIndex == index + 135
+                                  style: _mockExamController.answers![index + 135] != ""
                                   ? TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.secondary)
-                                  : TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.onPrimary),
+                                  : TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.background),
                                 ),
                               ),
                             );

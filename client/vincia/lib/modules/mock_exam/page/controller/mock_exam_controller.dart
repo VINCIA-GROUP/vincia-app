@@ -47,6 +47,9 @@ abstract class _MockExamController with Store {
   MockExamQuestionModel? question;
 
   @observable
+  int questionIndex = 0;
+
+  @observable
   QuestionState state = InitialState();
 
   _MockExamController(this._mockExamService);
@@ -59,6 +62,7 @@ abstract class _MockExamController with Store {
   @action
   Future<void> init() async {
     state = InitialState();
+    questionIndex = 0;
     duration = const Duration(seconds: 0);
     timeWatcher?.cancel();
     var sub = await _mockExamService.getUserId();
@@ -76,6 +80,9 @@ abstract class _MockExamController with Store {
         question = (questionData as Right).value;
         ratings![0] = question!.difficulty;
         correctAnswers![0] = question!.answer.toString();
+      }
+      if (answers![0] != "") {
+        state = AnsweredQuestionState(answers![0]);
       }
     }
     if (result.isLeft()) {
@@ -102,6 +109,9 @@ abstract class _MockExamController with Store {
       question = (questionData as Right).value;
       ratings![questionIndex] = question!.difficulty;
       correctAnswers![questionIndex] = question!.answer.toString();
+      if (answers![questionIndex] != "") {
+        state = AnsweredQuestionState(answers![questionIndex]);
+      }
     } 
     if (questionData.isLeft()) {
       FailureModel value = (questionData as Left).value;
