@@ -49,8 +49,9 @@ def answer():
 @requires_auth(None)
 def finish():
    connection = connection_pool.get_connection()
+   user_id = session.get('current_user').get('sub')
    grade = MockExamService(QuestionsRepository(connection),
                            HistoryOfQuestionsRepository(connection),
-                           HistoryOfMockExamRepository(connection)).submmit()
+                           HistoryOfMockExamRepository(connection)).finish(user_id)
    connection_pool.release_connection(connection)
    return success_api_response(data=grade)

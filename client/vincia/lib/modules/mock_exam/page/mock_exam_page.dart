@@ -264,12 +264,12 @@ class _MockExamPageState extends State<MockExamPage>
                                 style: ButtonStyle(
                                   backgroundColor: _mockExamController.answers![index] != "" 
                                     ? null
-                                    : MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.secondary),
+                                    : MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.primary),
                                 ),
                                 child: Text(
                                   (index + 1).toString(),
                                   style: _mockExamController.answers![index] != ""
-                                  ? TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.secondary)
+                                  ? TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.primary)
                                   : TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.background),
                                 ),
                               ),
@@ -301,12 +301,12 @@ class _MockExamPageState extends State<MockExamPage>
                                 style: ButtonStyle(
                                   backgroundColor: _mockExamController.answers![index + 45] != "" 
                                     ? null
-                                    : MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.secondary),
+                                    : MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.primary),
                                 ),
                                 child: Text(
                                   (index + 46).toString(),
                                   style: _mockExamController.answers![index + 45] != ""
-                                  ? TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.secondary)
+                                  ? TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.primary)
                                   : TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.background),
                                 ),
                               ),
@@ -338,12 +338,12 @@ class _MockExamPageState extends State<MockExamPage>
                                 style: ButtonStyle(
                                   backgroundColor: _mockExamController.answers![index + 90] != "" 
                                     ? null
-                                    : MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.secondary),
+                                    : MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.primary),
                                 ),
                                 child: Text(
                                   (index + 91).toString(),
                                   style: _mockExamController.answers![index + 90] != ""
-                                  ? TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.secondary)
+                                  ? TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.primary)
                                   : TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.background),
                                 ),
                               ),
@@ -375,12 +375,12 @@ class _MockExamPageState extends State<MockExamPage>
                                 style: ButtonStyle(
                                   backgroundColor: _mockExamController.answers![index + 135] != "" 
                                     ? null
-                                    : MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.secondary),
+                                    : MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.primary),
                                 ),
                                 child: Text(
                                   (index + 136).toString(),
                                   style: _mockExamController.answers![index + 135] != ""
-                                  ? TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.secondary)
+                                  ? TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.primary)
                                   : TextStyle(fontSize: 14.0, color: Theme.of(context).colorScheme.background),
                                 ),
                               ),

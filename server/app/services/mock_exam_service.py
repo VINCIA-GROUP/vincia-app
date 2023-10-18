@@ -1,6 +1,6 @@
 import uuid
 import random
-import numpy as np
+from datetime import time
 from app.domain.enums.areas_id import AreasID
 
 class MockExamService:
@@ -67,11 +67,14 @@ class MockExamService:
 
    def finish(self, user_id):
       mock_exam = self.history_of_mock_exam_repository.get_by_user_id(user_id)
-      answers = mock_exam.answers
-      correct_answers = mock_exam.correct_answers
-      ratings = mock_exam.ratings
-      self.history_of_questions_repository.finish_exam(
+      answers = self.deserialize(mock_exam.answers, "string")
+      correct_answers = self.deserialize(mock_exam.correct_answers, "string")
+      ratings = self.deserialize(mock_exam.ratings, "int")
+      durations = self.deserialize(mock_exam.durations, "int")
+      duration = sum(durations)
+      self.history_of_mock_exam_repository.finish_exam(
          user_id,
+         time(hour=duration // 3600, minute=(duration % 3600) // 60, second=duration % 60),
          self.get_grade(answers[:45], correct_answers[:45], ratings[:45]), 
          self.get_grade(answers[45:91], correct_answers[45:91], ratings[45:91]), 
          self.get_grade(answers[90:136], correct_answers[90:136], ratings[90:136]), 
@@ -82,18 +85,17 @@ class MockExamService:
       self.history_of_mock_exam_repository.commit()
 
    def get_grade(self, answers, correct_answers, ratings):
-      a = 1.0  # Parâmetro de discriminação
-      b = -3.0  # Parâmetro de dificuldade
-      c = 0.2  # Parâmetro de acerto ao acaso
       grade = 0
-      hit = []
       for i in range(len(correct_answers)):
-         if answers[i] != "": 
-            hit = 1 if answers[i] == correct_answers[i] else 0
-            hit_prob = c + (1 - c) / (1 + np.exp(-a * (ratings[i] - b)))
-            grade += hit * np.log(hit_prob) + (1 - hit) * np.log(1 - hit_prob)
-      grade = 200 + 100 * (grade - np.min(grade)) / (np.max(grade) - np.min(grade))
-      return grade
+         if answers[i] == "":
+            grade += 0
+         elif answers[i] == correct_answers[i]:
+            grade += 1
+         else:
+            difficulty = ratings[i] / 3000
+            err_prob = 1 / (1 + 2.71828 ** (3 * (difficulty - 1)))
+            grade -= err_prob
+         return max(0, grade)
 
    def deserialize(self, input_string, type):
       input_string = input_string.strip("{}")
