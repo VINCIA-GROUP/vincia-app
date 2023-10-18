@@ -7,6 +7,11 @@ import 'package:vincia/modules/home/page/controller/home_controller.dart';
 class HomePage extends StatelessWidget {
   final HomeController _homeController = Modular.get<HomeController>();
 
+  final itens = [
+    "Coordenadas cartesianas: Entender como as coordenadas cartesianas funcionam e como elas podem ser usadas para descrever pontos em um plano.",
+    "Distância e inclinação: Aprender como encontrar a distância entre dois pontos e a inclinação de uma reta usando coordenadas cartesianas."
+  ];
+
   HomePage({super.key}) {
     _homeController.init();
     _homeController.getRating();
@@ -114,25 +119,25 @@ class HomePage extends StatelessWidget {
                               color: Theme.of(context).colorScheme.primary),
                         ),
                       ),
-                      const Text("...")
-                      // ListView.builder(
-                      //   shrinkWrap: true,
-                      //   itemCount: itens.length,
-                      //   itemBuilder: (context, index) {
-                      //     return Padding(
-                      //       padding: const EdgeInsets.only(bottom: 8),
-                      //       child: Row(
-                      //         children: [
-                      //           Checkbox(
-                      //             value: false,
-                      //             onChanged: (bool? newValue) {},
-                      //           ),
-                      //           Expanded(child: Text(itens[index])),
-                      //         ],
-                      //       ),
-                      //     );
-                      //   },
-                      // )
+                      // const Text("...")
+                      ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: itens.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: Row(
+                              children: [
+                                Checkbox(
+                                  value: false,
+                                  onChanged: (bool? newValue) {},
+                                ),
+                                Expanded(child: Text(itens[index])),
+                              ],
+                            ),
+                          );
+                        },
+                      )
                     ]),
                   ),
                 ),

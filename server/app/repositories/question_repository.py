@@ -17,6 +17,21 @@ class QuestionsRepository(Repository):
          query="SELECT q.id, q.statement, q.answer, q.is_essay, q.ability_id, q.rating, q.rating_deviation, q.volatility, q.last_rating_update FROM questions q WHERE q.id = %s;", params=(id,))
       question.alternatives = self._get_alternatives(question.id)
       return question
+   
+   def get_by_id_without_alternatives(self, id):
+      question = super().get_one(
+         query="SELECT q.id, q.statement, q.answer, q.is_essay, q.ability_id, q.rating, q.rating_deviation, q.volatility, q.last_rating_update FROM questions q WHERE q.id = %s;", params=(id,))
+      return question
+   
+   def get_date_last_update(self, id):
+      cursor = self.connection.cursor()
+      cursor.execute("SELECT last_rating_update FROM questions WHERE id = %s" , (id,))
+      if(cursor.rowcount <= 0):
+         cursor.close()
+         return None
+      result, = cursor.fetchone()
+      cursor.close()
+      return result
 
    def get_filtered(self, filters): #filter_example = {"rating": "> 1.0", "is_essay": "= false"}
       if filters:
@@ -58,10 +73,10 @@ class QuestionsRepository(Repository):
       )
       return questions
 
-   def update_rating(self, id, rating, rating_deviation, volatility):
+   def update_rating(self, id, rating, rating_deviation, volatility, last_rating_update):
       return super().update(
-         query="UPDATE questions SET rating = %s, rating_deviation = %s, volatility = %s WHERE id = %s;", 
-         params=(rating, rating_deviation, volatility, id)
+         query="UPDATE questions SET rating = %s, rating_deviation = %s, volatility = %s, last_rating_update = %s WHERE id = %s;", 
+         params=(rating, rating_deviation, volatility, last_rating_update, id)
       )
 
    def _get_alternatives(self, question_id):

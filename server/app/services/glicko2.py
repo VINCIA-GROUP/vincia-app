@@ -41,7 +41,10 @@ class Player:
     rating = property(getRating, setRating)
 
     def getRd(self):
-        return self.__rd * 173.7178
+        result = self.__rd * 173.7178
+        if(result < 30):
+            return 30
+        return result
 
     def setRd(self, rd):
         self.__rd = rd / 173.7178

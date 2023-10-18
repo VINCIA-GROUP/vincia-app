@@ -41,15 +41,15 @@ class AdaptiveQuestionService implements IAdaptiveQuestionService {
   }
 
   @override
-  Future<Either<FailureModel, SuccessModel>> sendAnswerQuestion(
-      String answer, Duration duration, String historyQuestionId) async {
+  Future<Either<FailureModel, String>> sendAnswerQuestion(
+      String answer, Duration duration, String questionId) async {
     try {
       final token = await getAcessToken();
 
       final Map<String, dynamic> requestData = {
         'answer': answer,
         'duration': duration.toString(),
-        'historyQuestionId': historyQuestionId,
+        'questionId': questionId,
       };
 
       var jsonData = jsonEncode(requestData);
@@ -62,7 +62,8 @@ class AdaptiveQuestionService implements IAdaptiveQuestionService {
               },
               body: jsonData);
       if (response.statusCode == 200) {
-        return Right(SuccessModel());
+        final body = jsonDecode(response.body)["data"];
+        return Right(body["historyQuestionId"]);
       } else {
         final body = jsonDecode(response.body)["errors"];
         return Left(FailureModel.fromJson(body));
@@ -80,12 +81,12 @@ class AdaptiveQuestionService implements IAdaptiveQuestionService {
 
   @override
   Future<Either<FailureModel, String>> sendMessage(
-      String message, String historyQuestionId) async {
+      String message, String questionId) async {
     try {
       final token = await getAcessToken();
 
       final Map<String, dynamic> requestData = {
-        'historyQuestionId': historyQuestionId,
+        'questionId': questionId,
         'message': message
       };
 
