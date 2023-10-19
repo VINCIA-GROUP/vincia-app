@@ -9,6 +9,10 @@ class FailureModel implements Exception {
     errors.add(error);
   }
 
+  FailureModel.create(String code, String message) {
+    errors.add(ErrorModel(code, message));
+  }
+
   FailureModel.fromListErrors(this.errors);
 
   FailureModel.fromEnum(AplicationErrors error) {
