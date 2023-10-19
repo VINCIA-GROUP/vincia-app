@@ -8,7 +8,9 @@ class MockExamCache {
   MockExamCache._privateConstructor();
 
   Future<Database> get database async {
-    if (_database != null) return _database!;
+    if (_database != null) {
+      return _database!;
+    }
     _database = await _initDatabase();
     return _database!;
   }
@@ -40,7 +42,8 @@ class MockExamCache {
 
   Future<void> insert(Map<String, dynamic> question) async {
     final db = await database;
-    await db.insert(_tableName, question, conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(_tableName, question,
+        conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   Future<void> update(Map<String, dynamic> question) async {
@@ -60,10 +63,9 @@ class MockExamCache {
   }
 
   Future<bool> doesTableExists(Database db, String tableName) async {
-    List<Map<String, dynamic>> tables = await db.rawQuery(
-      "SELECT name FROM sqlite_master WHERE type='table'");
+    List<Map<String, dynamic>> tables =
+        await db.rawQuery("SELECT name FROM sqlite_master WHERE type='table'");
 
     return tables.any((table) => table['name'] == tableName);
   }
-
 }
