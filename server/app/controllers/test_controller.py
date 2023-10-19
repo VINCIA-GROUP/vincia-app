@@ -3,7 +3,7 @@ from app import app
 from app.decorator.requires_auth import requires_auth
 from app.controllers.base_controller import *
 from app.domain.errors import api_exception
-from app.domain.errors.authentication_errors import AuthorizationHeaderMissing
+from app.domain.errors.authentication_errors import AuthorizationHeaderMissing, InvalidHeaderToken
 
 @app.route("/api/test/public", endpoint="test/public")
 def public():
@@ -13,6 +13,17 @@ def public():
         "Hello from a public endpoint! You don't need to be"
         " authenticated to see this."
     )
+    return success_api_response(response)
+
+@app.route("/api/test/erro", endpoint="test/public/erro")
+def public_error():
+    """No access token required."""
+    print("Ola")
+    response = (
+        "Hello from a public endpoint! You don't need to be"
+        " authenticated to see this."
+    )
+    raise api_exception.ApiException(InvalidHeaderToken())
     return success_api_response(response)
 
 
