@@ -47,25 +47,25 @@ async def main_async():
     html_questions = []
     
     
-    # file_name_data = 'ITENS_PROVA_2020.csv'
-    # nome_prova = 'Enem-2020'
-    # dic_cod_prova = {
-    #     'MT' : '695',
-    #     'LC' : '691',
-    #     'CN' : '699',
-    #     'CH' : '687'
-    # }
-    # list_file_names = os.listdir(f"{base_path}/resources/{nome_prova}")
-    
-    list_file_names = os.listdir(f"{base_path}/resources/Enem-2021")
-    file_name_data = 'ITENS_PROVA_2021.csv'
-    nome_prova = 'Enem-2021'
+    file_name_data = 'ITENS_PROVA_2020.csv'
+    nome_prova = 'Enem-2020'
     dic_cod_prova = {
-        'MT': '1007',
-        'LC':'1003',
-        'CN':'1011',
-        'CH':'999'
+        'MT' : '695',
+        'LC' : '691',
+        'CN' : '699',
+        'CH' : '687'
     }
+    list_file_names = os.listdir(f"{base_path}/resources/{nome_prova}")
+    
+    # list_file_names = os.listdir(f"{base_path}/resources/Enem-2021")
+    # file_name_data = 'ITENS_PROVA_2021.csv'
+    # nome_prova = 'Enem-2021'
+    # dic_cod_prova = {
+    #     'MT': '1007',
+    #     'LC':'1003',
+    #     'CN':'1011',
+    #     'CH':'999'
+    # }
     
     question_repository = QuestionRepository(connection)
     question_repository.insert_areas_and_abilities()
