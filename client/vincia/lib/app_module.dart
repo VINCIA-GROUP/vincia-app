@@ -11,6 +11,7 @@ import 'modules/home/page/home_page.dart';
 import 'modules/home/page/profile_page.dart';
 import 'modules/login/page/controller/login_controller.dart';
 import 'modules/login/page/login_page.dart';
+import 'modules/statistics/page/statistics_page.dart';
 
 class AppModule extends Module {
   static const domain = String.fromEnvironment("AUTH0_DOMAIN");
@@ -34,5 +35,6 @@ class AppModule extends Module {
         ChildRoute('/login', child: (context, args) => LoginPage()),
         ModuleRoute('/question', module: AdaptiveQuestionModule()),
         ChildRoute('/profile', child: (context, args) => ProfilePage()),
+        ChildRoute('/statistics', child: (context, args) => StatisticsPage()),
       ];
 }
