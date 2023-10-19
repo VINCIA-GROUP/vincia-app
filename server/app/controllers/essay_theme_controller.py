@@ -12,7 +12,23 @@ def get_all_themes():
         essay_theme_repository = EssayThemeRepository(connection)
         service = EssayThemeService(essay_theme_repository)
         themes = service.get_all_themes()
-        response_data = [theme.to_json() for theme in themes]
+        response_data = [theme.to_dict() for theme in themes]
+
+        return jsonify(data=response_data), 200
+    except Exception as e:
+        return jsonify(error=str(e)), 500
+    finally:
+        connection_pool.release_connection(connection)
+
+@app.route("/api/essay/theme/random", methods=["GET"])
+def get_all_themes():
+    connection = connection_pool.get_connection()
+    try:
+        essay_theme_repository = EssayThemeRepository(connection)
+        service = EssayThemeService(essay_theme_repository)
+        themes = service.get_random_theme()
+        response_data = [theme.to_dict() for theme in themes]
+
         return jsonify(data=response_data), 200
     except Exception as e:
         return jsonify(error=str(e)), 500

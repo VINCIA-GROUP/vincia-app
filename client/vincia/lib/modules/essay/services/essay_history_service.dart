@@ -17,9 +17,15 @@ class EssayHistoryService implements IEssayHistoryService {
   List<Essay> get essays => _essays;
 
   Future<List<Essay>> getEssayHistory() async {
-    final userId = await getUserId();
+    final token = await getAcessToken();
     final response = await client.get(
-        Uri.parse('$apiUrl/api/essay/history/$userId'));
+        Uri.parse('$apiUrl/api/essay/history'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+          'Connection': 'Keep-Alive',
+        },
+        );
 
     if (response.statusCode == 200) {
       List<dynamic> body = jsonDecode(response.body);

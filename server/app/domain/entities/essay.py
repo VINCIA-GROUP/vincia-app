@@ -6,7 +6,7 @@ from typing import Optional
 class Essay:
     def __init__(
         self,
-        essay_id: int,
+        id: int,
         user_id: str,
         theme_id: str,
         title: str,
@@ -26,7 +26,7 @@ class Essay:
         c5_analysis: Optional[str] = None,
         general_analysis: Optional[str] = None
     ):
-        self.essay_id = essay_id
+        self.essay_id = id
         self.user_id = user_id
         self.theme_id = theme_id
         self.title = title

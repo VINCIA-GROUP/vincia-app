@@ -12,9 +12,10 @@ class TranscriptionService {
   TranscriptionService(this.apiUrl);
 
   Future<String?> transcribeImage(String imagePath) async {
+    print('$apiUrl/api/essay/transcribe');
     final request = http.MultipartRequest(
       'POST',
-      Uri.parse('$apiUrl/essay/transcribe'),  // Endpoint
+      Uri.parse('$apiUrl/api/essay/transcribe'),
     );
 
     request.files.add(

@@ -5,9 +5,12 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:vincia/modules/essay/page/essay_page.dart';
 import 'package:vincia/modules/essay/page/essay_home_page.dart';
 import 'package:vincia/modules/essay/page/essay_history_page.dart';
+import 'package:vincia/modules/essay/page/essay_theme_page.dart';
 import 'package:vincia/modules/essay/services/essay_history_service.dart';
 import 'package:http/http.dart' as http;
+import 'package:vincia/modules/essay/services/essay_theme_service.dart';
 import 'controllers/essay_history_controller.dart';
+import 'controllers/essay_theme_controller.dart';
 
 
 class EssayModule extends Module {
@@ -20,6 +23,8 @@ class EssayModule extends Module {
     Bind((i) => http.Client()),
     Bind((i) => EssayHistoryService(i(), i())),
     Bind((i) => EssayHistoryController(i())),
+    Bind((i) => EssayThemeService(i(), i())),
+    Bind((i) => EssayThemeController(i())),
   ];
 
   @override
@@ -27,5 +32,7 @@ class EssayModule extends Module {
     ChildRoute('/', child: (context, args) => const EssayHomePage()),
     ChildRoute('/edit', child: (context, args) => const EssayPage()),
     ChildRoute('/history', child: (context, args) => const EssayHistoryPage()),
+    ChildRoute('/theme', child: (context, args) => const EssayThemePage()),
   ];
 }
+

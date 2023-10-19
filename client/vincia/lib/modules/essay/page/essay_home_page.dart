@@ -3,9 +3,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:vincia/modules/essay/essay_module.dart';
-import 'package:vincia/modules/essay/services/essay_service.dart';
-
 
 class EssayHomePage extends StatelessWidget {
   const EssayHomePage({super.key});
@@ -30,7 +27,11 @@ class EssayHomePage extends StatelessWidget {
                     child: Column(
                       children: [
                         _carouselButton(" Escolher um tema para nova redação",
-                            CupertinoIcons.square_list, () => null),
+                            CupertinoIcons.square_list,
+                            () async{
+                              Modular.to.pushNamed('/essay/theme');
+                            }
+                        ),
                             SizedBox(height: 12),
                         _carouselButton(" Iniciar redação com tema aleatório",
                             CupertinoIcons.shuffle, () => null),

@@ -1,8 +1,6 @@
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import '../interfaces/i_essay_history_service.dart';
 import '../models/essay_model.dart';
-import '../services/essay_history_service.dart';
 
 part 'essay_history_controller.g.dart';
 
@@ -27,4 +25,5 @@ abstract class _EssayHistoryController with Store {
     var result = await _essayHistoryService.getEssayHistory();
     essay = List.from(essay..addAll(result));
   }
+  
 }

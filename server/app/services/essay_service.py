@@ -44,7 +44,7 @@ class EssayService:
         # Construct the prompt
         prompt = (
             "Você é um corretor experiente do Enem. Um aluno está solicitando que você corrija a redação que ele está te mandando."
-            "Usando os moldes de correção de redação do Enem, analise e dê nota com base no tema proposto o título e a redação do seu aluno.\n"
+            "Usando os moldes de correção de redação do Enem, analise e dê nota (nota de 0 a 200 em cada competência) com base no tema proposto o título e a redação do seu aluno.\n"
             f"Tema: {theme_title}\n"
             f"Título da redação: {essay_title}\n"
             f"Texto da redação: {essay_content}\n\n"
@@ -65,16 +65,14 @@ class EssayService:
         
         # Send a request to the ChatGPT API
         response = openai.Completion.create(
-            engine="gpt-3.5-turbo",
+            model="text-davinci-002",
             prompt=prompt,
-            max_tokens=3500,
+            max_tokens=3700,
             n=1,
             stop=None,
             temperature=0.7,
         )
         
-        print(f"Begin of response:\n{response.choices[0]}\n end of response")
-
         # Extract and parse the API response
         analysis_text = response.choices[0].text.strip()
         analysis_lines = analysis_text.split('\n')

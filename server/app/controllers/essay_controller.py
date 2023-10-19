@@ -11,42 +11,82 @@ from app.decorator.requires_auth import requires_auth
 from flask import session
 
 
-# Instantiate the repositories and service
-connection = connection_pool.get_connection()
-essay_repository = EssayRepository(connection)
-essay_additional_text_repository = EssayAdditionalTextRepository(connection)
-essay_theme_repository = EssayThemeRepository(connection)
-essay_service = EssayService(essay_repository, essay_additional_text_repository, essay_theme_repository)
 
 @app.route("/api/essay/history", methods=["GET"])
 @requires_auth(None)
 def get_essay_history():
+    connection = connection_pool.get_connection()
+    essay_repository = EssayRepository(connection)
+    essay_additional_text_repository = EssayAdditionalTextRepository(connection)
+    essay_theme_repository = EssayThemeRepository(connection)
+    essay_service = EssayService(essay_repository, essay_additional_text_repository, essay_theme_repository)
+
     user_id = session.get('current_user').get('sub')
     essay_history = essay_service.get_essay_history(user_id)
+
+
+    connection_pool.release_connection(connection)
     return jsonify([essay.to_dict() for essay in essay_history])
 
 @app.route("/api/essay/unfinished/<string:user_id>", methods=["GET"])
 def get_unfinished_essays(user_id):
+
+    connection = connection_pool.get_connection()
+    essay_repository = EssayRepository(connection)
+    essay_additional_text_repository = EssayAdditionalTextRepository(connection)
+    essay_theme_repository = EssayThemeRepository(connection)
+    essay_service = EssayService(essay_repository, essay_additional_text_repository, essay_theme_repository)
+
     user_id = session.get('current_user').get('sub')
     unfinished_essays = essay_service.get_unfinished_essays(user_id)
+
+    connection_pool.release_connection(connection)
     return jsonify([essay.to_dict() for essay in unfinished_essays])
 
 @app.route("/api/essay", methods=["POST"])
 def save_essay():
+
+    connection = connection_pool.get_connection()
+    essay_repository = EssayRepository(connection)
+    essay_additional_text_repository = EssayAdditionalTextRepository(connection)
+    essay_theme_repository = EssayThemeRepository(connection)
+    essay_service = EssayService(essay_repository, essay_additional_text_repository, essay_theme_repository)
+
+
     user_id = session.get('current_user').get('sub')
     data = request.get_json()
     essay = Essay(**data)
     essay_service.save_essay(essay)
+
+    connection_pool.release_connection(connection)
     return jsonify(success=True), 201
 
 @app.route("/api/essay/<string:essay_id>", methods=["DELETE"])
 def delete_essay(essay_id):
+
+    connection = connection_pool.get_connection()
+    essay_repository = EssayRepository(connection)
+    essay_additional_text_repository = EssayAdditionalTextRepository(connection)
+    essay_theme_repository = EssayThemeRepository(connection)
+    essay_service = EssayService(essay_repository, essay_additional_text_repository, essay_theme_repository)
+
+
     user_id = session.get('current_user').get('sub')
     essay_service.delete_essay(essay_id)
+
+    connection_pool.release_connection(connection)
     return jsonify(success=True)
 
 @app.route("/api/essay/analysis", methods=["POST"])
 def get_essay_analysis():
+
+    connection = connection_pool.get_connection()
+    essay_repository = EssayRepository(connection)
+    essay_additional_text_repository = EssayAdditionalTextRepository(connection)
+    essay_theme_repository = EssayThemeRepository(connection)
+    essay_service = EssayService(essay_repository, essay_additional_text_repository, essay_theme_repository)
+
+
     data = request.get_json()
     essay_id = data.get("essay_id")
     user_id = data.get("user_id")
@@ -56,4 +96,6 @@ def get_essay_analysis():
     essay_content = data.get("essay_content")
     
     analysis = essay_service.get_essay_analysis(essay_id, user_id, theme_id, theme_title, essay_title, essay_content)
+    
+    connection_pool.release_connection(connection)
     return jsonify(analysis)
