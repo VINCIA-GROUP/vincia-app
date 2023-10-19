@@ -40,7 +40,7 @@ class EssayService:
         """Delete an essay by its ID."""
         return self.essay_repository.delete_essay(essay_id)
 
-    def get_essay_analysis(essay_id, user_id, theme_id, theme_title, essay_title, essay_content):
+    def get_essay_analysis(self, essay_id, user_id, theme_id, theme_title, essay_title, essay_content):
         # Construct the prompt
         prompt = (
             "Você é um corretor experiente do Enem. Um aluno está solicitando que você corrija a redação que ele está te mandando."
@@ -48,8 +48,7 @@ class EssayService:
             f"Tema: {theme_title}\n"
             f"Título da redação: {essay_title}\n"
             f"Texto da redação: {essay_content}\n\n"
-            "Please provide an analysis of the essay with the following structure:\n"
-            "Por favor, retorne a analise da redação seguindo extritamente essa estrutura:"
+            "Por favor, retorne a analise da redação seguindo extritamente essa estrutura:\n"
             "C1 Nota: \n"
             "C2 Nota: \n"
             "C3 Nota: \n"
@@ -66,14 +65,16 @@ class EssayService:
         
         # Send a request to the ChatGPT API
         response = openai.Completion.create(
-            engine="davinci",
+            engine="gpt-3.5-turbo",
             prompt=prompt,
-            max_tokens=50,
+            max_tokens=3500,
             n=1,
             stop=None,
-            temperature=0.5,
+            temperature=0.7,
         )
         
+        print(f"Begin of response:\n{response.choices[0]}\n end of response")
+
         # Extract and parse the API response
         analysis_text = response.choices[0].text.strip()
         analysis_lines = analysis_text.split('\n')
