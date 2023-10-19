@@ -47,7 +47,7 @@ class EssayHomePage extends StatelessWidget {
                           " Histórico de redações",
                           CupertinoIcons.plus_app,
                           () async {
-                            Navigator.of(context).pushNamed('/essay/history');
+                            Modular.to.pushNamed('/essay/history');
                           }
                         ),
                         SizedBox(height: 12),

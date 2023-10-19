@@ -26,6 +26,6 @@ class EssayModule extends Module {
   List<ModularRoute> get routes => [
     ChildRoute('/', child: (context, args) => const EssayHomePage()),
     ChildRoute('/edit', child: (context, args) => const EssayPage()),
-    ChildRoute('/history', child: (context, args) => EssayHistoryPage()),
+    ChildRoute('/history', child: (context, args) => const EssayHistoryPage()),
   ];
 }

@@ -36,6 +36,5 @@ class AppModule extends Module {
         ModuleRoute('/question', module: AdaptiveQuestionModule()),
         ChildRoute('/profile', child: (context, args) => ProfilePage()),
         ModuleRoute('/essay', module: EssayModule()),
-        ModuleRoute('/essay/edit', module: EssayModule()),
       ];
 }

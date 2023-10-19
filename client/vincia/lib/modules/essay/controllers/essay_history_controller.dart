@@ -21,7 +21,6 @@ abstract class _EssayHistoryController with Store {
   @observable
   List<Essay> essay = [];
 
-
   @action
   Future<void> fetchEssayHistory() async {
     essayHistoryFuture = ObservableFuture(_essayHistoryService.getEssayHistory());

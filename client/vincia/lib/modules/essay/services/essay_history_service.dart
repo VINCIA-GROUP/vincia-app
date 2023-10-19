@@ -6,18 +6,19 @@ import 'package:auth0_flutter/auth0_flutter.dart';
 
 class EssayHistoryService implements IEssayHistoryService {
   final Auth0 auth;
-  final String apiUrl;
+  final http.Client client;
+  static const String apiUrl = String.fromEnvironment("API_URL");
 
   // Define the private variable to store the list of essays
   List<Essay> _essays = [];
 
-  EssayHistoryService(this.auth, this.apiUrl);
+  EssayHistoryService(this.auth, this.client);
 
   List<Essay> get essays => _essays;
 
   Future<List<Essay>> getEssayHistory() async {
     final userId = await getUserId();
-    final response = await http.get(
+    final response = await client.get(
         Uri.parse('$apiUrl/api/essay/history/$userId'));
 
     if (response.statusCode == 200) {

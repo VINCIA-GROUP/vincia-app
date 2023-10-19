@@ -1,25 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:mobx/mobx.dart';
 import '../controllers/essay_history_controller.dart';
 
+
 class EssayHistoryPage extends StatefulWidget {
+  const EssayHistoryPage({super.key});
+
   @override
-  _EssayHistoryPageState createState() => _EssayHistoryPageState();
+  State<EssayHistoryPage> createState() => _EssayHistoryPageState();
 }
 
 class _EssayHistoryPageState extends State<EssayHistoryPage> {
-  late final EssayHistoryController _essayHistoryController = Modular.get<EssayHistoryController>();
+  final EssayHistoryController _essayHistoryController = Modular.get<EssayHistoryController>();
 
   @override
   void initState() {
     super.initState();
-
-    // Get the EssayHistoryController instance.
-    // _essayHistoryController = Modular.get<EssayHistoryController>();
-
-    // Fetch the essay history using the controller.
     _essayHistoryController.fetchEssayHistory();
   }
 
