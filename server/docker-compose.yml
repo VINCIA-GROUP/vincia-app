@@ -10,6 +10,16 @@ services:
     dns:
       - 8.8.8.8
     environment:
-
+      APP_SECRET_KEY: "2cdcbdd2-f700-457c-acf6-2e5063adc21b"
+      API_ENVIRONMENT: "PRODUCTION"
+      AUTH0_DOMAIN: "dev-zqwk5k31wg11dtkh.us.auth0.com"
+      AUDIENCE: "vincia-api-v1" 
+      CONNECTION_STRING_DB: "postgres://app_conn:1Ov9QYmCiwTN@ep-autumn-term-545731-pooler.us-east-2.aws.neon.tech/production_v1"
+      OPENAI_KEY: "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" 
+      GOOGLE_PROJECT_ID: "testsdl"
+      GOOGLE_PRIVATE_KEY_ID: "643f4d4364c1578f3d05a04073aa7c0a4220986a"
+      GOOGLE_PRIVATE_KEY: "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDo/QG39yh+QG5N\nre9WC6KxW/RW2peri60D9FoY/0XE3eo6j815rogxFyG1iDnHHWO0x8+RtjAymQYI\n3/y7e4GuphnTFAthkC7epv7qCOMJg6BBv3gNBXsD1SXcIS6Z9jFNvxmRiUCvsUED\nWu3PjXnppcTXDwbUX/NraoZ/u4X4mom2QTCd4PZJdJIrXB9Y0hamjfL+rTDf2OkJ\nlYpytLwE6NaHnqnAoIHmve6/qNcaBegY6YWaZg1Z7ZvvdL99VSPdfUsFlesxmpAi\nAzN0rGH80yIVtHCtNKZ7HJ98pUjaxhA249l14R7zhxwNWvvcC9cGwiKf763cukm3\njmphpk7FAgMBAAECggEALaUvuoJuCPoHgily68kgyR2KS5/MuhuFvHIZWq9cVFrj\nojB9IXs7jF6LSJzVMPjFiWvh8xqd67PGFmQHiBWEzRoWkh9psWYFgLJ325L9I+aJ\nNYhU9TwfIxuVrMBFeH1eoGwxjq00opcX9RfR4mlFuqwy2a1EecQIlQFMM2ciMpd4\ndDEWaQhEtttC0xLllYEbBqX30y6CC5w/I5JTKiQqJpwmmg34gIh9+8Z989zk9YB1\nmu8M/Rr+tcxJBJCixHVhODzV+FuTU5Q4VJ18lnVhnO7o4uQqyZ9Htg4qTXr9xeT5\n0YI9iGDiTHh1kLI/39O4FulW9WCMtk+hQMTOavvg4QKBgQD1xcpIjxT/hz3zkSHG\nhXIq1N77Zwdt+P8NEKu7wTMNQJh2aYe/FgBa3D9LP4JjmJkuHZ1GVEHMr3b9F4lu\nngR/8iS1Bti9+a9IIywhv40WlmuErNTJSHt72YP7Ztz1xmL8tFV/cNRo8Ha7mCIM\nXjuYLrHgYf6pV9Jw1MA/pUz80QKBgQDyrwaNGJpXk86bXaFn4ZZIZfdLZApEQpys\nUCKHEzfsqQ1UADXUg8kbFSHhX1/Y/pSC9qtD92UbLPsOM+mI5cWqZaCoyw67NQl6\n14PfMcnEXEaKYeJXjdXIFCKgwy55Z1YIPrvzOX1PWgfK5XWyVCPjl82ggbjef9CE\nlo83q4ZftQKBgQCIbg9oT+T8I/sD5iC1rwY9OIW/UOYS6hHLEuICC7FnPeBkexhb\nvr7bsT+BafPbja4ap13S2JreINkQjaxAt38P9z7hLrfKXXwrszqgUVDkpQNyVu6X\n/aBuk8RsHiGyXTo9xW1gnSWMS0/duwnLi9PRGrqrMDrJjnLHJ5LAweYGwQKBgQDp\nxFEiLtXVkIpPPITSxQl3Wck5dPcyw5uZnGN2C7wuGrW8+argt8VLcjK9npp8Mtap\nxKQ7Bx78a3q2Nqk5dmPOfLCih178U9162AiuQY5iuKQ2fo2B2x1X6pVkmD63MSQ9\nMvjnFLSxcD7bYebazZP4kuy/NNX4ddRNM55neLEqlQKBgCmUcMJBodCCnnhjTVJZ\n+xNDJq6SYZ4h1JvguheES+ko4k09KGmD0XcM9m1kf/e74Fpxb7UZEpxVoZHltsw/\nhLYsmWC77FzhCr8SVMqNt/MTFmNlbj2V+oeoJIty9P3l9HwpGd4dccM7koJa7aGx\n16+Frnr7nhMRNsUw+A9prhmr\n-----END PRIVATE KEY-----\n"
+      CLIENT_EMAIL: "transcibeessay@testsdl.iam.gserviceaccount.com"
+      CLIENT_ID: "102278271707792708228"
     ports:
       - 8080:8080

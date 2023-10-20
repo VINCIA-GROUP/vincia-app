@@ -1,19 +1,35 @@
 import openai
-import json
 from datetime import datetime
 import os
 from google.cloud import vision_v1
 from dotenv import load_dotenv
 import uuid
+import json
 
 
 load_dotenv()
 openai.api_key = os.getenv('OPENAI_API_KEY')
-credentials_path = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
 
+service_account_info_string = f"""{{
+    "type": "service_account",
+    "project_id": "{os.getenv('GOOGLE_PROJECT_ID')}",
+    "private_key_id": "{os.getenv('GOOGLE_PRIVATE_KEY_ID')}",
+    "private_key": "{os.getenv('GOOGLE_PRIVATE_KEY')}",
+    "client_email": "{os.getenv('CLIENT_EMAIL')}",
+    "client_id": "{os.getenv('CLIENT_ID')}",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/transcibeessay%40testsdl.iam.gserviceaccount.com",
+    "universe_domain": "googleapis.com"
+    }}
+    """
 
-# Instantiate the Google Cloud Vision client
-client = vision_v1.ImageAnnotatorClient.from_service_account_file(credentials_path)
+arquivo = open("google_config.json", "w")
+arquivo.write(service_account_info_string)
+arquivo.close()
+
+client = vision_v1.ImageAnnotatorClient.from_service_account_file("google_config.json")
 
 class EssayService:
     def __init__(self, essay_repository, essay_additional_text_repository, essay_theme_repository):
