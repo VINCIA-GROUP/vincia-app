@@ -1,3 +1,5 @@
+import uuid
+
 class EssayThemeService:
 
     def __init__(self, essay_theme_repository):
@@ -12,8 +14,8 @@ class EssayThemeService:
     def get_random_theme(self):
         return self.essay_theme_repository.get_random_theme()
     
-    def create_theme(self, theme_id, title, tag):
-        return self.essay_theme_repository.insert_theme(theme_id, title, tag)
+    def create_theme(self, title, tag):
+        return self.essay_theme_repository.insert_theme(str(uuid.uuid4()), title, tag)
     
     def modify_theme(self, title, tag, theme_id):
         return self.essay_theme_repository.update_theme(title, tag, theme_id)

@@ -5,6 +5,7 @@ from app.services.essay_service import EssayService
 
 @app.route("/api/essay/transcribe", methods=['POST'])
 def transcribe_essay():
+    print(request)
     if 'image' not in request.files:
         return jsonify(error="No file part"), 400
     file = request.files['image']

@@ -44,28 +44,28 @@ class Essay {
   });
 
   factory Essay.fromJson(Map<String, dynamic> json) {
-    return Essay(
-      essayId: json['essayId'],
-      userId: json['userId'],
-      themeId: json['themeId'],
-      title: json['title'],
-      content: json['content'],
-      datetime: DateTime.parse(json['datetime']),
-      isFinished: json['isFinished'],
-      c1Grade: json['c1Grade'].toDouble(),
-      c2Grade: json['c2Grade'].toDouble(),
-      c3Grade: json['c3Grade'].toDouble(),
-      c4Grade: json['c4Grade'].toDouble(),
-      c5Grade: json['c5Grade'].toDouble(),
-      totalGrade: json['totalGrade'].toDouble(),
-      c1Analysis: json['c1Analysis'],
-      c2Analysis: json['c2Analysis'],
-      c3Analysis: json['c3Analysis'],
-      c4Analysis: json['c4Analysis'],
-      c5Analysis: json['c5Analysis'],
-      generalAnalysis: json['generalAnalysis'],
-    );
-  }
+  return Essay(
+    essayId: json['essayId'] ?? '',
+    userId: json['userId'] ?? '',
+    themeId: json['themeId'] ?? '',
+    title: json['title'] ?? '',
+    content: json['content'] ?? '',
+    datetime: DateTime.parse(json['datetime'] ?? '1970-01-01T00:00:00Z'),
+    isFinished: json['isFinished'] ?? false,
+    c1Grade: (json['c1Grade'] ?? 0).toDouble(),
+    c2Grade: (json['c2Grade'] ?? 0).toDouble(),
+    c3Grade: (json['c3Grade'] ?? 0).toDouble(),
+    c4Grade: (json['c4Grade'] ?? 0).toDouble(),
+    c5Grade: (json['c5Grade'] ?? 0).toDouble(),
+    totalGrade: (json['totalGrade'] ?? 0).toDouble(),
+    c1Analysis: json['c1Analysis'] ?? '',
+    c2Analysis: json['c2Analysis'] ?? '',
+    c3Analysis: json['c3Analysis'] ?? '',
+    c4Analysis: json['c4Analysis'] ?? '',
+    c5Analysis: json['c5Analysis'] ?? '',
+    generalAnalysis: json['generalAnalysis'] ?? '',
+  );
+}
 
   DateTime get createdAt {
     return datetime;

@@ -15,7 +15,7 @@ class EssayThemeRepository(Repository):
 
     def get_by_id(self, theme_id):
         return super().get_one(
-            query="SELECT * FROM essay_themes WHERE theme_id = %s;",
+            query="SELECT * FROM essay_themes WHERE id = %s;",
             params=(theme_id,)
         )
     
@@ -25,20 +25,20 @@ class EssayThemeRepository(Repository):
             params=""
         )
 
-    def insert_theme(self, theme_id, title, tag):
-        return super().insert(
-            query="INSERT INTO essay_themes (theme_id, title, tag) VALUES (%s, %s, %s);",
-            params=(theme_id, title, tag)
+    def insert_theme(self, id, title, tag):
+        return super().update(
+            query="INSERT INTO essay_themes (id, title, tag) VALUES (%s, %s, %s);",
+            params=(id, title, tag)
         )
 
     def update_theme(self, title, tag, theme_id):
         return super().update(
-            query="UPDATE essay_themes SET title=%s, tag=%s WHERE theme_id=%s;",
+            query="UPDATE essay_themes SET title=%s, tag=%s WHERE id=%s;",
             params=(title, tag, theme_id)
         )
 
     def delete_theme(self, theme_id):
         return super().delete(
-            query="DELETE FROM essay_themes WHERE theme_id=%s;",
+            query="DELETE FROM essay_themes WHERE id=%s;",
             params=(theme_id,)
         )  

@@ -22,15 +22,23 @@ class EssayRepository(Repository):
         )
         return essays
     
-    def get_unfinished(self):
+    def get_unfinished_by_user_id(self, user_id):
         essays = super().get_many(
-            query="SELECT * FROM essays WHERE is_finished = %s;",
-            params=(False,)
+            query="SELECT * FROM essays WHERE is_finished = %s AND user_id = %s;",
+            params=("False",user_id,)
         )
         return essays
     
+    def insert_new_essay(self, id, theme_id, user_id, title, contents, datetime, is_finished):
+        print(f'essay_id: {id}, theme_id: {theme_id}, user_id: {user_id}')
+        return super().update(
+            query=("INSERT INTO essays (id, theme_id, user_id, title, contents, datetime, is_finished) "
+                   "VALUES (%s, %s, %s, %s, %s, %s, %s);"),
+            params=(id, theme_id, user_id, title, contents, datetime, is_finished)
+        )
+    
     def insert_essay(self, essay):
-        return super().insert(
+        return super().update(
             query=("INSERT INTO essays (user_id, theme_id, title, content, datetime, is_finished, "
                    "c1_grade, c2_grade, c3_grade, c4_grade, c5_grade, total_grade, "
                    "c1_analysis, c2_analysis, c3_analysis, c4_analysis, c5_analysis, general_analysis) "

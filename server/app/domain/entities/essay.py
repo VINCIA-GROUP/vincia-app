@@ -45,3 +45,26 @@ class Essay:
         self.c4_analysis = c4_analysis
         self.c5_analysis = c5_analysis
         self.general_analysis = general_analysis
+
+    def to_json(self):
+        return {
+            "id": self.essay_id,
+            "theme_id": self.user_id,
+            "user_id": self.theme_id,
+            "title": self.title,
+            "content": self.content,
+            "datetime": self.datetime.strftime("%Y-%m-%d %H:%M:%S"),
+            "is_finished": self.is_finished,
+            "c1_grade": self.c1_grade,
+            "c2_grade": self.c2_grade,
+            "c3_grade": self.c3_grade,
+            "c4_grade": self.c4_grade,
+            "c5_grade": self.c5_grade,
+            "total_grade": self.total_grade,
+            "c1_analysis": self.c1_analysis,
+            "c2_analysis": self.c2_analysis,
+            "c3_analysis": self.c3_analysis,
+            "c4_analysis": self.c4_analysis,
+            "c5_analysis": self.c5_analysis,
+            "general_analysis": self.general_analysis
+        }

@@ -4,6 +4,7 @@ from datetime import datetime
 import os
 from google.cloud import vision_v1
 from dotenv import load_dotenv
+import uuid
 
 
 load_dotenv()
@@ -27,6 +28,9 @@ class EssayService:
     def get_unfinished_essays(self, user_id):
         """Retrieve a user's unfinished essays."""
         return self.essay_repository.get_unfinished_by_user_id(user_id)
+    
+    def create_new_essay(self, theme_id, user_id):
+        return self.essay_repository.insert_new_essay(str(uuid.uuid4()), theme_id, user_id, "", "", datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "False")
     
     def save_essay(self, essay):
         """Save an essay, either inserting a new one or updating an existing one."""
@@ -100,7 +104,6 @@ class EssayService:
             "c5_analysis": analysis_dict["C5 Explicação"],
             "general_analysis": analysis_dict["Explicação Geral"]
         }
-        print(essay_analysis)
         return essay_analysis
 
     def perform_ocr(content):

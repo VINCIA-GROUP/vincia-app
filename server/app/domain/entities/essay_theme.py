@@ -4,3 +4,10 @@ class EssayTheme:
         self.id = id
         self.title = title
         self.tag = tag
+
+    def to_json(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "tag": self.tag
+        }

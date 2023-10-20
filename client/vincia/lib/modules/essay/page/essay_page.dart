@@ -2,9 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:vincia/modules/essay/services/essay_service.dart';
+import 'package:vincia/modules/essay/models/essay_model.dart';  // Ensure to import your Essay model
 
 class EssayPage extends StatefulWidget {
-  const EssayPage({super.key});
+  final Essay selectedEssay;  // Update the field type to Essay
+
+  const EssayPage({required this.selectedEssay, Key? key}) : super(key: key);  // Update the parameter name and type
 
   @override
   _EssayPageState createState() => _EssayPageState();
@@ -70,7 +73,7 @@ class _EssayPageState extends State<EssayPage> {
                         style: TextStyle(color: Theme.of(context).colorScheme.onPrimaryContainer, fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        'Tema tema tema tema tema tema tema tema tema',
+                        widget.selectedEssay.themeId,  // Access title of selectedEssay here
                         style: TextStyle(color: Theme.of(context).colorScheme.onPrimaryContainer),
                       ),
                     ],
@@ -88,7 +91,7 @@ class _EssayPageState extends State<EssayPage> {
                     BoxShadow(
                       color: Colors.grey,
                       blurRadius: 4,
-                      offset: Offset(2, 2), // Shadow position
+                      offset: Offset(2, 2),  // Shadow position
                     ),
                   ],
                 ),

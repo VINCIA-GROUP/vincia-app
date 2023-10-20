@@ -1,3 +1,5 @@
+// lib/modules/essay/services/essay_history_service.dart
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../interfaces/i_essay_history_service.dart';
@@ -19,13 +21,13 @@ class EssayHistoryService implements IEssayHistoryService {
   Future<List<Essay>> getEssayHistory() async {
     final token = await getAcessToken();
     final response = await client.get(
-        Uri.parse('$apiUrl/api/essay/history'),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Accept': 'application/json',
-          'Connection': 'Keep-Alive',
-        },
-        );
+      Uri.parse('$apiUrl/api/essay/history'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+        'Connection': 'Keep-Alive',
+      },
+    );
 
     if (response.statusCode == 200) {
       List<dynamic> body = jsonDecode(response.body);
@@ -36,6 +38,51 @@ class EssayHistoryService implements IEssayHistoryService {
       return _essays;
     } else {
       throw Exception('Failed to fetch essay history');
+    }
+  }
+
+  Future<List<Essay>> getUnfinishedEssay() async {
+    final token = await getAcessToken();
+    final response = await client.get(
+      Uri.parse('$apiUrl/api/essay/unfinished'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+        'Connection': 'Keep-Alive',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      List<dynamic> body = jsonDecode(response.body);
+
+      // Update the _essays variable with the fetched essays
+      _essays = body.map((dynamic item) => Essay.fromJson(item)).toList();
+
+      return _essays;
+    } else {
+      throw Exception('Failed to fetch unfinished essay');
+    }
+  }
+
+  Future<Essay> createEssay(Map<String, dynamic> essayData) async {
+    final token = await getAcessToken();
+    final response = await client.post(
+      Uri.parse('$apiUrl/api/essay/create'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Connection': 'Keep-Alive',
+      },
+      body: jsonEncode(essayData),
+    );
+
+    if (response.statusCode == 201) {
+      Map<String, dynamic> body = jsonDecode(response.body);
+      final Essay newEssay = Essay.fromJson(body);
+      return newEssay;
+    } else {
+      throw Exception('Failed to create essay');
     }
   }
 

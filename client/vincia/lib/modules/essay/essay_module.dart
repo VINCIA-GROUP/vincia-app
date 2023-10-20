@@ -30,9 +30,10 @@ class EssayModule extends Module {
   @override
   List<ModularRoute> get routes => [
     ChildRoute('/', child: (context, args) => const EssayHomePage()),
-    ChildRoute('/edit', child: (context, args) => const EssayPage()),
+    ChildRoute('/edit', child: (context, args) => EssayPage(selectedEssay: args.data)),
     ChildRoute('/history', child: (context, args) => const EssayHistoryPage()),
     ChildRoute('/theme', child: (context, args) => const EssayThemePage()),
   ];
 }
+
 

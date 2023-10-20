@@ -3,9 +3,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:vincia/modules/essay/controllers/essay_history_controller.dart';
 
-class EssayHomePage extends StatelessWidget {
+class EssayHomePage extends StatefulWidget {
   const EssayHomePage({super.key});
+
+  @override
+  State<EssayHomePage> createState() => _EssayHomePageState();
+
+}
+
+class _EssayHomePageState extends State<EssayHomePage> {
+  final EssayHistoryController _essayHistoryController = Modular.get<EssayHistoryController>();
+
+  @override
+  void initState() {
+    super.initState();
+    _essayHistoryController.fetchUnfinishedEssay();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +55,11 @@ class EssayHomePage extends StatelessWidget {
                           " Continuar redação",
                           CupertinoIcons.pencil,
                           () async {
-                            Navigator.of(context).pushNamed('/essay/edit');
+                            if( _essayHistoryController.essay.isEmpty) {
+                            return Modular.to.pushNamed('/essay/theme');
+                          } else {
+                            return Modular.to.pushNamed('/essay/edit', arguments: _essayHistoryController.essay[0]);
+                          }
                           }
                         ),
                         SizedBox(height: 12),
