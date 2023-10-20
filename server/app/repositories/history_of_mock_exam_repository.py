@@ -28,7 +28,10 @@ class HistoryOfMockExamRepository(Repository):
          query="UPDATE history_of_mock_exam SET answers = %s, durations = %s, ratings = %s, correct_answers = %s WHERE user_id = %s AND created_at = (SELECT MAX (created_at) FROM history_of_mock_exam WHERE user_id = %s)",
          params=(answers, durations, ratings, correct_answers, user_id, user_id,))
    
-   def finish_exam(self, user_id, duration, languages_grade, humanities_grade, natural_science_grade, mathematics_grade, general_grade, is_open):
+   def finish_exam(self, user_id, is_open):
+      # super().update(
+      #    query="UPDATE history_of_mock_exam SET duration_total = %s, languages_grade = %s, humanities_grade = %s, mathematics_grade = %s, natural_science_grade = %s, general_grade = %s, is_open = %s WHERE user_id = %s AND created_at = (SELECT MAX(created_at) FROM history_of_mock_exam WHERE user_id = %s)",
+      #    params=(duration, int(languages_grade), int(humanities_grade), int(mathematics_grade), int(natural_science_grade), int(general_grade), is_open, user_id, user_id,))
       super().update(
-         query="UPDATE history_of_mock_exam SET duration_total = %s, languages_grade = %s, humanities_grade = %s, mathematics_grade = %s, natural_science_grade = %s, general_grade = %s, is_open = %s WHERE user_id = %s AND created_at = (SELECT MAX(created_at) FROM history_of_mock_exam WHERE user_id = %s)",
-         params=(duration, int(languages_grade), int(humanities_grade), int(mathematics_grade), int(natural_science_grade), int(general_grade), is_open, user_id, user_id,))
+         query="UPDATE history_of_mock_exam SET is_open = %s WHERE user_id = %s AND created_at = (SELECT MAX(created_at) FROM history_of_mock_exam WHERE user_id = %s)",
+         params=(is_open, user_id, user_id,))
