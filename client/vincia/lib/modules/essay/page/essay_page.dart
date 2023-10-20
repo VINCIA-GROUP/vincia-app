@@ -2,24 +2,39 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:vincia/modules/essay/services/essay_service.dart';
-import 'package:vincia/modules/essay/models/essay_model.dart';  // Ensure to import your Essay model
+import 'package:vincia/modules/essay/models/essay_model.dart';
+import 'package:auth0_flutter/auth0_flutter.dart';
+import 'package:http/http.dart' as http;
 
 class EssayPage extends StatefulWidget {
-  final Essay selectedEssay;  // Update the field type to Essay
+  final Essay selectedEssay;
+  final Auth0 auth;
+  final http.Client client;
 
-  const EssayPage({required this.selectedEssay, Key? key}) : super(key: key);  // Update the parameter name and type
+  const EssayPage({
+    required this.selectedEssay,
+    required this.auth,
+    required this.client,
+    Key? key,
+  }) : super(key: key);
 
   @override
   _EssayPageState createState() => _EssayPageState();
 }
 
 class _EssayPageState extends State<EssayPage> {
-  static const String apiUrl = String.fromEnvironment("API_URL");
   late final ImagePickerHandler _imagePickerHandler;
-
-  _EssayPageState() : _imagePickerHandler = ImagePickerHandler(apiUrl);
-
   String _transcription = '';
+
+  @override
+  void initState() {
+    super.initState();
+    final TranscriptionService transcriptionService = TranscriptionService(widget.auth, widget.client);
+    _imagePickerHandler = ImagePickerHandler(transcriptionService);
+    if (widget.selectedEssay.content != null) {
+      _transcription = widget.selectedEssay.content!;
+    }
+  }
 
   void _updateTranscription(String transcription) {
     setState(() {
@@ -70,11 +85,19 @@ class _EssayPageState extends State<EssayPage> {
                     children: [
                       Text(
                         'Tema',
-                        style: TextStyle(color: Theme.of(context).colorScheme.onPrimaryContainer, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimaryContainer,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      Text(
-                        widget.selectedEssay.themeId,  // Access title of selectedEssay here
-                        style: TextStyle(color: Theme.of(context).colorScheme.onPrimaryContainer),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Text(
+                          widget.selectedEssay.title,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onPrimaryContainer,
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -91,7 +114,7 @@ class _EssayPageState extends State<EssayPage> {
                     BoxShadow(
                       color: Colors.grey,
                       blurRadius: 4,
-                      offset: Offset(2, 2),  // Shadow position
+                      offset: Offset(2, 2),
                     ),
                   ],
                 ),
@@ -115,7 +138,7 @@ class _EssayPageState extends State<EssayPage> {
                   _carouselButton(
                     " Acessar texto motivadores",
                     CupertinoIcons.today,
-                    () => null
+                    () => null,
                   ),
                   _carouselButton(
                     " Digitalizar redação",
@@ -130,7 +153,7 @@ class _EssayPageState extends State<EssayPage> {
                   _carouselButton(
                     " Enviar para correção",
                     CupertinoIcons.chart_bar,
-                    () => null
+                    () => null,
                   ),
                 ],
               )

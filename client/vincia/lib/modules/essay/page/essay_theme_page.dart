@@ -4,7 +4,9 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:vincia/modules/essay/page/essay_page.dart';
 import '../controllers/essay_theme_controller.dart';
-import '../controllers/essay_history_controller.dart';  // Import the EssayHistoryController
+import '../controllers/essay_history_controller.dart';
+import 'package:auth0_flutter/auth0_flutter.dart';
+import 'package:http/http.dart' as http;
 
 class EssayThemePage extends StatefulWidget {
   const EssayThemePage({super.key});
@@ -56,14 +58,17 @@ class _EssayThemePageState extends State<EssayThemePage> {
                 return _carouselButton(essaytheme.title, essaytheme.tag,
                     () async {
                   final essayData = {
-                    // ... add all necessary essay fields here
                     'theme_id': essaytheme.id,
-                    // ... other fields
+                    'title':essaytheme.title
                   };
                   try {
                     final newEssay = await _essayHistoryController.createEssay(essayData);
                     Modular.to.push(MaterialPageRoute(
-                      builder: (context) => EssayPage(selectedEssay: newEssay),
+                      builder: (context) => EssayPage(
+                        selectedEssay: newEssay,
+                        auth: Modular.get<Auth0>(),
+                        client: Modular.get<http.Client>(),
+                      ),
                     ));
                   } catch (e) {
                     print('Failed to create essay: $e');

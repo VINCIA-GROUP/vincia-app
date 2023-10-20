@@ -23,26 +23,31 @@ class EssayService:
     
     def get_essay_history(self, user_id):
         """Retrieve a user's essay history."""
-        return self.essay_repository.get_by_user_id(user_id)
+        response = self.essay_repository.get_by_user_id(user_id)
+        self.essay_repository.commit()
+        return response
     
     def get_unfinished_essays(self, user_id):
         """Retrieve a user's unfinished essays."""
-        return self.essay_repository.get_unfinished_by_user_id(user_id)
+        response = self.essay_repository.get_unfinished_by_user_id(user_id)
+        self.essay_repository.commit()
+        return response
     
-    def create_new_essay(self, theme_id, user_id):
-        return self.essay_repository.insert_new_essay(str(uuid.uuid4()), theme_id, user_id, "", "", datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "False")
+    def create_new_essay(self, theme_id, user_id, title):
+        result = self.essay_repository.insert_new_essay(str(uuid.uuid4()), theme_id, user_id, title, "", datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "False")
+        self.essay_repository.commit()
+        return result
     
     def save_essay(self, essay):
-        """Save an essay, either inserting a new one or updating an existing one."""
-        existing_essay = self.essay_repository.get_by_id(essay.essay_id)
-        if existing_essay:
-            return self.essay_repository.update_essay(essay)
-        else:
-            return self.essay_repository.insert_essay(essay)
+        result = self.essay_repository.insert_essay(essay)
+        self.essay_repository.commit()
+        return result
     
     def delete_essay(self, essay_id):
         """Delete an essay by its ID."""
-        return self.essay_repository.delete_essay(essay_id)
+        response = self.essay_repository.delete_essay(essay_id)
+        self.essay_repository.commit()
+        return response
 
     def get_essay_analysis(self, essay_id, user_id, theme_id, theme_title, essay_title, essay_content):
         # Construct the prompt
@@ -104,6 +109,7 @@ class EssayService:
             "c5_analysis": analysis_dict["C5 Explicação"],
             "general_analysis": analysis_dict["Explicação Geral"]
         }
+        self.save_essay(essay_analysis)
         return essay_analysis
 
     def perform_ocr(content):

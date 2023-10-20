@@ -12,7 +12,6 @@ import 'package:vincia/modules/essay/services/essay_theme_service.dart';
 import 'controllers/essay_history_controller.dart';
 import 'controllers/essay_theme_controller.dart';
 
-
 class EssayModule extends Module {
   static const domain = String.fromEnvironment("AUTH0_DOMAIN");
   static const clientId = String.fromEnvironment("AUTH0_CLIENT_ID");
@@ -30,10 +29,13 @@ class EssayModule extends Module {
   @override
   List<ModularRoute> get routes => [
     ChildRoute('/', child: (context, args) => const EssayHomePage()),
-    ChildRoute('/edit', child: (context, args) => EssayPage(selectedEssay: args.data)),
+    ChildRoute('/edit', child: (context, args) => EssayPage(
+        selectedEssay: args.data,
+        auth: Modular.get<Auth0>(),
+        client: Modular.get<http.Client>(),
+      ),
+    ),
     ChildRoute('/history', child: (context, args) => const EssayHistoryPage()),
     ChildRoute('/theme', child: (context, args) => const EssayThemePage()),
   ];
 }
-
-

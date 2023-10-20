@@ -10,8 +10,7 @@ from app.domain.entities.essay import Essay
 from app.decorator.requires_auth import requires_auth
 
 
-
-@app.route("/api/essay/history", methods=["GET"])
+@app.route("/api/essay/history", methods=["GET"], endpoint="essay/history")
 @requires_auth(None)
 def get_essay_history():
     connection = connection_pool.get_connection()
@@ -78,7 +77,8 @@ def create_new_essay():
         return jsonify(error="theme_id is required"), 400  # Return a 400 Bad Request if theme_id is missing
 
     theme_id = data['theme_id']
-    essay_service.create_new_essay(theme_id, user_id)
+    title = data['title']
+    essay_service.create_new_essay(theme_id, user_id, title)
 
     connection_pool.release_connection(connection)
     return jsonify(success=True), 201
@@ -99,7 +99,8 @@ def delete_essay(essay_id):
     connection_pool.release_connection(connection)
     return jsonify(success=True)
 
-@app.route("/api/essay/analysis", methods=["POST"])
+@app.route("/api/essay/analysis", methods=["POST"], endpoint="essay/analysis")
+@requires_auth(None)
 def get_essay_analysis():
 
     connection = connection_pool.get_connection()

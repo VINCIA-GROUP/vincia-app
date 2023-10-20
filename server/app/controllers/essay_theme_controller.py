@@ -5,8 +5,11 @@ from app.controllers.base_controller import success_api_response
 from app.repositories.essay_theme_repository import EssayThemeRepository
 from app.services.essay_theme_service import EssayThemeService
 from app import connection_pool
+from app.decorator.requires_auth import requires_auth
 
-@app.route("/api/essay/theme", methods=["GET"])
+
+@app.route("/api/essay/theme", methods=["GET"], endpoint="essay/theme")
+@requires_auth(None)
 def get_all_themes():
     connection = connection_pool.get_connection()
     try:
