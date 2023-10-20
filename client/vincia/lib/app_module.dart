@@ -6,6 +6,7 @@ import 'package:vincia/modules/login/services/login_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:vincia/modules/mock_exam/mock_exam_module.dart';
 import 'modules/Initial/page/initial_page.dart';
+import 'modules/essay/essay_module.dart';
 import 'modules/home/page/controller/home_controller.dart';
 import 'modules/home/page/controller/profile_controller.dart';
 import 'modules/home/page/home_page.dart';
@@ -38,5 +39,6 @@ class AppModule extends Module {
         ModuleRoute('/mock-exam', module: MockExamModule()),
         ChildRoute('/profile', child: (context, args) => ProfilePage()),
         ChildRoute('/statistics', child: (context, args) => StatisticsPage()),
+        ModuleRoute('/essay', module: EssayModule()),
       ];
 }

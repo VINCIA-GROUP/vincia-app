@@ -10,6 +10,7 @@ services:
     dns:
       - 8.8.8.8
     environment:
+      APP_SECRET_KEY: ""
 
     ports:
       - 8080:8080

@@ -100,5 +100,3 @@ class QuestionService:
             if question.answer == answer:
                 return 1
             return 0
-
-        

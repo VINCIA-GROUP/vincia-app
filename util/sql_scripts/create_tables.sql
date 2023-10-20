@@ -114,7 +114,7 @@ CREATE TABLE history_of_mock_exam (
 	durations varchar NOT NULL,
 	ratings varchar NOT NULL,
 	correct_answers varchar NOT NULL,
-	duration_total interval NULL
+	duration_total intervalï¿½NULL
 );
 
 

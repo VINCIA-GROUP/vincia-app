@@ -81,7 +81,6 @@ abstract class _AdaptiveQuestionController with Store {
       text:
           "Olá, sou o Vincia Bot é irei esclarecer todas as suas dúvidas. Como posso te ajudar?",
     );
-
     messages.add(textMessage);
   }
 
