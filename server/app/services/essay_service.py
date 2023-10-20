@@ -6,27 +6,23 @@ from google.cloud import vision_v1
 from dotenv import load_dotenv
 import uuid
 from google.oauth2 import service_account
+import os
+from dotenv import load_dotenv
+from google.cloud import vision_v1
+from google.auth.transport import requests
+from google.auth import _cloud_sdk
 
-# Get the partial credentials JSON string from the environment variable
-credentials_partial_str = os.getenv('GOOGLE_CREDENTIALS_PARTIAL')
+# Get the API key from the environment variable
+api_key = os.getenv('GOOGLE_API_KEY')
 
-# Parse the JSON string into a dictionary
-credentials_dict = json.loads(credentials_partial_str)
+# Create a credentials object using the API key
+credentials = _cloud_sdk.Credentials(api_key)
 
-# Add the other fields to the credentials dictionary
-credentials_dict.update({
-    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-    "token_uri": "https://oauth2.googleapis.com/token",
-    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/transcibeessay%40testsdl.iam.gserviceaccount.com",
-    "universe_domain": "googleapis.com"
-})
-
-# Create a credentials object from the dictionary
-credentials = service_account.Credentials.from_service_account_info(credentials_dict)
+# Create a requests Session object for the credentials object to use
+session = requests.Request()
 
 # Instantiate the Google Cloud Vision client
-client = vision_v1.ImageAnnotatorClient(credentials=credentials)
+client = vision_v1.ImageAnnotatorClient(credentials=credentials, transport=vision_v1.ImageAnnotatorClient.get_transport_class())
 
 
 class EssayService:
