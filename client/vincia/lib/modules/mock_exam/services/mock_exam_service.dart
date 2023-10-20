@@ -150,8 +150,7 @@ class MockExamQuestionService implements IMockExamService {
         },
       );
       if (response.statusCode == 200) {
-        final body = jsonDecode(response.body)["data"];
-        return Right(body);
+        return Right(SuccessModel());
       } else {
         final body = jsonDecode(response.body)["errors"];
         return Left(FailureModel.fromJson(body));
