@@ -111,14 +111,14 @@ def get_essay_analysis():
 
 
     data = request.get_json()
-    essay_id = data.get("essay_id")
-    user_id = data.get("user_id")
+    print(data)
+    id = data.get("id")
+    user_id = session.get('current_user').get('sub')
     theme_id = data.get("theme_id")
-    theme_title = data.get("theme_title")
     essay_title = data.get("essay_title")
     essay_content = data.get("essay_content")
     
-    analysis = essay_service.get_essay_analysis(essay_id, user_id, theme_id, theme_title, essay_title, essay_content)
+    analysis = essay_service.get_essay_analysis(id, user_id, theme_id, essay_title, essay_content)
     
     connection_pool.release_connection(connection)
     return jsonify(analysis)

@@ -19,7 +19,6 @@ def transcribe_essay():
         return jsonify(error="Invalid base64 string"), 400
 
     transcription = EssayService.perform_ocr(image_data)  # Pass the binary data to your OCR method
-    print(f"performing ocr: {transcription}")
     if transcription:
         return jsonify(transcription=transcription)
     return jsonify(error="Could not transcribe image"), 400

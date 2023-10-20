@@ -5,6 +5,32 @@ import 'package:vincia/modules/essay/services/essay_service.dart';
 import 'package:vincia/modules/essay/models/essay_model.dart';
 import 'package:auth0_flutter/auth0_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+const apiUrl = String.fromEnvironment("API_URL");  // Replace with your backend API URL
+
+class EssayAnalysisService {
+  final String apiUrl;
+  final http.Client client;
+
+  EssayAnalysisService(this.apiUrl, this.client);
+
+  Future<Map<String, dynamic>> analyzeEssay(Map<String, dynamic> essayData) async {
+    final response = await client.post(
+      Uri.parse('$apiUrl/api/essay/analysis'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(essayData),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to analyze essay: ${response.reasonPhrase}');
+    }
+  }
+}
 
 class EssayPage extends StatefulWidget {
   final Essay selectedEssay;
@@ -153,7 +179,24 @@ class _EssayPageState extends State<EssayPage> {
                   _carouselButton(
                     " Enviar para correção",
                     CupertinoIcons.chart_bar,
-                    () => null,
+                    () async {
+                      final essayData = {
+                        'id': widget.selectedEssay.essayId,
+                        'theme_id': widget.selectedEssay.themeId,
+                        'theme_title': widget.selectedEssay.title,
+                        'essay_title': widget.selectedEssay.title,
+                        'essay_content': _transcription,
+                      };
+
+                      final analysisService = EssayAnalysisService(apiUrl, http.Client());
+                      try {
+                        final analysis = await analysisService.analyzeEssay(essayData);
+                        // Handle analysis result, e.g., show it to the user
+                      } catch (e) {
+                        print('Failed to analyze essay: $e');
+                        // Optionally, display an error message to the user
+                      }
+                    },
                   ),
                 ],
               )

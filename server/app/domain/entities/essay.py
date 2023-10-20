@@ -26,7 +26,7 @@ class Essay:
         c5_analysis: Optional[str] = None,
         general_analysis: Optional[str] = None
     ):
-        self.essay_id = id
+        self.id = id
         self.user_id = user_id
         self.theme_id = theme_id
         self.title = title
@@ -48,7 +48,7 @@ class Essay:
 
     def to_json(self):
         return {
-            "id": self.essay_id,
+            "id": self.id,
             "theme_id": self.user_id,
             "user_id": self.theme_id,
             "title": self.title,

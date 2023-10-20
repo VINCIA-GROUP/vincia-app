@@ -49,13 +49,13 @@ class EssayService:
         self.essay_repository.commit()
         return response
 
-    def get_essay_analysis(self, essay_id, user_id, theme_id, theme_title, essay_title, essay_content):
+    def get_essay_analysis(self, essay_id, user_id, theme_id, essay_title, essay_content):
         # Construct the prompt
         prompt = (
             "Você é um corretor experiente do Enem. Um aluno está solicitando que você corrija a redação que ele está te mandando."
             "Usando os moldes de correção de redação do Enem, analise e dê nota (nota de 0 a 200 em cada competência) com base no tema proposto o título e a redação do seu aluno.\n"
-            f"Tema: {theme_title}\n"
-            f"Título da redação: {essay_title}\n"
+            f"Tema: {essay_title}\n"
+            "Título da redação: O titulo da redação é a primeira linha do texto da redação\n"
             f"Texto da redação: {essay_content}\n\n"
             "Por favor, retorne a analise da redação seguindo extritamente essa estrutura:\n"
             "C1 Nota: \n"
