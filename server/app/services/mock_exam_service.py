@@ -66,20 +66,24 @@ class MockExamService:
       self.history_of_mock_exam_repository.commit()
 
    def finish(self, user_id):
-      mock_exam = self.history_of_mock_exam_repository.get_by_user_id(user_id)
-      answers = self.deserialize(mock_exam.answers, "string")
-      correct_answers = self.deserialize(mock_exam.correct_answers, "string")
-      ratings = self.deserialize(mock_exam.ratings, "int")
-      durations = self.deserialize(mock_exam.durations, "int")
-      duration = sum(durations)
+      # mock_exam = self.history_of_mock_exam_repository.get_by_user_id(user_id)
+      # answers = self.deserialize(mock_exam.answers, "string")
+      # correct_answers = self.deserialize(mock_exam.correct_answers, "string")
+      # ratings = self.deserialize(mock_exam.ratings, "int")
+      # durations = self.deserialize(mock_exam.durations, "int")
+      # duration = sum(durations)
+      # self.history_of_mock_exam_repository.finish_exam(
+      #    user_id,
+      #    time(hour=duration // 3600, minute=(duration % 3600) // 60, second=duration % 60),
+      #    self.get_grade(answers[:45], correct_answers[:45], ratings[:45]), 
+      #    self.get_grade(answers[45:91], correct_answers[45:91], ratings[45:91]), 
+      #    self.get_grade(answers[90:136], correct_answers[90:136], ratings[90:136]), 
+      #    self.get_grade(answers[135:181], correct_answers[135:181], ratings[135:181]), 
+      #    self.get_grade(answers, correct_answers, ratings), 
+      #    False   
+      # )
       self.history_of_mock_exam_repository.finish_exam(
-         user_id,
-         time(hour=duration // 3600, minute=(duration % 3600) // 60, second=duration % 60),
-         self.get_grade(answers[:45], correct_answers[:45], ratings[:45]), 
-         self.get_grade(answers[45:91], correct_answers[45:91], ratings[45:91]), 
-         self.get_grade(answers[90:136], correct_answers[90:136], ratings[90:136]), 
-         self.get_grade(answers[135:181], correct_answers[135:181], ratings[135:181]), 
-         self.get_grade(answers, correct_answers, ratings), 
+         user_id, 
          False   
       )
       self.history_of_mock_exam_repository.commit()
