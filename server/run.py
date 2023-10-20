@@ -5,6 +5,6 @@ import os
 if __name__ == "__main__":
     env = os.environ["API_ENVIRONMENT"]
     if(env == 'PRODUCTION'):
-        serve(app, host="0.0.0.0", port=5000)
+        serve(app, host="0.0.0.0", port=8080)
     else:
-        app.run(debug=True, host='192.168.56.1', port=5000)
+        app.run(debug=True, host='10.2.0.57', port=8080)
