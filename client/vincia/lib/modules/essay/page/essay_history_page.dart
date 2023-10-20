@@ -87,7 +87,7 @@ Widget _essayHistoryCard(
                   height:
                       10,
                 ),
-                Text(
+                Text( 
                   "Título da redação: $title",
                   textAlign: TextAlign.center,
                   softWrap: true,
@@ -100,7 +100,7 @@ Widget _essayHistoryCard(
                       height: 30,
                     ),
                     Text(
-                      !isFinished ? totalGrade.toString() : "Não finalizado",
+                      totalGrade.toString(),
                       //textAlign: TextAlign.left,
                       softWrap: true,
                     ),

@@ -9,21 +9,12 @@ from google.oauth2 import service_account
 import os
 from dotenv import load_dotenv
 from google.cloud import vision_v1
-from google.auth.transport import requests
 from google.auth import _cloud_sdk
+import base64
+import requests
 
 # Get the API key from the environment variable
 api_key = os.getenv('GOOGLE_API_KEY')
-
-# Create a credentials object using the API key
-credentials = _cloud_sdk.Credentials(api_key)
-
-# Create a requests Session object for the credentials object to use
-session = requests.Request()
-
-# Instantiate the Google Cloud Vision client
-client = vision_v1.ImageAnnotatorClient(credentials=credentials, transport=vision_v1.ImageAnnotatorClient.get_transport_class())
-
 
 class EssayService:
     def __init__(self, essay_repository, essay_additional_text_repository, essay_theme_repository):
@@ -122,10 +113,41 @@ class EssayService:
         self.save_essay(essay_analysis)
         return essay_analysis
 
-    def perform_ocr(content):
-        image = vision_v1.Image(content=content)
-        response = client.text_detection(image=image)
-        texts = response.text_annotations
-        if texts:
-            return texts[0].description  # Return the entire text from the image
+    def perform_ocr(self, content):
+        # Encode the image content to base64
+        image_base64 = base64.b64encode(content).decode('utf-8')
+        
+        # Create the JSON request payload
+        request_payload = {
+            "requests": [
+                {
+                    "image": {
+                        "content": image_base64
+                    },
+                    "features": [
+                        {
+                            "type": "TEXT_DETECTION"
+                        }
+                    ]
+                }
+            ]
+        }
+        
+        # Send a request to the Google Cloud Vision API
+        response = requests.post(
+            url=f'https://vision.googleapis.com/v1/images:annotate?key={api_key}',
+            headers={'Content-Type': 'application/json'},
+            json=request_payload
+        )
+        
+        # Check for a valid response
+        if response.status_code == 200:
+            response_data = response.json()
+            texts = response_data['responses'][0].get('textAnnotations', [])
+            if texts:
+                return texts[0]['description']  # Return the entire text from the image
+        else:
+            print(f'Error: {response.status_code}')
+            print(response.text)
+        
         return ""
