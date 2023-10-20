@@ -10,11 +10,7 @@ services:
     dns:
       - 8.8.8.8
     environment:
-      APP_SECRET_KEY: 
-      API_ENVIRONMENT: 
-      AUTH0_DOMAIN: 
-      AUDIENCE: 
-      CONNECTION_STRING_DB: 
-      OPENAI_KEY: 
+      APP_SECRET_KEY: ""
+
     ports:
       - 8080:8080

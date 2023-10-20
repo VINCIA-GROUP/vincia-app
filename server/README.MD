@@ -9,6 +9,8 @@
 - desativar env
     deactivate
 
+docker-compose up -d --no-deps --build 
+
 DEP
 -flask
 -flask_cors
