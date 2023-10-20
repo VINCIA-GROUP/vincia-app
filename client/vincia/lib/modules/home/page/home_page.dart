@@ -162,7 +162,9 @@ class HomePage extends StatelessWidget {
                     _carouselButton(
                       "Simulado",
                       Icons.ballot_sharp,
-                      () {},
+                      () {
+                        Modular.to.pushNamed("/mock-exam");
+                      },
                     ),
                     _carouselButton(
                       "Redação",
@@ -174,7 +176,9 @@ class HomePage extends StatelessWidget {
                     _carouselButton(
                       "Estatisticas",
                       Icons.stacked_bar_chart_outlined,
-                      () {},
+                      () {
+                        Modular.to.pushNamed('/statistics');
+                      },
                     ),
                     _carouselButton(
                       "Atualizar",

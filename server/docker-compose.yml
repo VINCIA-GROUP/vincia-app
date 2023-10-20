@@ -7,9 +7,9 @@ services:
       dockerfile: Dockerfile
     container_name: vincia-api
     restart: always
-    environment: 
-      API_ENVIRONMENT: "PRODUCTION"
-    ports:
-      - 8080:8080
     dns:
       - 8.8.8.8
+    environment:
+
+    ports:
+      - 8080:8080

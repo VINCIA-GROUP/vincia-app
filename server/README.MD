@@ -5,8 +5,17 @@
     virtualenv -p python3 venv
 3 - excecução do ambiente 
     . venv/Scripts/activate
-4 - .\venv\Scripts\pip.exe intall -r requirements.txt
+4 - .\venv\Scripts\pip.exe install -r requirements.txt
 - desativar env
     deactivate
 
-PRODUCTION1
+DEP
+-flask
+-flask_cors
+-openai
+-dotenv
+-psycopg2
+-jwt
+-pyjwt
+-beautifulsoup4
+-waitress
