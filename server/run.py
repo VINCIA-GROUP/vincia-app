@@ -7,4 +7,4 @@ if __name__ == "__main__":
     if(env == 'PRODUCTION'):
         serve(app, host="0.0.0.0", port=8080)
     else:
-        app.run(debug=True, host='192.168.56.1', port=8080)
+        app.run(debug=True, host='10.0.25.52', port=8080)

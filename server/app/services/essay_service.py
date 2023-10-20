@@ -7,9 +7,6 @@ from dotenv import load_dotenv
 import uuid
 from google.oauth2 import service_account
 
-load_dotenv()
-openai.api_key = os.getenv('OPENAI_API_KEY')
-
 # Get the partial credentials JSON string from the environment variable
 credentials_partial_str = os.getenv('GOOGLE_CREDENTIALS_PARTIAL')
 
