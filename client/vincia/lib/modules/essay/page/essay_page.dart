@@ -136,7 +136,7 @@ class _EssayPageState extends State<EssayPage> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
+                  boxShadow: const [
                     BoxShadow(
                       color: Colors.grey,
                       blurRadius: 4,
@@ -146,10 +146,10 @@ class _EssayPageState extends State<EssayPage> {
                 ),
                 child: TextField(
                   maxLines: null,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.black,
                   ),
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: 'Insira sua redação',
                     hintStyle: TextStyle(
                       color: Colors.black,

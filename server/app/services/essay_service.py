@@ -44,6 +44,11 @@ class EssayService:
         self.essay_repository.commit()
         return result
     
+    def update_essay(self, essay):
+        result = self.essay_repository.update_essay(essay)
+        self.essay_repository.commit()
+        return result
+    
     def delete_essay(self, essay_id):
         """Delete an essay by its ID."""
         response = self.essay_repository.delete_essay(essay_id)
@@ -90,9 +95,9 @@ class EssayService:
         
         # Construct the essay analysis entity
         essay_analysis = {
-            "essay_id": essay_id,
-            "user_id": user_id,
+            "id": essay_id,
             "theme_id": theme_id,
+            "user_id": user_id,
             "title": essay_title,
             "content": essay_content,
             "datetime": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),  # current datetime in a string format
@@ -110,7 +115,7 @@ class EssayService:
             "c5_analysis": analysis_dict["C5 Explicação"],
             "general_analysis": analysis_dict["Explicação Geral"]
         }
-        self.save_essay(essay_analysis)
+        self.update_essay(essay_analysis)
         return essay_analysis
 
     def perform_ocr(self, content):

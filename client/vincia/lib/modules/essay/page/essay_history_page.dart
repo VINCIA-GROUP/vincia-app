@@ -27,7 +27,7 @@ class _EssayHistoryPageState extends State<EssayHistoryPage> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+          padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
           iconSize: 30,
           icon: const Icon(CupertinoIcons.back),
           color: Theme.of(context).colorScheme.onSecondaryContainer,
@@ -50,7 +50,7 @@ class _EssayHistoryPageState extends State<EssayHistoryPage> {
                 final essay = _essayHistoryController.essay[index];
 
                 return _essayHistoryCard(essay.title, essay.createdAt,
-                    essay.totalGrade, essay.isFinished);
+                    essay.totalGrade, essay.isFinished, essay.c1Grade, essay.c2Grade, essay.c3Grade, essay.c4Grade, essay.c5Grade, essay.c1Analysis, essay.c2Analysis, essay.c3Analysis, essay.c4Analysis, essay.c5Analysis, essay.generalAnalysis);
               },
             );
           }
@@ -61,59 +61,153 @@ class _EssayHistoryPageState extends State<EssayHistoryPage> {
 }
 
 Widget _essayHistoryCard(
-    String title, DateTime datetime, double totalGrade, bool isFinished) {
+    String title, DateTime datetime, double totalGrade, bool isFinished, double c1Grade, double c2Grade, double c3Grade, double c4Grade, double c5Grade, String c1Analysis, String c2Analysis, String c3Analysis, String c4Analysis, String c5Analysis, String generalAnalysis) {
   return Padding(
-    padding: const EdgeInsets.all(10.0),
+    padding: const EdgeInsets.all(20.0),
     child: LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         return SizedBox(
-          width: constraints
-              .maxWidth,
+          width: constraints.maxWidth,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-              foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+              backgroundColor:
+                  Theme.of(context).colorScheme.primaryContainer,
+              foregroundColor:
+                  Theme.of(context).colorScheme.onPrimaryContainer,
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(10.0)),
               ),
             ),
             onPressed: () async {
-              //Modular.to.pushNamed('/essay/history', arguments: title);
             },
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SizedBox(
-                  height:
-                      10,
+                const SizedBox(
+                  height: 20,
                 ),
-                Text( 
-                  "Título da redação: $title",
-                  textAlign: TextAlign.center,
+                Row(children: [
+                  Text(
+                    "Tema: $title",
+                    softWrap: true,
+                    style: const TextStyle(fontSize: 18.0),
+                  ),
+                  const Spacer(),
+                  Text(
+                    DateFormat('dd/MM/yy  HH:mm').format(datetime),
+                    softWrap: true,
+                    style: const TextStyle(fontSize: 18.0),
+                  ),
+                ]),
+                const SizedBox(
+                  height: 30,
+                ),
+                Text(
+                  "Nota geral: $totalGrade",
+                  textAlign: TextAlign.left,
                   softWrap: true,
+                  style: const TextStyle(fontSize: 16.0),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment
-                      .spaceBetween, 
-                  children: [
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Text(
-                      totalGrade.toString(),
-                      //textAlign: TextAlign.left,
-                      softWrap: true,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      DateFormat('dd/MM/yy  HH:mm').format(datetime),
-                      textAlign: TextAlign.right,
-                      softWrap: true,
-                    ),
-                  ],
-                )
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "Comentário geral: $generalAnalysis",
+                  textAlign: TextAlign.left,
+                  softWrap: true,
+                  style: const TextStyle(fontSize: 16.0),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "Nota compentência 1: $c1Grade",
+                  textAlign: TextAlign.left,
+                  softWrap: true,
+                  style: const TextStyle(fontSize: 16.0),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "Comentários compentência 1: $c1Analysis",
+                  textAlign: TextAlign.left,
+                  softWrap: true,
+                  style: const TextStyle(fontSize: 16.0),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "Nota compentência 2: $c2Grade",
+                  textAlign: TextAlign.left,
+                  softWrap: true,
+                  style: const TextStyle(fontSize: 16.0),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "Comentários compentência 2: $c2Analysis",
+                  textAlign: TextAlign.left,
+                  softWrap: true,
+                  style: const TextStyle(fontSize: 16.0),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "Nota compentência 3: $c3Grade",
+                  textAlign: TextAlign.left,
+                  softWrap: true,
+                  style: const TextStyle(fontSize: 16.0),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "Comentários compentência 3: $c3Analysis",
+                  textAlign: TextAlign.left,
+                  softWrap: true,
+                  style: const TextStyle(fontSize: 16.0),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "Nota compentência 4: $c4Grade",
+                  textAlign: TextAlign.left,
+                  softWrap: true,
+                  style: const TextStyle(fontSize: 16.0),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "Comentários compentência 4: $c4Analysis",
+                  textAlign: TextAlign.left,
+                  softWrap: true,
+                  style: const TextStyle(fontSize: 16.0),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "Nota compentência 5: $c5Grade",
+                  textAlign: TextAlign.left,
+                  softWrap: true,
+                  style: const TextStyle(fontSize: 16.0),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "Comentários compentência 5: $c5Analysis",
+                  textAlign: TextAlign.left,
+                  softWrap: true,
+                  style: const TextStyle(fontSize: 16.0),
+                ),
               ],
             ),
           ),
