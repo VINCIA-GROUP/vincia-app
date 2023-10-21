@@ -39,28 +39,28 @@ class EssayRepository(Repository):
     
     def insert_essay(self, essay):
         return super().update(
-            query=("INSERT INTO essays (user_id, theme_id, title, content, datetime, is_finished, "
+            query=("INSERT INTO essays (id, theme_id, user_id, title, contents, datetime, is_finished, "
                    "c1_grade, c2_grade, c3_grade, c4_grade, c5_grade, total_grade, "
                    "c1_analysis, c2_analysis, c3_analysis, c4_analysis, c5_analysis, general_analysis) "
                    "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"),
             params=(
-                essay.id, essay.theme_id, essay.title, essay.content, essay.datetime, essay.is_finished,
+                essay.id, essay.theme_id, essay.user_id, essay.title, essay.contents, essay.datetime, essay.is_finished,
                 essay.c1_grade, essay.c2_grade, essay.c3_grade, essay.c4_grade, essay.c5_grade, essay.total_grade,
                 essay.c1_analysis, essay.c2_analysis, essay.c3_analysis, essay.c4_analysis, essay.c5_analysis, essay.general_analysis
             )
         )
-    
+
     def update_essay(self, essay):
         return super().update(
-            query=("UPDATE essays SET user_id=%s, theme_id=%s, title=%s, content=%s, datetime=%s, is_finished=%s, "
+            query=("UPDATE essays SET theme_id=%s, user_id=%s, title=%s, contents=%s, datetime=%s, is_finished=%s, "
                    "c1_grade=%s, c2_grade=%s, c3_grade=%s, c4_grade=%s, c5_grade=%s, total_grade=%s, "
                    "c1_analysis=%s, c2_analysis=%s, c3_analysis=%s, c4_analysis=%s, c5_analysis=%s, general_analysis=%s "
-                   "WHERE essay_id=%s;"),
+                   "WHERE id=%s;"),
             params=(
-                essay.id, essay.theme_id, essay.title, essay.content, essay.datetime, essay.is_finished,
+                essay.theme_id, essay.user_id, essay.title, essay.contents, essay.datetime, essay.is_finished,
                 essay.c1_grade, essay.c2_grade, essay.c3_grade, essay.c4_grade, essay.c5_grade, essay.total_grade,
                 essay.c1_analysis, essay.c2_analysis, essay.c3_analysis, essay.c4_analysis, essay.c5_analysis, essay.general_analysis,
-                essay.essay_id
+                essay.id
             )
         )
 
