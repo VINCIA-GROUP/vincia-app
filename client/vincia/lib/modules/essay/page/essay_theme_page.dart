@@ -61,6 +61,8 @@ class _EssayThemePageState extends State<EssayThemePage> {
                     'theme_id': essaytheme.id,
                     'title':essaytheme.title
                   };
+                  print(essaytheme.id);
+                  print(essaytheme.title); 
                   try {
                     final newEssay = await _essayHistoryController.createEssay(essayData);
                     Modular.to.push(MaterialPageRoute(

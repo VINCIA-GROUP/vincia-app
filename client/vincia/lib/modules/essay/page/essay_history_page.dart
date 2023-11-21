@@ -49,8 +49,22 @@ class _EssayHistoryPageState extends State<EssayHistoryPage> {
               itemBuilder: (context, index) {
                 final essay = _essayHistoryController.essay[index];
 
-                return _essayHistoryCard(essay.title, essay.createdAt,
-                    essay.totalGrade, essay.isFinished, essay.c1Grade, essay.c2Grade, essay.c3Grade, essay.c4Grade, essay.c5Grade, essay.c1Analysis, essay.c2Analysis, essay.c3Analysis, essay.c4Analysis, essay.c5Analysis, essay.generalAnalysis);
+                return _essayHistoryCard(
+                    essay.title,
+                    essay.createdAt,
+                    essay.totalGrade,
+                    essay.isFinished,
+                    essay.c1Grade,
+                    essay.c2Grade,
+                    essay.c3Grade,
+                    essay.c4Grade,
+                    essay.c5Grade,
+                    essay.c1Analysis,
+                    essay.c2Analysis,
+                    essay.c3Analysis,
+                    essay.c4Analysis,
+                    essay.c5Analysis,
+                    essay.generalAnalysis);
               },
             );
           }
@@ -61,7 +75,21 @@ class _EssayHistoryPageState extends State<EssayHistoryPage> {
 }
 
 Widget _essayHistoryCard(
-    String title, DateTime datetime, double totalGrade, bool isFinished, double c1Grade, double c2Grade, double c3Grade, double c4Grade, double c5Grade, String c1Analysis, String c2Analysis, String c3Analysis, String c4Analysis, String c5Analysis, String generalAnalysis) {
+    String title,
+    DateTime datetime,
+    double totalGrade,
+    bool isFinished,
+    double c1Grade,
+    double c2Grade,
+    double c3Grade,
+    double c4Grade,
+    double c5Grade,
+    String c1Analysis,
+    String c2Analysis,
+    String c3Analysis,
+    String c4Analysis,
+    String c5Analysis,
+    String generalAnalysis) {
   return Padding(
     padding: const EdgeInsets.all(20.0),
     child: LayoutBuilder(
@@ -70,16 +98,13 @@ Widget _essayHistoryCard(
           width: constraints.maxWidth,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor:
-                  Theme.of(context).colorScheme.primaryContainer,
-              foregroundColor:
-                  Theme.of(context).colorScheme.onPrimaryContainer,
+              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+              foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(10.0)),
               ),
             ),
-            onPressed: () async {
-            },
+            onPressed: () async {},
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -87,19 +112,20 @@ Widget _essayHistoryCard(
                 const SizedBox(
                   height: 20,
                 ),
-                Row(children: [
-                  Text(
-                    "Tema: $title",
-                    softWrap: true,
-                    style: const TextStyle(fontSize: 18.0),
-                  ),
-                  const Spacer(),
-                  Text(
+                Align(
+                  alignment:
+                      Alignment.centerRight, 
+                  child: Text(
                     DateFormat('dd/MM/yy  HH:mm').format(datetime),
                     softWrap: true,
-                    style: const TextStyle(fontSize: 18.0),
+                    style: const TextStyle(fontSize: 15.0),
                   ),
-                ]),
+                ),
+                Text(
+                  "Tema: $title",
+                  softWrap: true,
+                  style: const TextStyle(fontSize: 17.0),
+                ),
                 const SizedBox(
                   height: 30,
                 ),
@@ -107,13 +133,13 @@ Widget _essayHistoryCard(
                   "Nota geral: $totalGrade",
                   textAlign: TextAlign.left,
                   softWrap: true,
-                  style: const TextStyle(fontSize: 16.0),
+                  style: const TextStyle(fontSize: 18.0),
                 ),
                 const SizedBox(
                   height: 10,
                 ),
                 Text(
-                  "Comentário geral: $generalAnalysis",
+                  "Comentário geral:\n$generalAnalysis\n",
                   textAlign: TextAlign.left,
                   softWrap: true,
                   style: const TextStyle(fontSize: 16.0),
@@ -131,7 +157,7 @@ Widget _essayHistoryCard(
                   height: 10,
                 ),
                 Text(
-                  "Comentários compentência 1: $c1Analysis",
+                  "Comentários compentência 1:\n$c1Analysis\n",
                   textAlign: TextAlign.left,
                   softWrap: true,
                   style: const TextStyle(fontSize: 16.0),
@@ -149,7 +175,7 @@ Widget _essayHistoryCard(
                   height: 10,
                 ),
                 Text(
-                  "Comentários compentência 2: $c2Analysis",
+                  "Comentários compentência 2:\n$c2Analysis\n",
                   textAlign: TextAlign.left,
                   softWrap: true,
                   style: const TextStyle(fontSize: 16.0),
@@ -167,7 +193,7 @@ Widget _essayHistoryCard(
                   height: 10,
                 ),
                 Text(
-                  "Comentários compentência 3: $c3Analysis",
+                  "Comentários compentência 3:\n$c3Analysis\n",
                   textAlign: TextAlign.left,
                   softWrap: true,
                   style: const TextStyle(fontSize: 16.0),
@@ -185,7 +211,7 @@ Widget _essayHistoryCard(
                   height: 10,
                 ),
                 Text(
-                  "Comentários compentência 4: $c4Analysis",
+                  "Comentários compentência 4:\n$c4Analysis\n",
                   textAlign: TextAlign.left,
                   softWrap: true,
                   style: const TextStyle(fontSize: 16.0),
@@ -203,7 +229,7 @@ Widget _essayHistoryCard(
                   height: 10,
                 ),
                 Text(
-                  "Comentários compentência 5: $c5Analysis",
+                  "Comentários compentência 5:\n$c5Analysis\n",
                   textAlign: TextAlign.left,
                   softWrap: true,
                   style: const TextStyle(fontSize: 16.0),
