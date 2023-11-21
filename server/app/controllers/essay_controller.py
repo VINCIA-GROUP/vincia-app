@@ -80,8 +80,11 @@ def create_new_essay():
     title = data['title']
     essay_service.create_new_essay(theme_id, user_id, title)
 
+    essay = essay_service.get_newest_created_essay(user_id)
+
     connection_pool.release_connection(connection)
-    return jsonify(success=True), 201
+    return jsonify(essay.to_json()), 201
+    # return jsonify(success=True), 201
 
 @app.route("/api/essay/<string:essay_id>", methods=["DELETE"])
 def delete_essay(essay_id):
@@ -109,15 +112,13 @@ def get_essay_analysis():
     essay_theme_repository = EssayThemeRepository(connection)
     essay_service = EssayService(essay_repository, essay_additional_text_repository, essay_theme_repository)
 
-
     data = request.get_json()
-    print(data)
     id = data.get("id")
     user_id = session.get('current_user').get('sub')
     theme_id = data.get("theme_id")
     essay_title = data.get("essay_title")
     essay_content = data.get("essay_content")
-    
+
     analysis = essay_service.get_essay_analysis(id, user_id, theme_id, essay_title, essay_content)
     
     connection_pool.release_connection(connection)

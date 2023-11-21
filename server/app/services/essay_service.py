@@ -23,13 +23,16 @@ class EssayService:
         self.essay_theme_repository = essay_theme_repository
     
     def get_essay_history(self, user_id):
-        """Retrieve a user's essay history."""
         response = self.essay_repository.get_by_user_id(user_id)
         self.essay_repository.commit()
         return response
     
+    def get_newest_created_essay(self, user_id):
+        response = self.essay_repository.get_created_essay_by_user_id(user_id)
+        self.essay_repository.commit()
+        return response
+    
     def get_unfinished_essays(self, user_id):
-        """Retrieve a user's unfinished essays."""
         response = self.essay_repository.get_unfinished_by_user_id(user_id)
         self.essay_repository.commit()
         return response
@@ -50,20 +53,18 @@ class EssayService:
         return result
     
     def delete_essay(self, essay_id):
-        """Delete an essay by its ID."""
         response = self.essay_repository.delete_essay(essay_id)
         self.essay_repository.commit()
         return response
 
-    def get_essay_analysis(self, essay_id, user_id, theme_id, essay_title, essay_content):
-        # Construct the prompt
+    def get_essay_analysis(self, id, user_id, theme_id, essay_title, essay_content):
         prompt = (
             "Você é um corretor experiente do Enem. Um aluno está solicitando que você corrija a redação que ele está te mandando."
-            "Usando os moldes de correção de redação do Enem, analise e dê nota (nota de 0 a 200 em cada competência) com base no tema proposto o título e a redação do seu aluno.\n"
+            "Usando os moldes de correção de redação do Enem, analise e dê nota (nota de 0 a 200 para cada competência) com base no tema proposto o título e a redação do seu aluno.\n"
             f"Tema: {essay_title}\n"
             "Título da redação: O titulo da redação é a primeira linha do texto da redação\n"
             f"Texto da redação: {essay_content}\n\n"
-            "Por favor, retorne a analise da redação seguindo extritamente essa estrutura:\n"
+            "Por favor, retorne a análise da redação seguindo estritamente essa estrutura:\n"
             "C1 Nota: \n"
             "C2 Nota: \n"
             "C3 Nota: \n"
@@ -79,29 +80,30 @@ class EssayService:
         )
         
         # Send a request to the ChatGPT API
-        response = openai.Completion.create(
-            model="text-davinci-002",
-            prompt=prompt,
-            max_tokens=3700,
-            n=1,
-            stop=None,
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo-1106",
+            messages = [
+                {'role': 'user', 'content': prompt}
+            ],
+            # n=1,
+            # stop=None,
             temperature=0.7,
         )
         
         # Extract and parse the API response
-        analysis_text = response.choices[0].text.strip()
+        analysis_text = response['choices'][0]['message']['content'].strip()
         analysis_lines = analysis_text.split('\n')
-        analysis_dict = {line.split(': ')[0]: line.split(': ')[1] for line in analysis_lines}
+        analysis_dict = {line.split(': ')[0]: line.split(': ')[1] for line in analysis_lines if line.strip()}
         
         # Construct the essay analysis entity
         essay_analysis = {
-            "id": essay_id,
-            "theme_id": theme_id,
+            "id": id,
             "user_id": user_id,
+            "theme_id": theme_id,
             "title": essay_title,
-            "content": essay_content,
-            "datetime": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),  # current datetime in a string format
-            "is_finished": True,  # assuming the analysis indicates a finished essay
+            "contents": essay_content,
+            "datetime": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "is_finished": True,
             "c1_grade": analysis_dict["C1 Nota"],
             "c2_grade": analysis_dict["C2 Nota"],
             "c3_grade": analysis_dict["C3 Nota"],
@@ -152,7 +154,5 @@ class EssayService:
             if texts:
                 return texts[0]['description']  # Return the entire text from the image
         else:
-            print(f'Error: {response.status_code}')
-            print(response.text)
-        
+            return response.status_code, 500
         return ""

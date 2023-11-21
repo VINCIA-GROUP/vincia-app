@@ -64,6 +64,7 @@ class EssayHistoryService implements IEssayHistoryService {
     }
   }
 
+  @override
   Future<Essay> createEssay(Map<String, dynamic> essayData) async {
     final token = await getAcessToken();
     final response = await client.post(
@@ -78,6 +79,8 @@ class EssayHistoryService implements IEssayHistoryService {
     );
 
     if (response.statusCode == 201) {
+      print("Essay created on the server");
+      print(jsonDecode(response.body));
       Map<String, dynamic> body = jsonDecode(response.body);
       final Essay newEssay = Essay.fromJson(body);
       return newEssay;
