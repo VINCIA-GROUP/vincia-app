@@ -156,7 +156,7 @@ class _EssayPageState extends State<EssayPage> {
                     ),
                     border: InputBorder.none,
                   ),
-                  controller: TextEditingController(text: _transcription),
+                  onChanged: (value) => _updateTranscription(value),
                 ),
               ),
               Column(
