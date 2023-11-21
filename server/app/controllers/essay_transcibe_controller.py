@@ -21,7 +21,6 @@ def transcribe_essay():
 
     data = request.get_json()  # Get the JSON payload from the request
     if not data or 'image' not in data:
-        print("no image data")
         connection_pool.release_connection(connection)
         return jsonify(error="No image data"), 400
 

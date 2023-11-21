@@ -5,6 +5,7 @@ import 'package:vincia/modules/essay/services/essay_service.dart';
 import 'package:vincia/modules/essay/models/essay_model.dart';
 import 'package:auth0_flutter/auth0_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:auth0_flutter/auth0_flutter.dart';
 import 'dart:convert';
 
 const apiUrl = String.fromEnvironment("API_URL");  // Replace with your backend API URL
@@ -12,24 +13,37 @@ const apiUrl = String.fromEnvironment("API_URL");  // Replace with your backend 
 class EssayAnalysisService {
   final String apiUrl;
   final http.Client client;
+  final Auth0 auth;
 
-  EssayAnalysisService(this.apiUrl, this.client);
+
+  EssayAnalysisService(this.auth, this.apiUrl, this.client);
 
   Future<Map<String, dynamic>> analyzeEssay(Map<String, dynamic> essayData) async {
+    final token = await getAccessToken();
+
     final response = await client.post(
       Uri.parse('$apiUrl/api/essay/analysis'),
       headers: {
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
+        'Connection': 'Keep-Alive',
       },
       body: jsonEncode(essayData),
     );
-
+    print(response.body);
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
       throw Exception('Failed to analyze essay: ${response.reasonPhrase}');
     }
   }
+
+  Future<String> getAccessToken() async {
+    var credentials = await auth.credentialsManager.credentials();
+    return credentials.accessToken;
+  }
+
 }
 
 class EssayPage extends StatefulWidget {
@@ -136,7 +150,7 @@ class _EssayPageState extends State<EssayPage> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
+                  boxShadow: const [
                     BoxShadow(
                       color: Colors.grey,
                       blurRadius: 4,
@@ -146,10 +160,10 @@ class _EssayPageState extends State<EssayPage> {
                 ),
                 child: TextField(
                   maxLines: null,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.black,
                   ),
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: 'Insira sua redação',
                     hintStyle: TextStyle(
                       color: Colors.black,
@@ -183,13 +197,13 @@ class _EssayPageState extends State<EssayPage> {
                       final essayData = {
                         'id': widget.selectedEssay.essayId,
                         'theme_id': widget.selectedEssay.themeId,
-                        'theme_title': widget.selectedEssay.title,
                         'essay_title': widget.selectedEssay.title,
-                        'essay_content': _transcription,
+                        'essay_content': _transcription.toString(),
                       };
 
-                      final analysisService = EssayAnalysisService(apiUrl, http.Client());
+                      final analysisService = EssayAnalysisService(widget.auth, apiUrl, widget.client);
                       try {
+                        //print(essayData);
                         final analysis = await analysisService.analyzeEssay(essayData);
                         // Handle analysis result, e.g., show it to the user
                       } catch (e) {

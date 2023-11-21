@@ -8,8 +8,9 @@ services:
     container_name: vincia-api
     restart: always
     dns:
-      - 8.8.8.8
-    environment:
+        - 8.8.8.8
+    environment: 
 
     ports:
       - 8080:8080
+ 
