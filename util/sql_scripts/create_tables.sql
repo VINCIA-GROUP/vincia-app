@@ -99,6 +99,24 @@ CREATE TABLE history_of_question_rating_updates(
   FOREIGN KEY (question_id) REFERENCES questions(id)
 );
 
+CREATE TABLE history_of_mock_exam (
+	id uuid NOT NULL,
+	languages_grade int4 NULL,
+	humanities_grade int4 NULL,
+	mathematics_grade int4 NULL,
+	natural_science_grade int4 NULL,
+	general_grade int4 NULL,
+	user_id varchar NOT NULL,
+	created_at date NOT NULL,
+	questions varchar NOT NULL,
+	is_open bool NOT NULL,
+	answers varchar NOT NULL,
+	durations varchar NOT NULL,
+	ratings varchar NOT NULL,
+	correct_answers varchar NOT NULL,
+	duration_total interval�NULL
+);
+
 
 
 

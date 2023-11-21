@@ -16,7 +16,7 @@ class MockExamQuestionService implements IMockExamService {
   final Auth0 auth;
   final http.Client client;
   static const String apiUrl = String.fromEnvironment("API_URL");
-  
+
   MockExamQuestionService(this.auth, this.client);
 
   @override
@@ -32,17 +32,16 @@ class MockExamQuestionService implements IMockExamService {
   }
 
   @override
-  Future<Either<FailureModel, Map<String, dynamic>>> getQuestionsFromAPI() async {
+  Future<Either<FailureModel, Map<String, dynamic>>>
+      getQuestionsFromAPI() async {
     try {
       final token = await getAcessToken();
-      final response = await client.get(
-        Uri.parse("$apiUrl/api/mock-exam/questions"),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Accept': 'application/json',
-          'Connection': 'Keep-Alive'
-        }
-      );
+      final response = await client
+          .get(Uri.parse("$apiUrl/api/mock-exam/questions"), headers: {
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+        'Connection': 'Keep-Alive'
+      });
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body)["data"];
         return Right(body);
@@ -56,17 +55,16 @@ class MockExamQuestionService implements IMockExamService {
   }
 
   @override
-  Future<Either<FailureModel, Map<String, dynamic>>> getQuestionFromAPI(String id) async {
+  Future<Either<FailureModel, Map<String, dynamic>>> getQuestionFromAPI(
+      String id) async {
     try {
       final token = await getAcessToken();
-      final response = await client.get(
-        Uri.parse("$apiUrl/api/mock-exam/question/$id"),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Accept': 'application/json',
-          'Connection': 'Keep-Alive'
-        }
-      );
+      final response = await client
+          .get(Uri.parse("$apiUrl/api/mock-exam/question/$id"), headers: {
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+        'Connection': 'Keep-Alive'
+      });
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body)["data"];
         return Right(body);
@@ -82,56 +80,53 @@ class MockExamQuestionService implements IMockExamService {
   @override
   Future<Either<FailureModel, MockExamQuestionsModel>> getQuestions() async {
     try {
-      MockExamQuestionsModel result = MockExamQuestionsModel([], [], [], [], []);
+      MockExamQuestionsModel result =
+          MockExamQuestionsModel([], [], [], [], []);
       final areas = await getQuestionsFromAPI();
-      return areas.fold(
-        (failure) {
-          throw Exception();
-        },
-        (resp) {
-          result.questions = resp["questions"].cast<String>().toList();
-          result.answers = resp["answers"].cast<String>().toList();
-          result.durations = resp["durations"].cast<int>().toList();
-          result.ratings = resp["ratings"].cast<int>().toList();
-          result.correctAnswers = resp["correctAnswers"].cast<String>().toList();
-          return Right(result);
-        });
+      return areas.fold((failure) {
+        throw Exception();
+      }, (resp) {
+        result.questions = resp["questions"].cast<String>().toList();
+        result.answers = resp["answers"].cast<String>().toList();
+        result.durations = resp["durations"].cast<int>().toList();
+        result.ratings = resp["ratings"].cast<int>().toList();
+        result.correctAnswers = resp["correctAnswers"].cast<String>().toList();
+        return Right(result);
+      });
     } catch (e) {
       return Left(FailureModel.fromEnum(AplicationErrors.internalError));
-    } 
+    }
   }
 
   @override
-  Future<Either<FailureModel, MockExamQuestionModel>> getQuestion(String id) async {
+  Future<Either<FailureModel, MockExamQuestionModel>> getQuestion(
+      String id) async {
     try {
       MockExamQuestionModel result;
       final question = await getQuestionFromAPI(id);
-      return question.fold(
-        (failure) {
-          throw Exception();
-        }, 
-        (resp) {
-          result = MockExamQuestionModel.fromJson(resp);
-          return Right(result);
-        }
-      );
+      return question.fold((failure) {
+        throw Exception();
+      }, (resp) {
+        result = MockExamQuestionModel.fromJson(resp);
+        return Right(result);
+      });
     } catch (e) {
       return Left(FailureModel.fromEnum(AplicationErrors.internalError));
-    } 
+    }
   }
 
-
   @override
-  Future<Either<FailureModel, SuccessModel>> sendQuestionAnswer(MockExamAnswerModel answer) async {
+  Future<Either<FailureModel, SuccessModel>> sendQuestionAnswer(
+      MockExamAnswerModel answer) async {
     try {
       final token = await getAcessToken();
-      final response = await client.post(Uri.parse("$apiUrl/api/mock-exam/answer"),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-        body: json.encode(answer.toJson())
-      );
+      final response =
+          await client.post(Uri.parse("$apiUrl/api/mock-exam/answer"),
+              headers: {
+                'Authorization': 'Bearer $token',
+                'Content-Type': 'application/json',
+              },
+              body: json.encode(answer.toJson()));
       if (response.statusCode == 200) {
         return Right(SuccessModel());
       } else {
@@ -147,15 +142,15 @@ class MockExamQuestionService implements IMockExamService {
   Future<Either<FailureModel, SuccessModel>> submmitMockExam() async {
     try {
       final token = await getAcessToken();
-      final response = await client.post(Uri.parse("$apiUrl/api/mock-exam/submmit"),
+      final response = await client.post(
+        Uri.parse("$apiUrl/api/mock-exam/submmit"),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
       );
       if (response.statusCode == 200) {
-        final body = jsonDecode(response.body)["data"];
-        return Right(body);
+        return Right(SuccessModel());
       } else {
         final body = jsonDecode(response.body)["errors"];
         return Left(FailureModel.fromJson(body));

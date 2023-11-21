@@ -169,12 +169,16 @@ class HomePage extends StatelessWidget {
                     _carouselButton(
                       "Redação",
                       Icons.create,
-                      () {},
+                      () {
+                        Modular.to.pushNamed("/essay");
+                      },
                     ),
                     _carouselButton(
                       "Estatisticas",
                       Icons.stacked_bar_chart_outlined,
-                      () {},
+                      () {
+                        Modular.to.pushNamed('/statistics');
+                      },
                     ),
                     _carouselButton(
                       "Atualizar",

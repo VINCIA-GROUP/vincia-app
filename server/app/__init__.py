@@ -25,8 +25,7 @@ from app.controllers import question_controller
 from app.controllers import mock_exam_controller
 from app.controllers import chat_controller
 from app.controllers import ability_controller
-
-
-
-
-
+from app.controllers import essay_transcibe_controller
+from app.controllers import essay_theme_controller
+from app.controllers import essay_additional_text_controller
+from app.controllers import essay_controller
