@@ -8,7 +8,13 @@ services:
     container_name: vincia-api
     restart: always
     environment: 
+      APP_SECRET_KEY: "2cdcbdd2-f700-457c-acf6-2e5063adc21b"
       API_ENVIRONMENT: "PRODUCTION"
+      AUTH0_DOMAIN: "dev-zqwk5k31wg11dtkh.us.auth0.com"
+      AUDIENCE: "vincia-api-v1" 
+      CONNECTION_STRING_DB: "postgres://app_conn:1Ov9QYmCiwTN@ep-autumn-term-545731-pooler.us-east-2.aws.neon.tech/production_v1"
+      OPENAI_KEY: "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"
+      GOOGLE_API_KEY: "AIzaSyDr8pKrJfxvwH6SXwYWYo_Kzes18Ngu2dI"
     ports:
       - 8080:8080
     dns:
