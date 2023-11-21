@@ -17,10 +17,17 @@ class EssayRepository(Repository):
     
     def get_by_user_id(self, user_id):
         essays = super().get_many(
-            query="SELECT * FROM essays WHERE user_id = %s;",
-            params=(user_id,)
+            query="SELECT * FROM essays WHERE is_finished = %s AND user_id = %s;",
+            params=("True", user_id,)
         )
         return essays
+    
+    def get_created_essay_by_user_id(self, user_id):
+        essay = super().get_one(
+            query="SELECT * FROM essays WHERE user_id = %s ORDER BY datetime DESC LIMIT 1;",
+            params=(user_id,)
+        )
+        return essay
     
     def get_unfinished_by_user_id(self, user_id):
         essays = super().get_many(
@@ -30,7 +37,6 @@ class EssayRepository(Repository):
         return essays
     
     def insert_new_essay(self, id, theme_id, user_id, title, contents, datetime, is_finished):
-        print(f'essay_id: {id}, theme_id: {theme_id}, user_id: {user_id}')
         return super().update(
             query=("INSERT INTO essays (id, theme_id, user_id, title, contents, datetime, is_finished) "
                    "VALUES (%s, %s, %s, %s, %s, %s, %s);"),
@@ -44,9 +50,9 @@ class EssayRepository(Repository):
                    "c1_analysis, c2_analysis, c3_analysis, c4_analysis, c5_analysis, general_analysis) "
                    "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"),
             params=(
-                essay.id, essay.theme_id, essay.user_id, essay.title, essay.contents, essay.datetime, essay.is_finished,
-                essay.c1_grade, essay.c2_grade, essay.c3_grade, essay.c4_grade, essay.c5_grade, essay.total_grade,
-                essay.c1_analysis, essay.c2_analysis, essay.c3_analysis, essay.c4_analysis, essay.c5_analysis, essay.general_analysis
+                essay["id"], essay["theme_id"], essay["user_id"], essay["title"], essay["contents"], essay["datetime"], essay["is_finished"],
+                essay["c1_grade"], essay["c2_grade"], essay["c3_grade"], essay["c4_grade"], essay["c5_grade"], essay["total_grade"],
+                essay["c1_analysis"], essay["c2_analysis"], essay["c3_analysis"], essay["c4_analysis"], essay["c5_analysis"], essay["general_analysis"]
             )
         )
 
@@ -57,15 +63,16 @@ class EssayRepository(Repository):
                    "c1_analysis=%s, c2_analysis=%s, c3_analysis=%s, c4_analysis=%s, c5_analysis=%s, general_analysis=%s "
                    "WHERE id=%s;"),
             params=(
-                essay.theme_id, essay.user_id, essay.title, essay.contents, essay.datetime, essay.is_finished,
-                essay.c1_grade, essay.c2_grade, essay.c3_grade, essay.c4_grade, essay.c5_grade, essay.total_grade,
-                essay.c1_analysis, essay.c2_analysis, essay.c3_analysis, essay.c4_analysis, essay.c5_analysis, essay.general_analysis,
-                essay.id
+                essay["theme_id"], essay["user_id"], essay["title"], essay["contents"], essay["datetime"], essay["is_finished"],
+                essay["c1_grade"], essay["c2_grade"], essay["c3_grade"], essay["c4_grade"], essay["c5_grade"], essay["total_grade"],
+                essay["c1_analysis"], essay["c2_analysis"], essay["c3_analysis"], essay["c4_analysis"], essay["c5_analysis"], essay["general_analysis"],
+                essay["id"]
             )
         )
 
     def delete_essay(self, essay_id):
         return super().delete(
             query="DELETE FROM essays WHERE essay_id=%s;",
-            params=(essay_id,)
+            params=(essay_id)
         )
+    

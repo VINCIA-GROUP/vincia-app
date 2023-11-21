@@ -10,8 +10,8 @@ class EssayAnalysisService {
 
   EssayAnalysisService(this.auth, this.client);
 
-  Future<Map<String, dynamic>> analyzeEssay(
-      Map<String, dynamic> essayData) async {
+  Future<Map<String, dynamic>> analyzeEssay(essayData) async {
+    print(essayData);
     final token = await getAcessToken();
     final response = await client.post(
       Uri.parse('$apiUrl/api/essay/analysis'),

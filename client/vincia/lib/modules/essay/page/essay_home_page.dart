@@ -58,6 +58,7 @@ class _EssayHomePageState extends State<EssayHomePage> {
                             if( _essayHistoryController.essay.isEmpty) {
                             return Modular.to.pushNamed('/essay/theme');
                           } else {
+                            print(_essayHistoryController.essay[0]);
                             return Modular.to.pushNamed('/essay/edit', arguments: _essayHistoryController.essay[0]);
                           }
                           }
